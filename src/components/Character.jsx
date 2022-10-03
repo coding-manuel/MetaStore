@@ -1,9 +1,11 @@
 import * as THREE from 'three';
 import React, { useRef, useEffect, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useLoader } from '@react-three/fiber';
 import { useSphere } from '@react-three/cannon';
 import { useGLTF, useAnimations } from '@react-three/drei';
 import useKeyboardInput from '../hooks/useKeyboardInput';
+import { TextureLoader } from 'three';
+import { BoxGeometry } from 'three';
 
 export default function Model({ camera }) {
   const group = useRef(null);
@@ -20,6 +22,7 @@ export default function Model({ camera }) {
   const velocity = new THREE.Vector3(0, 0, 0);
 
   const [selectedAction, setSelectedAction] = useState('idle');
+  const [texture, setTexture] = useState();
 
   const calculateOffset = (vector) => {
     const idealLookat = vector;
@@ -118,14 +121,18 @@ export default function Model({ camera }) {
     // updateCameraTarget(delta);
   };
 
-  useFrame((state, delta) => {
-    // updatePosition(delta);
-  });
+  // useFrame((state, delta) => {
+  //   // updatePosition(delta);
+  // });
 
   useEffect(() => {
     actions[selectedAction]?.reset().fadeIn(0.5).play();
+    console.log(x)
     return () => void actions[selectedAction]?.fadeOut(0.5);
   }, [selectedAction]);
+
+  const x = useLoader(TextureLoader, '/src/assets/tshirt_text.png')
+  x.flipY = false
 
   //   const [mesh, api] = useSphere(() => ({
   //     mass: 2, type: 'Dynamic', position: [0, 1, 0], ...props,
@@ -137,7 +144,7 @@ export default function Model({ camera }) {
         <group name="Model_Body">
           <primitive object={nodes.Hips} />
           <skinnedMesh
-          castShadow
+            castShadow
             name="Bind"
             geometry={nodes.Bind.geometry}
             material={materials['Wolf3D_Eye.007']}
@@ -146,7 +153,7 @@ export default function Model({ camera }) {
             morphTargetInfluences={nodes.Bind.morphTargetInfluences}
           />
           <skinnedMesh
-          castShadow
+            castShadow
             name="EyeLeft"
             geometry={nodes.EyeLeft.geometry}
             material={materials['Wolf3D_Eye.008']}
@@ -155,7 +162,7 @@ export default function Model({ camera }) {
             morphTargetInfluences={nodes.EyeLeft.morphTargetInfluences}
           />
           <skinnedMesh
-          castShadow
+            castShadow
             name="EyeRight"
             geometry={nodes.EyeRight.geometry}
             material={materials['Wolf3D_Eye.008']}
@@ -164,14 +171,14 @@ export default function Model({ camera }) {
             morphTargetInfluences={nodes.EyeRight.morphTargetInfluences}
           />
           <skinnedMesh
-          castShadow
+            castShadow
             name="Hair"
             geometry={nodes.Hair.geometry}
             material={materials['Wolf3D_Hair.004']}
             skeleton={nodes.Hair.skeleton}
           />
           <skinnedMesh
-          castShadow
+            castShadow
             name="Head_1"
             geometry={nodes.Head_1.geometry}
             material={materials['Wolf3D_Skin.004']}
@@ -180,28 +187,30 @@ export default function Model({ camera }) {
             morphTargetInfluences={nodes.Head_1.morphTargetInfluences}
           />
           <skinnedMesh
-          castShadow
+            castShadow
             name="Top"
             geometry={nodes.Top.geometry}
             material={materials['Wolf3D_Outfit_Top.006']}
             skeleton={nodes.Top.skeleton}
-          />
+          >
+            <meshStandardMaterial map={x && x} ></meshStandardMaterial>
+          </skinnedMesh>
           <skinnedMesh
-          castShadow
+            castShadow
             name="Shoes"
             geometry={nodes.Shoes.geometry}
             material={materials['Wolf3D_Outfit_Footwear.005']}
             skeleton={nodes.Shoes.skeleton}
           />
           <skinnedMesh
-          castShadow
+            castShadow
             name="Skin"
             geometry={nodes.Skin.geometry}
             material={materials['Wolf3D_Body.005']}
             skeleton={nodes.Skin.skeleton}
           />
           <skinnedMesh
-          castShadow
+            castShadow
             name="Bottom"
             geometry={nodes.Bottom.geometry}
             material={materials['Wolf3D_Outfit_Bottom.010']}
