@@ -173,5 +173,25 @@ export const bodyStyles = () => ({
 
   // "::selection": { background: "#eea02b" },
 
+  '::-webkit-scrollbar-track':
+  {
+    webkitBoxShadow: 'inset 0 0 6px #333333',
+    backgroundColor: '#111111',
+  },
+
+  '::-webkit-scrollbar':
+  {
+    width: 8,
+    borderRadius: 20,
+    backgroundColor: '#555555',
+  },
+
+  '::-webkit-scrollbar-thumb':
+  {
+    borderRadius: 20,
+    backgroundColor: '#eea02b',
+	  border: 'none',
+  },
+
   "#root": { height: "100vh" },
 });
