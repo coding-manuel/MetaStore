@@ -1,10 +1,10 @@
 import React from 'react'
-import { ScrollArea , Grid } from '@mantine/core'
+import { Group } from '@mantine/core'
 import OutfitCard from './OutfitCard'
 
 export default function OutfitSelector() {
   return (
-    <Grid grow>
+    <Group position="center" spacing={16}>
         <OutfitCard />
         <OutfitCard />
         <OutfitCard />
@@ -21,6 +21,6 @@ export default function OutfitSelector() {
         <OutfitCard />
         <OutfitCard />
         <OutfitCard />
-    </Grid>
+    </Group>
   )
 }
