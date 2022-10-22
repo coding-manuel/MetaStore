@@ -1,30 +1,22 @@
-import create from 'zustand'
-import {devtools, persist} from 'zustand/middleware'
+import create from "zustand"
 
 const mainStore = (set) => ({
-    menuOpen: false,
-    isDesktop: true,
+  menuOpen: false,
+  isDesktop: true,
 
-    onResize: () => {
-        set(() => ({
-            isDesktop: window.innerWidth > 820,
-        }))
-    },
+  onResize: () => {
+    set(() => ({
+      isDesktop: window.innerWidth > 820,
+    }))
+  },
 
-    handleMenuToggle: () => {
-        console.log("dgvjh")
-        set((state) => ({
-            menuOpen: !state.menuOpen
-        }))
-    }
+  handleMenuToggle: () => {
+    set((state) => ({
+      menuOpen: !state.menuOpen,
+    }))
+  },
 })
 
-const useMainStore = create(
-    devtools(
-        persist(mainStore, {
-            name: "main",
-        })
-    )
-)
+const useMainStore = create(mainStore)
 
-export default useMainStore;
+export default useMainStore
