@@ -4,12 +4,13 @@ import { useGLTF, useAnimations, useHelper } from "@react-three/drei"
 import { BoxHelper, TextureLoader } from "three"
 import useCharacterStore from "../store/characterStore"
 
-export default function Model({ camera }) {
+export default function Model() {
   const group = useRef(null)
-  useHelper(group, BoxHelper, "blue")
   const { nodes, materials, animations } = useGLTF(
     "/src/assets/models/male_model.glb"
   )
+  const mogi = useGLTF("/src/assets/models/shoe_2.glb")
+
   const { actions } = useAnimations(animations, group)
 
   const [selectedAction, setSelectedAction] = useState("idle")
@@ -18,6 +19,10 @@ export default function Model({ camera }) {
     actions[selectedAction]?.reset().fadeIn(0.5).play()
     return () => void actions[selectedAction]?.fadeOut(0.5)
   }, [selectedAction])
+
+  useEffect(() => {
+    console.log(mogi)
+  }, [mogi])
 
   const shapeKeys = useCharacterStore((state) => state.shapeKeys)
 
@@ -40,6 +45,8 @@ export default function Model({ camera }) {
             geometry={nodes.Body.geometry}
             material={materials["Wolf3D_Body.001"]}
             skeleton={nodes.Body.skeleton}
+            morphTargetDictionary={nodes.Bottom.morphTargetDictionary}
+            morphTargetInfluences={[shapeKeys.hands]}
           />
           <skinnedMesh
             name="Bottom"
@@ -47,7 +54,13 @@ export default function Model({ camera }) {
             material={materials["Wolf3D_Outfit_Bottom.001"]}
             skeleton={nodes.Bottom.skeleton}
             morphTargetDictionary={nodes.Bottom.morphTargetDictionary}
-            morphTargetInfluences={[]}
+            morphTargetInfluences={[
+              shapeKeys.stomach,
+              shapeKeys.waist,
+              shapeKeys.butt,
+              shapeKeys.thighs,
+              shapeKeys.calves,
+            ]}
           />
           <skinnedMesh
             name="EyeLeft"
@@ -78,10 +91,10 @@ export default function Model({ camera }) {
             skeleton={nodes.Top.skeleton}
             morphTargetDictionary={nodes.Top.morphTargetDictionary}
             morphTargetInfluences={[
-              shapeKeys.top.stomach,
-              shapeKeys.top.waist,
-              shapeKeys.top.chest,
-              shapeKeys.top.butt,
+              shapeKeys.stomach,
+              shapeKeys.waist,
+              shapeKeys.chest,
+              shapeKeys.butt,
             ]}
           >
             <meshStandardMaterial map={x && x}></meshStandardMaterial>
@@ -114,4 +127,5 @@ export default function Model({ camera }) {
   )
 }
 
+useGLTF.preload("/src/assets/models/shoe_2.glb")
 useGLTF.preload("/src/assets/models/male_model.glb")

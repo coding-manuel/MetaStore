@@ -3,30 +3,35 @@ import { persist, devtools } from "zustand/middleware"
 import produce from "immer"
 
 const characterStore = (set) => ({
+  preset: "custom",
   shapeKeys: {
-    top: {
-      stomach: 1,
-      waist: 1,
-      chest: 1,
-      butt: 1,
-    },
-    bottom: {
-      stomach: 1,
-      waist: 1,
-      butt: 1,
-      thighs: 1,
-    },
+    stomach: 1,
+    waist: 1,
+    chest: 1,
+    butt: 1,
+    thighs: 1,
+    calves: 1,
+    hands: 1,
   },
 
-  updateShapeKey(item, shapekey, val) {
+  updateShapeKey(shapekey, val) {
     set((state) =>
       produce(state, (draftState) => {
-        draftState.shapeKeys[item][shapekey] = val
+        draftState.shapeKeys[shapekey] = val
+        draftState.preset = "custom"
+      })
+    )
+  },
+
+  setPreset(size) {
+    set((state) =>
+      produce(state, (draftState) => {
+        draftState.preset = size
       })
     )
   },
 })
 
-const useCharacterStore = create(persist(devtools(characterStore)))
+const useCharacterStore = create(devtools(characterStore))
 
 export default useCharacterStore

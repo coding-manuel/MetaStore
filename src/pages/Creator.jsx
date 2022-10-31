@@ -13,9 +13,19 @@ export default function Creator() {
 
   return (
     <>
-      <Group noWrap spacing={0} sx={{ height: "100%", overflow: "hidden" }}>
+      <Group
+        grow={isDesktop}
+        noWrap
+        spacing={0}
+        sx={{ height: "100%", overflow: "hidden" }}
+      >
         <Customisation />
-        <Box sx={{ width: isDesktop ? "400px" : "100%", height: "100%" }}>
+        <Box
+          sx={{
+            width: "100%",
+            height: "100%",
+          }}
+        >
           <Experience />
         </Box>
         {!isDesktop && (

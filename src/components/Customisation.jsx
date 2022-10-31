@@ -22,7 +22,11 @@ export default function Customisation() {
       p="md"
       sx={
         isDesktop
-          ? { margin: "0 16px", height: "100%", flex: 1 }
+          ? {
+              margin: "0 16px",
+              height: "100%",
+              maxWidth: 900,
+            }
           : {
               position: "absolute",
               top: 0,
@@ -30,6 +34,7 @@ export default function Customisation() {
               width: "100%",
               zIndex: 100,
               height: "100%",
+              transition: ".25s ease",
             }
       }
     >
@@ -48,7 +53,7 @@ const TabComponent = ({ isDesktop, handleMenuToggle }) => {
         flexDirection: "column",
       }}
       variant="pills"
-      defaultValue="top"
+      defaultValue="body"
     >
       <Tabs.List grow position="center">
         <Tabs.Tab value="top">Top</Tabs.Tab>

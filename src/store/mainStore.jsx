@@ -6,7 +6,7 @@ const mainStore = (set) => ({
 
   onResize: () => {
     set(() => ({
-      isDesktop: window.innerWidth > 820,
+      isDesktop: window.innerWidth > 1030,
     }))
   },
 
