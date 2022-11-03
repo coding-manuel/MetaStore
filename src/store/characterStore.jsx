@@ -1,6 +1,7 @@
 import create from "zustand"
 import { persist, devtools } from "zustand/middleware"
 import produce from "immer"
+import { sizeChart } from "../utils/sizeChart"
 
 const characterStore = (set) => ({
   preset: "custom",
@@ -27,6 +28,13 @@ const characterStore = (set) => ({
     set((state) =>
       produce(state, (draftState) => {
         draftState.preset = size
+        draftState.shapeKeys.stomach = sizeChart[size].stomach
+        draftState.shapeKeys.waist = sizeChart[size].waist
+        draftState.shapeKeys.chest = sizeChart[size].chest
+        draftState.shapeKeys.butt = sizeChart[size].butt
+        draftState.shapeKeys.thighs = sizeChart[size].thighs
+        draftState.shapeKeys.calves = sizeChart[size].calves
+        draftState.shapeKeys.hands = sizeChart[size].hands
       })
     )
   },

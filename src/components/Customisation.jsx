@@ -1,20 +1,20 @@
-import React, { useEffect } from "react"
-import { Tabs, Paper, Button } from "@mantine/core"
-import OutfitSelector from "./OutfitSelector"
-import { X } from "phosphor-react"
-import useMainStore from "../store/mainStore"
-import BodyCustomise from "./BodyCustomise"
+import React, { useEffect } from "react";
+import { Tabs, Paper, Button } from "@mantine/core";
+import OutfitSelector from "./OutfitSelector";
+import { X } from "phosphor-react";
+import useMainStore from "../store/mainStore";
+import BodyCustomise from "./BodyCustomise";
 
 export default function Customisation() {
-  const menuOpen = useMainStore((state) => state.menuOpen)
-  const isDesktop = useMainStore((state) => state.isDesktop)
-  const onResize = useMainStore((state) => state.onResize)
-  const handleMenuToggle = useMainStore((state) => state.handleMenuToggle)
+  const menuOpen = useMainStore((state) => state.menuOpen);
+  const isDesktop = useMainStore((state) => state.isDesktop);
+  const onResize = useMainStore((state) => state.onResize);
+  const handleMenuToggle = useMainStore((state) => state.handleMenuToggle);
 
   useEffect(() => {
-    window.addEventListener("resize", onResize)
-    return () => window.removeEventListener("resize", onResize)
-  })
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  });
 
   return (
     <Paper
@@ -40,7 +40,7 @@ export default function Customisation() {
     >
       <TabComponent isDesktop={isDesktop} handleMenuToggle={handleMenuToggle} />
     </Paper>
-  )
+  );
 }
 
 const TabComponent = ({ isDesktop, handleMenuToggle }) => {
@@ -82,9 +82,9 @@ const TabComponent = ({ isDesktop, handleMenuToggle }) => {
         <OutfitSelector />
       </Tabs.Panel>
 
-      <Tabs.Panel value="body" pt="xs">
+      <Tabs.Panel value="body" mt="xs" sx={{overflowY: "auto"}}>
         <BodyCustomise />
       </Tabs.Panel>
     </Tabs>
-  )
-}
+  );
+};
