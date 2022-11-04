@@ -67,22 +67,22 @@ const TabComponent = ({ isDesktop, handleMenuToggle }) => {
       </Tabs.List>
 
       <Tabs.Panel
-        sx={{ height: "100%", overflow: "auto", overflowX: "hidden" }}
+        sx={{ height: "100%", overflowY: "auto"}}
         value="top"
-        mt="xs"
+        my={16}
       >
         <OutfitSelector />
       </Tabs.Panel>
 
       <Tabs.Panel
-        sx={{ height: "100%", overflow: "auto", overflowX: "hidden" }}
+        sx={{ height: "100%", overflowY: "auto" }}
+        my={16}
         value="bottom"
-        mt="xs"
       >
         <OutfitSelector />
       </Tabs.Panel>
 
-      <Tabs.Panel value="body" mt="xs" sx={{overflowY: "auto"}}>
+      <Tabs.Panel value="body" my={16} sx={{ overflowY: "auto" }}>
         <BodyCustomise />
       </Tabs.Panel>
     </Tabs>

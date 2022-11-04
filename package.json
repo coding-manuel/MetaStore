@@ -21,6 +21,7 @@
     "@react-three/drei": "^9.34.3",
     "@react-three/fiber": "^8.8.9",
     "@react-three/postprocessing": "^2.6.2",
+    "@supabase/supabase-js": "^2.0.5",
     "immer": "^9.0.15",
     "javascript-time-ago": "^2.5.7",
     "leva": "^0.9.31",
@@ -28,6 +29,7 @@
     "postprocessing": "^6.28.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-router-dom": "^6.4.3",
     "three": "^0.145.0",
     "zustand": "^4.1.1"
   },

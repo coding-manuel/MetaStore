@@ -1,26 +1,27 @@
-import React from "react"
-import {
-  MantineProvider,
-  ColorSchemeProvider,
-  Global,
-  Stack,
-} from "@mantine/core"
-import { NotificationsProvider } from "@mantine/notifications"
-import { useLocalStorage } from "@mantine/hooks"
+import React, { useState, useEffect } from "react";
+import { MantineProvider, ColorSchemeProvider, Global } from "@mantine/core";
+import { NotificationsProvider } from "@mantine/notifications";
+import { useLocalStorage } from "@mantine/hooks";
+import { supabase } from "./utils/supabaseClient";
 
-import { globalStyles, bodyStyles } from "./globalStyles"
-import Creator from "./pages/Creator"
-import { HeaderComp } from "./components/HeaderComp"
+import { globalStyles, bodyStyles } from "./globalStyles";
+import { SignIn } from "./pages/SignIn";
+import { SignUp } from "./pages/SignUp";
+import { Route, Routes } from "react-router-dom";
+import Creator from "./pages/Creator";
+import useMainStore from "./store/mainStore";
 
 function App() {
+  const setSession = useMainStore((state) => state.setSession);
+  const session = useMainStore((state) => state.user);
   const [colorScheme, setColorScheme] = useLocalStorage({
     key: "mantine-color-scheme",
     defaultValue: "dark",
     getInitialValueInEffect: true,
-  })
+  });
 
   const toggleColorScheme = (value) =>
-    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"))
+    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 
   const theme = {
     components: globalStyles,
@@ -70,7 +71,17 @@ function App() {
         h6: { fontSize: "0.707rem" },
       },
     },
-  }
+  };
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+  }, []);
 
   return (
     <ColorSchemeProvider
@@ -80,14 +91,15 @@ function App() {
       <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
         <NotificationsProvider>
           <Global styles={bodyStyles} />
-          <Stack spacing={0} sx={{ height: "100%" }}>
-            <HeaderComp />
-            <Creator />
-          </Stack>
+          <Routes>
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/" element={<Creator />} />
+          </Routes>
         </NotificationsProvider>
       </MantineProvider>
     </ColorSchemeProvider>
-  )
+  );
 }
 
-export default App
+export default App;

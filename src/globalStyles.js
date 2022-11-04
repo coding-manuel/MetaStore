@@ -78,9 +78,14 @@ export const globalStyles = {
     }),
   },
 
+  InputWrapper: {
+    styles: (theme) => ({
+      label: { fontWeight: 600, marginBottom: 4 },
+    })
+  },
+
   TextInput: {
     styles: (theme) => ({
-      label: { fontWeight: 600 },
       filledVariant: {
         border: `1px solid ${
           theme.colorScheme === "dark" ? "#8e8e8e" : "#bbbbbb"

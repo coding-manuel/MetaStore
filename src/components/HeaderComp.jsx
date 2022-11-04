@@ -1,7 +1,6 @@
 import {
   createStyles,
   Header,
-  HoverCard,
   Group,
   Button,
   UnstyledButton,
@@ -14,20 +13,13 @@ import {
   Box,
   Burger,
   Drawer,
-  Collapse,
   ScrollArea,
-} from "@mantine/core"
-import { useDisclosure } from "@mantine/hooks"
-import Logo from "../assets/type-logo.svg"
-// import {
-//   IconNotification,
-//   IconCode,
-//   IconBook,
-//   IconChartPie3,
-//   IconFingerprint,
-//   IconCoin,
-//   IconChevronDown,
-// } from "@tabler/icons"
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { Link } from "react-router-dom";
+import Logo from "../assets/type-logo.svg";
+import useMainStore from "../store/mainStore";
+import { supabase } from "../utils/supabaseClient";
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -95,64 +87,18 @@ const useStyles = createStyles((theme) => ({
       display: "none",
     },
   },
-}))
-
-const mockdata = [
-  {
-    // icon: IconCode,
-    title: "Open source",
-    description: "This Pokémon’s cry is very loud and distracting",
-  },
-  {
-    // icon: IconCoin,
-    title: "Free for everyone",
-    description: "The fluid of Smeargle’s tail secretions changes",
-  },
-  {
-    // icon: IconBook,
-    title: "Documentation",
-    description: "Yanma is capable of seeing 360 degrees without",
-  },
-  {
-    // icon: IconFingerprint,
-    title: "Security",
-    description: "The shell’s rounded shape and the grooves on its.",
-  },
-  {
-    // icon: IconChartPie3,
-    title: "Analytics",
-    description: "This Pokémon uses its flying ability to quickly chase",
-  },
-  {
-    // icon: IconNotification,
-    title: "Notifications",
-    description: "Combusken battles with the intensely hot flames it spews",
-  },
-]
+}));
 
 export function HeaderComp() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
-    useDisclosure(false)
-  const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false)
-  const { classes, theme } = useStyles()
+    useDisclosure(false);
+  const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
+  const { classes, theme } = useStyles();
+  const session = useMainStore((state) => state.user);
 
-  const links = mockdata.map((item) => (
-    <UnstyledButton className={classes.subLink} key={item.title}>
-      <Group noWrap align="flex-start">
-        <ThemeIcon size={34} variant="default" radius="md">
-          {/* <item.icon size={22} color={theme.fn.primaryColor()} /> */}
-        </ThemeIcon>
-        <div>
-          <Text size="sm" weight={500}>
-            {item.title}
-          </Text>
-          <Text size="xs" color="dimmed">
-            {item.description}
-          </Text>
-        </div>
-      </Group>
-    </UnstyledButton>
-  ))
+  const handleLogOut = async () => {
+    let { error } = await supabase.auth.signOut();
+  };
 
   return (
     <Box>
@@ -160,9 +106,24 @@ export function HeaderComp() {
         <Group position="apart" sx={{ height: "100%" }}>
           <img src={Logo} style={{ height: 20 }} />
 
-          <Group className={classes.hiddenMobile}>
-            <Button variant="default">Log in</Button>
-            <Button>Sign up</Button>
+          <Group className={classes.hiddenMobile} hidden={session}>
+            <Button component={Link} to="signin" variant="default">
+              Log in
+            </Button>
+            <Button component={Link} to="signup">
+              Sign up
+            </Button>
+          </Group>
+
+          <Group className={classes.hiddenMobile} hidden={!session}>
+            <Button
+              component={Link}
+              to="signin"
+              variant="default"
+              onClick={handleLogOut}
+            >
+              Log Out
+            </Button>
           </Group>
 
           <Burger
@@ -178,7 +139,7 @@ export function HeaderComp() {
         onClose={closeDrawer}
         size="100%"
         padding="md"
-        title="Navigation"
+        title={<img src={Logo} style={{ height: 20 }} />}
         className={classes.hiddenDesktop}
         zIndex={1000000}
       >
@@ -196,10 +157,8 @@ export function HeaderComp() {
               <Box component="span" mr={5}>
                 Features
               </Box>
-              {/* <IconChevronDown size={16} color={theme.fn.primaryColor()} /> */}
             </Center>
           </UnstyledButton>
-          <Collapse in={linksOpened}>{links}</Collapse>
           <a href="#" className={classes.link}>
             Learn
           </a>
@@ -213,11 +172,15 @@ export function HeaderComp() {
           />
 
           <Group position="center" grow pb="xl" px="md">
-            <Button variant="default">Log in</Button>
-            <Button>Sign up</Button>
+            <Button component={Link} to="signin" variant="default">
+              Log in
+            </Button>
+            <Button component={Link} to="signup">
+              Sign up
+            </Button>
           </Group>
         </ScrollArea>
       </Drawer>
     </Box>
-  )
+  );
 }

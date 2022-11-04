@@ -1,33 +1,45 @@
-import React, { useRef, useEffect, useState } from "react"
-import { useLoader } from "@react-three/fiber"
-import { useGLTF, useAnimations, useHelper } from "@react-three/drei"
-import { BoxHelper, TextureLoader } from "three"
-import useCharacterStore from "../store/characterStore"
+import React, { useRef, useEffect, useState } from "react";
+import { useLoader } from "@react-three/fiber";
+import { useGLTF, useAnimations, useHelper } from "@react-three/drei";
+import { BoxHelper, TextureLoader } from "three";
+import useCharacterStore from "../store/characterStore";
+import { Texture } from "@react-three/postprocessing";
 
 export default function Model() {
-  const group = useRef(null)
+  const group = useRef(null);
   const { nodes, materials, animations } = useGLTF(
     "/src/assets/models/male_model.glb"
-  )
-  const mogi = useGLTF("/src/assets/models/shoe_2.glb")
+  );
+  const mogi = useGLTF("/src/assets/models/shoe_2.glb");
 
-  const { actions } = useAnimations(animations, group)
+  const { actions } = useAnimations(animations, group);
 
-  const [selectedAction, setSelectedAction] = useState("idle")
-
-  useEffect(() => {
-    actions[selectedAction]?.reset().fadeIn(0.5).play()
-    return () => void actions[selectedAction]?.fadeOut(0.5)
-  }, [selectedAction])
+  const [selectedAction, setSelectedAction] = useState("idle");
 
   useEffect(() => {
-    console.log(mogi)
-  }, [mogi])
+    actions[selectedAction]?.reset().fadeIn(0.5).play();
+    return () => void actions[selectedAction]?.fadeOut(0.5);
+  }, [selectedAction]);
 
-  const shapeKeys = useCharacterStore((state) => state.shapeKeys)
+  const shapeKeys = useCharacterStore((state) => state.shapeKeys);
 
-  const x = useLoader(TextureLoader, "/src/assets/tshirt_text2.png")
-  x.flipY = false
+  const material = useRef(null);
+
+  const topTexture = useCharacterStore((state) => state.texture.top);
+
+  const [tpTexture, setTpTexture] = useState(
+    useLoader(TextureLoader, topTexture)
+  );
+
+  useEffect(() => {
+    customLoader();
+  }, [topTexture]);
+
+  const customLoader = () => {
+    const x = useLoader(TextureLoader, topTexture);
+    x.flipY = false;
+    setTpTexture(x);
+  };
 
   return (
     <group
@@ -97,7 +109,10 @@ export default function Model() {
               shapeKeys.butt,
             ]}
           >
-            <meshStandardMaterial map={x && x}></meshStandardMaterial>
+            <meshStandardMaterial
+              ref={material}
+              map={tpTexture}
+            ></meshStandardMaterial>
           </skinnedMesh>
           <skinnedMesh
             name="Teeth"
@@ -124,8 +139,8 @@ export default function Model() {
         </group>
       </group>
     </group>
-  )
+  );
 }
 
-useGLTF.preload("/src/assets/models/shoe_2.glb")
-useGLTF.preload("/src/assets/models/male_model.glb")
+useGLTF.preload("/src/assets/models/shoe_2.glb");
+useGLTF.preload("/src/assets/models/male_model.glb");

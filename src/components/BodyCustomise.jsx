@@ -8,7 +8,7 @@ export default function BodyCustomise() {
   const theme = useTheme()
 
   return (
-    <Stack spacing={16} mx={48} my={24}>
+    <Stack spacing={16} mx={8}>
       <Group grow>
         <CustomSizeButton size="S" />
         <CustomSizeButton size="M" />
@@ -55,32 +55,32 @@ const CustomSizeButton = ({ size }) => {
 }
 
 function CustomSlider({ shapeKey, value }) {
-  const updateShapeKey = useCharacterStore((state) => state.updateShapeKey)
-  const theme = useTheme()
-  return (
-    <Group align="center" sx={{ width: "100%" }}>
-      <Stack py={8} spacing={8} sx={{ flexGrow: 1 }}>
-        <Text>{shapeKey.charAt(0).toUpperCase() + shapeKey.slice(1)}</Text>
-        <Slider
-          sx={{ flexGrow: 1 }}
-          value={value}
-          onChange={(val) => updateShapeKey(shapeKey, val)}
-          label={null}
-          step={0.01}
-          min={0}
-          max={1}
-        />
-      </Stack>
-      <Box
-        sx={{
-          background: theme.colors.dark[6],
-          padding: "8px 8px",
-          borderRadius: 8,
-          marginTop: 8,
-        }}
-      >
-        {value.toFixed(2)}
-      </Box>
-    </Group>
-  )
+const updateShapeKey = useCharacterStore((state) => state.updateShapeKey)
+const theme = useTheme()
+return (
+  <Group align="center" sx={{ width: "100%" }}>
+    <Stack py={8} spacing={8} sx={{ flexGrow: 1 }}>
+      <Text>{shapeKey.charAt(0).toUpperCase() + shapeKey.slice(1)}</Text>
+      <Slider
+        sx={{ flexGrow: 1 }}
+        value={value}
+        onChange={(val) => updateShapeKey(shapeKey, val)}
+        label={null}
+        step={0.01}
+        min={0}
+        max={1}
+      />
+    </Stack>
+    <Box
+      sx={{
+        background: theme.colors.dark[6],
+        padding: "8px 8px",
+        borderRadius: 8,
+        marginTop: 8,
+      }}
+    >
+      {value.toFixed(2)}
+    </Box>
+  </Group>
+)
 }
