@@ -2,7 +2,7 @@ import React from "react";
 import { Card, Image, Text } from "@mantine/core";
 import useCharacterStore from "../store/characterStore";
 
-export default function OutfitCard({ type, name, path }) {
+export default function OutfitCard({ type, name, path, img }) {
   const updateTexture = useCharacterStore((state) => state.updateTexture);
   return (
     <Card
@@ -21,11 +21,7 @@ export default function OutfitCard({ type, name, path }) {
       onClick={() => updateTexture(type, path)}
     >
       <Card.Section>
-        <Image
-          src="https://cdn.shopify.com/s/files/1/1002/7150/products/New-Mockups---no-hanger---TShirt-Yellow.jpg?v=1639657077"
-          height={160}
-          alt="Norway"
-        />
+        <Image src={img} fit="cover" height={160} width={140} alt="Norway" />
       </Card.Section>
 
       <Text weight={500} mt="md" size="sm">

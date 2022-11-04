@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Tabs, Paper, Button } from "@mantine/core";
+import { Tabs, Paper, Button, Title } from "@mantine/core";
 import OutfitSelector from "./OutfitSelector";
 import { X } from "phosphor-react";
 import useMainStore from "../store/mainStore";
@@ -67,7 +67,7 @@ const TabComponent = ({ isDesktop, handleMenuToggle }) => {
       </Tabs.List>
 
       <Tabs.Panel
-        sx={{ height: "100%", overflowY: "auto"}}
+        sx={{ height: "100%", overflowY: "auto" }}
         value="top"
         my={16}
       >
@@ -79,7 +79,7 @@ const TabComponent = ({ isDesktop, handleMenuToggle }) => {
         my={16}
         value="bottom"
       >
-        <OutfitSelector />
+        <Title align="center" order={5} >Feature in Development</Title>
       </Tabs.Panel>
 
       <Tabs.Panel value="body" my={16} sx={{ overflowY: "auto" }}>
