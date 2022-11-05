@@ -14,8 +14,13 @@ import {
   Burger,
   Drawer,
   ScrollArea,
+  Avatar,
+  ActionIcon,
+  Menu,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { CaretDown, SignOut } from "phosphor-react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "../assets/type-logo.svg";
 import useMainStore from "../store/mainStore";
@@ -95,6 +100,7 @@ export function HeaderComp() {
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
   const { classes, theme } = useStyles();
   const session = useMainStore((state) => state.user);
+  const [userMenuOpened, setUserMenuOpened] = useState(false);
 
   const handleLogOut = async () => {
     let { error } = await supabase.auth.signOut();
@@ -116,14 +122,40 @@ export function HeaderComp() {
           </Group>
 
           <Group className={classes.hiddenMobile} hidden={!session}>
-            <Button
+            <Menu
+              width={180}
+              position="bottom-end"
+              transition="pop-top-right"
+              onClose={() => setUserMenuOpened(false)}
+              onOpen={() => setUserMenuOpened(true)}
+            >
+              <Menu.Target>
+                <UnstyledButton>
+                  <Group spacing={7}>
+                    <Avatar radius="xl" />
+                  </Group>
+                </UnstyledButton>
+              </Menu.Target>
+              <Menu.Dropdown>
+                <Menu.Item
+                  component={Link}
+                  to="signin"
+                  onClick={handleLogOut}
+                  icon={<SignOut size={16} />}
+                  color="red"
+                >
+                  Log out
+                </Menu.Item>
+              </Menu.Dropdown>
+            </Menu>
+            {/* <Button
               component={Link}
               to="signin"
               variant="default"
               onClick={handleLogOut}
             >
               Log Out
-            </Button>
+            </Button> */}
           </Group>
 
           <Burger

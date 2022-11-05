@@ -26,12 +26,6 @@ function Experience() {
       />
       <Suspense fallback={null}>
         <EffectComposer>
-          <DepthOfField
-            focusDistance={0}
-            focalLength={0.2}
-            bokehScale={2}
-            height={480}
-          />
           <PerspectiveCamera makeDefault fov={50} position={[0, 20, 13]} />
           <Character />
           <mesh position={[0, -10, 0]} rotation={[-Math.PI / 2, 0, 0]}>
@@ -40,12 +34,12 @@ function Experience() {
               blur={[300, 100]}
               resolution={2048}
               mixBlur={1}
-              mixStrength={20}
-              roughness={1}
+              mixStrength={10}
+              roughness={10}
               depthScale={1.2}
               minDepthThreshold={0.4}
               maxDepthThreshold={1.4}
-              color="#050505"
+              color="#1a1a1a"
               metalness={0.5}
             />
           </mesh>
