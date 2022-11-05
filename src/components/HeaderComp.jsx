@@ -121,37 +121,38 @@ export function HeaderComp() {
             </Button>
           </Group>
 
-          <Group className={classes.hiddenMobile} hidden={!session}>
-            <Menu
-              width={240}
-              position="bottom-end"
-              transition="pop-top-right"
-              onClose={() => setUserMenuOpened(false)}
-              onOpen={() => setUserMenuOpened(true)}
-            >
-              <Menu.Target>
-                <UnstyledButton>
-                  <Group spacing={7}>
-                    <Avatar radius="xl" />
-                  </Group>
-                </UnstyledButton>
-              </Menu.Target>
-              <Menu.Dropdown>
-                {session.user && (
-                  <Menu.Item color="red">{session.user.email}</Menu.Item>
-                )}
-                <Menu.Item
-                  component={Link}
-                  to="signin"
-                  onClick={handleLogOut}
-                  icon={<SignOut size={16} />}
-                  color="red"
-                >
-                  Log out
-                </Menu.Item>
-              </Menu.Dropdown>
-            </Menu>
-            {/* <Button
+          {session !== null && (
+            <Group className={classes.hiddenMobile}>
+              <Menu
+                width={240}
+                position="bottom-end"
+                transition="pop-top-right"
+                onClose={() => setUserMenuOpened(false)}
+                onOpen={() => setUserMenuOpened(true)}
+              >
+                <Menu.Target>
+                  <UnstyledButton>
+                    <Group spacing={7}>
+                      <Avatar radius="xl" />
+                    </Group>
+                  </UnstyledButton>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  {session.user && (
+                    <Menu.Item color="red">{session.user.email}</Menu.Item>
+                  )}
+                  <Menu.Item
+                    component={Link}
+                    to="signin"
+                    onClick={handleLogOut}
+                    icon={<SignOut size={16} />}
+                    color="red"
+                  >
+                    Log out
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+              {/* <Button
               component={Link}
               to="signin"
               variant="default"
@@ -159,7 +160,8 @@ export function HeaderComp() {
             >
               Log Out
             </Button> */}
-          </Group>
+            </Group>
+          )}
 
           <Burger
             opened={drawerOpened}
