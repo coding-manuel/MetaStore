@@ -8,7 +8,6 @@ import { HeaderComp } from "../components/HeaderComp";
 
 export default function Creator() {
   const isDesktop = useMainStore((state) => state.isDesktop);
-  const menuOpen = useMainStore((state) => state.menuOpen);
   const handleMenuToggle = useMainStore((state) => state.handleMenuToggle);
 
   return (

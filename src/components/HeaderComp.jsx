@@ -123,7 +123,7 @@ export function HeaderComp() {
 
           <Group className={classes.hiddenMobile} hidden={!session}>
             <Menu
-              width={180}
+              width={240}
               position="bottom-end"
               transition="pop-top-right"
               onClose={() => setUserMenuOpened(false)}
@@ -137,6 +137,9 @@ export function HeaderComp() {
                 </UnstyledButton>
               </Menu.Target>
               <Menu.Dropdown>
+                {session.user && (
+                  <Menu.Item color="red">{session.user.email}</Menu.Item>
+                )}
                 <Menu.Item
                   component={Link}
                   to="signin"

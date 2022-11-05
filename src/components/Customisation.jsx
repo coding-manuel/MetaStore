@@ -14,7 +14,7 @@ export default function Customisation() {
   useEffect(() => {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
-  });
+  }, []);
 
   return (
     <Paper
@@ -79,7 +79,9 @@ const TabComponent = ({ isDesktop, handleMenuToggle }) => {
         my={16}
         value="bottom"
       >
-        <Title align="center" order={5} >Feature in Development</Title>
+        <Title align="center" order={5}>
+          Feature in Development
+        </Title>
       </Tabs.Panel>
 
       <Tabs.Panel value="body" my={16} sx={{ overflowY: "auto" }}>
