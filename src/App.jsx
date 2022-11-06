@@ -24,6 +24,17 @@ function App() {
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 
   const theme = {
+    globalStyles: (theme) => ({
+      body: {
+        minHeight: '100vh',
+  minHeight: '-webkit-fill-available',
+
+      },
+      html: {
+        height: '-webkit-fill-available',
+      }
+    }),
+
     components: globalStyles,
     colorScheme,
     primaryColor: "yellow",
