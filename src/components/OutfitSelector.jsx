@@ -6,28 +6,28 @@ export default function OutfitSelector() {
   const items = [
     {
       name: "Black T-shirt",
-      path: "/src/assets/black.png",
-      img: "src/assets/black-product.jpg",
+      path: "/assets/black.png",
+      img: "/assets/black-product.jpg",
     },
     {
       name: "Green T-shirt",
-      path: "/src/assets/green.png",
-      img: "src/assets/green-product.jpg",
+      path: "/assets/green.png",
+      img: "/assets/green-product.jpg",
     },
     {
       name: "Orange T-shirt",
-      path: "/src/assets/orange.png",
-      img: "src/assets/orange-product.jpg",
+      path: "/assets/orange.png",
+      img: "/assets/orange-product.jpg",
     },
     {
       name: "Red T-shirt",
-      path: "/src/assets/red.png",
-      img: "src/assets/red-product.jpg",
+      path: "/assets/red.png",
+      img: "/assets/red-product.jpg",
     },
     {
       name: "New Energy T-shirt",
-      path: "/src/assets/newenergy.png",
-      img: "src/assets/newenergy-product.png",
+      path: "/assets/newenergy.png",
+      img: "/assets/newenergy-product.png",
     },
   ];
   return (

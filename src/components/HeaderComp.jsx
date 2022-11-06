@@ -22,7 +22,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { CaretDown, SignOut } from "phosphor-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import Logo from "../assets/type-logo.svg";
+import Logo from "/assets/type-logo.svg";
 import useMainStore from "../store/mainStore";
 import { supabase } from "../utils/supabaseClient";
 

@@ -18,7 +18,7 @@ import Character from "./Character";
 function Experience() {
   return (
     <Canvas dpr={[1, 2]} shadows>
-      <ambientLight intensity={0.85} />
+      <ambientLight intensity={0.2} />
 
       <OrbitControls
         minPolarAngle={Math.PI / 2.3}
@@ -32,7 +32,7 @@ function Experience() {
             <planeGeometry args={[200, 200]} position={[0, 0, 0]} />
             <MeshReflectorMaterial
               blur={[300, 100]}
-              resolution={2048}
+              resolution={1024}
               mixBlur={1}
               mixStrength={10}
               roughness={10}

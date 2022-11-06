@@ -1,16 +1,14 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useLoader } from "@react-three/fiber";
 import { useGLTF, useAnimations, useHelper } from "@react-three/drei";
-import { BoxHelper, TextureLoader } from "three";
+import { TextureLoader } from "three";
 import useCharacterStore from "../store/characterStore";
-import { Texture } from "@react-three/postprocessing";
 
 export default function Model() {
   const group = useRef(null);
   const { nodes, materials, animations } = useGLTF(
-    "/src/assets/models/male_model.glb"
+    "/assets/models/male_model.glb"
   );
-  const mogi = useGLTF("/src/assets/models/shoe_2.glb");
 
   const { actions } = useAnimations(animations, group);
 
@@ -38,7 +36,9 @@ export default function Model() {
   const customLoader = () => {
     const x = useLoader(TextureLoader, topTexture);
     x.flipY = false;
-    setTpTexture(x);
+    // setTpTexture(x);
+    material.current.map = x;
+    // console.log(material.current);
   };
 
   return (
@@ -111,7 +111,7 @@ export default function Model() {
           >
             <meshStandardMaterial
               ref={material}
-              map={tpTexture}
+              // map={tpTexture}
             ></meshStandardMaterial>
           </skinnedMesh>
           <skinnedMesh
@@ -142,5 +142,4 @@ export default function Model() {
   );
 }
 
-useGLTF.preload("/src/assets/models/shoe_2.glb");
-useGLTF.preload("/src/assets/models/male_model.glb");
+useGLTF.preload("/assets/models/male_model.glb");

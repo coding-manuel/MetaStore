@@ -16,7 +16,7 @@ const characterStore = (set) => ({
   },
 
   texture: {
-    top: "/src/assets/orange.png",
+    top: "/assets/orange.png",
   },
 
   updateTexture(type, path) {

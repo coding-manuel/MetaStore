@@ -15,7 +15,7 @@ import {
 
 import { supabase } from "../utils/supabaseClient";
 import { Link } from "react-router-dom";
-import Logo from "../assets/type-logo.svg";
+import Logo from "/assets/type-logo.svg";
 
 export function SignUp() {
   const [loading, setLoading] = useState(false);
