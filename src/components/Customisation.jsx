@@ -8,13 +8,7 @@ import BodyCustomise from "./BodyCustomise";
 export default function Customisation() {
   const menuOpen = useMainStore((state) => state.menuOpen);
   const isDesktop = useMainStore((state) => state.isDesktop);
-  const onResize = useMainStore((state) => state.onResize);
   const handleMenuToggle = useMainStore((state) => state.handleMenuToggle);
-
-  useEffect(() => {
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
 
   return (
     <Paper
