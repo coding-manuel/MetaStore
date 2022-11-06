@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { MantineProvider, ColorSchemeProvider, Global } from "@mantine/core";
 import { NotificationsProvider } from "@mantine/notifications";
-import { useLocalStorage } from "@mantine/hooks";
+import { useLocalStorage, useViewportSize } from "@mantine/hooks";
 import { supabase } from "./utils/supabaseClient";
 
 import { globalStyles, bodyStyles } from "./globalStyles";
@@ -14,6 +14,7 @@ import useMainStore from "./store/mainStore";
 function App() {
   const setSession = useMainStore((state) => state.setSession);
   const session = useMainStore((state) => state.user);
+  const { width, height } = useViewportSize()
   const [colorScheme, setColorScheme] = useLocalStorage({
     key: "mantine-color-scheme",
     defaultValue: "dark",
@@ -26,12 +27,12 @@ function App() {
   const theme = {
     globalStyles: (theme) => ({
       body: {
-        minHeight: '100vh',
-  minHeight: '-webkit-fill-available',
+        minHeight: height,
+        // minHeight: '-webkit-fill-available',
 
       },
       html: {
-        height: '-webkit-fill-available',
+        // height: '-webkit-fill-available',
       }
     }),
 
