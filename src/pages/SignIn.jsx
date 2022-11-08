@@ -16,6 +16,8 @@ import {
 import { supabase } from "../utils/supabaseClient";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "/assets/type-logo.svg";
+import { showNotification } from "@mantine/notifications";
+import { notificationStyles } from "../globalStyles";
 
 export function SignIn() {
   const [loading, setLoading] = useState(false);
@@ -37,16 +39,22 @@ export function SignIn() {
   const handleLogin = async (values) => {
     try {
       setLoading(true);
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
       });
+
       setLoading(false);
-      if (data) navigate("/");
+
       if (error) throw error;
+
+      navigate("/");
     } catch (error) {
-      alert(error.error_description || error.message);
-      setLoading(false);
+      showNotification({
+        title: error.error_description || error.message,
+        styles: notificationStyles,
+      });
     }
   };
 

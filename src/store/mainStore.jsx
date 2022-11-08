@@ -1,9 +1,18 @@
 import create from "zustand";
+import { supabase } from "../utils/supabaseClient";
 
 const mainStore = (set) => ({
   menuOpen: false,
   isDesktop: true,
   user: "null",
+
+  useAuth() {
+    const { data, error } = supabase.auth.getSession();
+    set(() => ({
+      user: data,
+    }));
+    return data;
+  },
 
   setSession(session) {
     set(() => ({
@@ -12,6 +21,10 @@ const mainStore = (set) => ({
   },
 
   onResize: () => {
+    document
+      .querySelector(":root")
+      .style.setProperty("--vh", window.innerHeight / 100 + "px");
+
     set(() => ({
       isDesktop: window.innerWidth > 700,
     }));

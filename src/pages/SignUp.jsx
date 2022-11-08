@@ -14,11 +14,15 @@ import {
 } from "@mantine/core";
 
 import { supabase } from "../utils/supabaseClient";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "/assets/type-logo.svg";
+import { showNotification } from "@mantine/notifications";
+import { notificationStyles } from "../globalStyles";
 
 export function SignUp() {
   const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const form = useForm({
     initialValues: {
@@ -35,16 +39,32 @@ export function SignUp() {
   const handleLogin = async (values) => {
     try {
       setLoading(true);
+
       const { data, error } = await supabase.auth.signUp({
-        name: values.name,
         email: values.email,
         password: values.password,
+        options: {
+          data: {
+            full_name: values.name,
+          },
+        },
       });
+
       setLoading(false);
+
       if (error) throw error;
+
+      showNotification({
+        title: "Login using your credentials",
+        styles: notificationStyles,
+      });
+
+      navigate("/signin");
     } catch (error) {
-      alert(error.error_description || error.message);
-      setLoading(false);
+      showNotification({
+        title: error.error_description || error.message,
+        styles: notificationStyles,
+      });
     }
   };
 

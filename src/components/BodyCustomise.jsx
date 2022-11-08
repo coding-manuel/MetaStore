@@ -1,27 +1,71 @@
 import React, { useEffect, useState } from "react";
-import { Group, Slider, Text, Stack, Box, Paper, Title } from "@mantine/core";
+import {
+  Group,
+  Slider,
+  Text,
+  Stack,
+  Box,
+  Paper,
+  Title,
+  Button,
+} from "@mantine/core";
 import useCharacterStore from "../store/characterStore";
 import { useTheme } from "@emotion/react";
+import useMainStore from "../store/mainStore";
+import { X } from "phosphor-react";
 
 export default function BodyCustomise() {
   const shapeKeys = useCharacterStore((state) => state.shapeKeys);
+  const isDesktop = useMainStore((state) => state.isDesktop);
+  const menuOpen = useMainStore((state) => state.menuOpen);
+  const handleMenuToggle = useMainStore((state) => state.handleMenuToggle);
+
   const theme = useTheme();
   return (
-    <Stack spacing={16} mx={8}>
-      <Group grow>
-        <CustomSizeButton size="S" />
-        <CustomSizeButton size="M" />
-        <CustomSizeButton size="L" />
-        <CustomSizeButton size="XL" />
-      </Group>
-      <CustomSlider shapeKey="stomach" value={shapeKeys.stomach} />
-      <CustomSlider shapeKey="chest" value={shapeKeys.chest} />
-      <CustomSlider shapeKey="waist" value={shapeKeys.waist} />
-      <CustomSlider shapeKey="butt" value={shapeKeys.butt} />
-      <CustomSlider shapeKey="thighs" value={shapeKeys.thighs} />
-      <CustomSlider shapeKey="calves" value={shapeKeys.calves} />
-      <CustomSlider shapeKey="hands" value={shapeKeys.hands} />
-    </Stack>
+    <Paper
+      shadow="sm"
+      p="md"
+      sx={
+        isDesktop
+          ? {
+              height: "100%",
+              maxWidth: 900,
+            }
+          : {
+              position: "absolute",
+              top: 0,
+              right: !menuOpen ? "100%" : "0%",
+              width: "100%",
+              zIndex: 100,
+              height: "100%",
+              transition: ".25s ease",
+            }
+      }
+    >
+      <Stack px={16} sx={{ height: "inherit", overflow: "auto" }}>
+        <Group position="apart">
+          <Text>Profile</Text>
+          {!isDesktop && (
+            <Button onClick={handleMenuToggle}>
+              <X size={16} weight="bold" />
+            </Button>
+          )}
+        </Group>
+        <Group grow>
+          <CustomSizeButton size="S" />
+          <CustomSizeButton size="M" />
+          <CustomSizeButton size="L" />
+          <CustomSizeButton size="XL" />
+        </Group>
+        <CustomSlider shapeKey="stomach" value={shapeKeys.stomach} />
+        <CustomSlider shapeKey="chest" value={shapeKeys.chest} />
+        <CustomSlider shapeKey="waist" value={shapeKeys.waist} />
+        <CustomSlider shapeKey="butt" value={shapeKeys.butt} />
+        <CustomSlider shapeKey="thighs" value={shapeKeys.thighs} />
+        <CustomSlider shapeKey="calves" value={shapeKeys.calves} />
+        <CustomSlider shapeKey="hands" value={shapeKeys.hands} />
+      </Stack>
+    </Paper>
   );
 }
 

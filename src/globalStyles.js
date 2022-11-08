@@ -35,29 +35,14 @@ export const globalStyles = {
 
   Menu: {
     styles: (theme) => ({
-      body: {
-        padding: 0,
-        background: "transparent",
-        border: "none",
-        boxShadow: "none",
-      },
       item: {
         padding: "6px 8px",
-        background:
-          theme.colorScheme !== "dark"
-            ? theme.colors.gray[0]
-            : theme.colors.dark[6],
-        border: `1px solid ${
-          theme.colorScheme === "dark" ? theme.white : theme.black
-        }`,
         margin: "2px 0",
-      },
-      itemHovered: {
-        backgroundColor: `${
-          theme.colorScheme !== "dark"
-            ? theme.colors.orange[3]
-            : theme.colors.dark[5]
-        }!important`,
+        color: theme.colors.gray[1],
+        '&[data-hovered]': {
+          backgroundColor: theme.colors.yellow[4],
+          color: theme.white,
+        },
       },
     }),
   },
@@ -159,12 +144,10 @@ export const notificationStyles = (theme) => ({
   },
   title: {
     color: `${theme.colorScheme === "dark" ? theme.white : theme.black}`,
-    fontSize: 12,
     fontWeight: 600,
   },
-  description: {
+  message: {
     color: `${theme.colorScheme === "dark" ? theme.white : theme.black}`,
-    fontSize: 10,
   },
   closeButton: {
     color: `${theme.colorScheme === "dark" ? theme.white : theme.black}`,
@@ -198,5 +181,12 @@ export const bodyStyles = () => ({
 	  border: 'none',
   },
 
-  "#root": { height: "100vh" },
+  'body': {
+    overflow: 'hidden',
+    height: 'calc(100 * var(--vh))'
+  },
+
+  '#root': {
+    height: 'inherit'
+  }
 });

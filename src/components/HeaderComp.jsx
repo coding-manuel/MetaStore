@@ -19,7 +19,7 @@ import {
   Menu,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { CaretDown, SignOut } from "phosphor-react";
+import { CaretDown, SignOut, User } from "phosphor-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "/assets/type-logo.svg";
@@ -113,10 +113,10 @@ export function HeaderComp() {
           <img src={Logo} style={{ height: 20 }} />
 
           <Group className={classes.hiddenMobile} hidden={session}>
-            <Button component={Link} to="signin" variant="default">
+            <Button component={Link} to="/signin" variant="default">
               Log in
             </Button>
-            <Button component={Link} to="signup">
+            <Button component={Link} to="/signup">
               Sign up
             </Button>
           </Group>
@@ -124,7 +124,7 @@ export function HeaderComp() {
           {session !== null && (
             <Group className={classes.hiddenMobile}>
               <Menu
-                width={240}
+                width={180}
                 position="bottom-end"
                 transition="pop-top-right"
                 onClose={() => setUserMenuOpened(false)}
@@ -138,12 +138,16 @@ export function HeaderComp() {
                   </UnstyledButton>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  {session.user && (
-                    <Menu.Item color="red">{session.user.email}</Menu.Item>
-                  )}
                   <Menu.Item
                     component={Link}
-                    to="signin"
+                    to="/profile"
+                    icon={<User size={16} />}
+                  >
+                    Profile
+                  </Menu.Item>
+                  <Menu.Item
+                    component={Link}
+                    to="/signin"
                     onClick={handleLogOut}
                     icon={<SignOut size={16} />}
                     color="red"
@@ -152,14 +156,6 @@ export function HeaderComp() {
                   </Menu.Item>
                 </Menu.Dropdown>
               </Menu>
-              {/* <Button
-              component={Link}
-              to="signin"
-              variant="default"
-              onClick={handleLogOut}
-            >
-              Log Out
-            </Button> */}
             </Group>
           )}
 
@@ -208,12 +204,39 @@ export function HeaderComp() {
             color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
           />
 
-          <Group position="center" grow pb="xl" px="md">
-            <Button component={Link} to="signin" variant="default">
+          <Group
+            hidden={session !== null}
+            position="center"
+            grow
+            pb="xl"
+            px="md"
+          >
+            <Button component={Link} to="/signin" variant="default">
               Log in
             </Button>
-            <Button component={Link} to="signup">
+            <Button component={Link} to="/signup">
               Sign up
+            </Button>
+          </Group>
+
+          <Group
+            hidden={session === null}
+            position="center"
+            grow
+            pb="xl"
+            px="md"
+          >
+            <Button component={Link} to="/profile" icon={<User size={16} />}>
+              Profile
+            </Button>
+            <Button
+              component={Link}
+              to="/signin"
+              onClick={handleLogOut}
+              icon={<SignOut size={16} />}
+              color="red"
+            >
+              Log out
             </Button>
           </Group>
         </ScrollArea>

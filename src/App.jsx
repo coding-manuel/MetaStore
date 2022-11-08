@@ -1,20 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { MantineProvider, ColorSchemeProvider, Global } from "@mantine/core";
-import { NotificationsProvider } from "@mantine/notifications";
-import { useLocalStorage, useViewportSize } from "@mantine/hooks";
+import {
+  NotificationsProvider,
+  showNotification,
+} from "@mantine/notifications";
+import { useLocalStorage } from "@mantine/hooks";
 import { supabase } from "./utils/supabaseClient";
 
-import { globalStyles, bodyStyles } from "./globalStyles";
+import { globalStyles, bodyStyles, notificationStyles } from "./globalStyles";
 import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Creator from "./pages/Creator";
 import useMainStore from "./store/mainStore";
+import Profile from "./pages/Profile";
 
 function App() {
   const setSession = useMainStore((state) => state.setSession);
   const session = useMainStore((state) => state.user);
-  const { width, height } = useViewportSize()
+  const onResize = useMainStore((state) => state.onResize);
+
   const [colorScheme, setColorScheme] = useLocalStorage({
     key: "mantine-color-scheme",
     defaultValue: "dark",
@@ -25,17 +30,6 @@ function App() {
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
 
   const theme = {
-    globalStyles: (theme) => ({
-      body: {
-        minHeight: height,
-        // minHeight: '-webkit-fill-available',
-
-      },
-      html: {
-        // height: '-webkit-fill-available',
-      }
-    }),
-
     components: globalStyles,
     colorScheme,
     primaryColor: "yellow",
@@ -95,6 +89,16 @@ function App() {
     });
   }, []);
 
+  useEffect(() => {
+    document
+      .querySelector(":root")
+      .style.setProperty("--vh", window.innerHeight / 100 + "px");
+
+    window.addEventListener("resize", onResize);
+    onResize();
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   return (
     <ColorSchemeProvider
       colorScheme={colorScheme}
@@ -106,6 +110,14 @@ function App() {
           <Routes>
             <Route path="/signin" element={<SignIn />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute user={session}>
+                  <Profile />
+                </PrivateRoute>
+              }
+            />
             <Route path="/" element={<Creator />} />
           </Routes>
         </NotificationsProvider>
@@ -113,5 +125,18 @@ function App() {
     </ColorSchemeProvider>
   );
 }
+
+const PrivateRoute = ({ user, children }) => {
+  if (!user) {
+    showNotification({
+      title: "Session Expired",
+      message: "Cannot find your session",
+      styles: notificationStyles,
+    });
+    return <Navigate to="/signin" replace />;
+  }
+
+  return children;
+};
 
 export default App;

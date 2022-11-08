@@ -1,15 +1,14 @@
-import React, { useEffect } from "react";
-import Experience from "../components/Experience";
-import Customisation from "../components/Customisation";
-import { Group, Box, Button, Stack } from "@mantine/core";
-import { DotsThree } from "phosphor-react";
+import { Stack, Group, Box, Button } from "@mantine/core";
+import React from "react";
 import useMainStore from "../store/mainStore";
 import { HeaderComp } from "../components/HeaderComp";
+import Experience from "../components/Experience";
+import BodyCustomise from "../components/BodyCustomise";
+import { DotsThree } from "phosphor-react";
 
-export default function Creator() {
+export default function Profile() {
   const isDesktop = useMainStore((state) => state.isDesktop);
   const handleMenuToggle = useMainStore((state) => state.handleMenuToggle);
-
   return (
     <Stack spacing={0} sx={{ height: "inherit" }}>
       <HeaderComp />
@@ -19,7 +18,7 @@ export default function Creator() {
         spacing={0}
         sx={{ flexGrow: 1, overflow: "hidden" }}
       >
-        <Customisation />
+        <BodyCustomise />
         <Box
           sx={{
             width: "100%",

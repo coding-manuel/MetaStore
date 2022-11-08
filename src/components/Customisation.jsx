@@ -47,12 +47,11 @@ const TabComponent = ({ isDesktop, handleMenuToggle }) => {
         flexDirection: "column",
       }}
       variant="pills"
-      defaultValue="body"
+      defaultValue="top"
     >
       <Tabs.List grow position="center">
         <Tabs.Tab value="top">Top</Tabs.Tab>
         <Tabs.Tab value="bottom">Bottom</Tabs.Tab>
-        <Tabs.Tab value="body">Body</Tabs.Tab>
         {!isDesktop && (
           <Button onClick={handleMenuToggle}>
             <X size={16} weight="bold" />
@@ -76,10 +75,6 @@ const TabComponent = ({ isDesktop, handleMenuToggle }) => {
         <Title align="center" order={5}>
           Feature in Development
         </Title>
-      </Tabs.Panel>
-
-      <Tabs.Panel value="body" my={16} sx={{ overflowY: "auto" }}>
-        <BodyCustomise />
       </Tabs.Panel>
     </Tabs>
   );
