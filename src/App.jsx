@@ -6,19 +6,24 @@ import {
 } from "@mantine/notifications";
 import { useLocalStorage } from "@mantine/hooks";
 import { supabase } from "./utils/supabaseClient";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import { globalStyles, bodyStyles, notificationStyles } from "./globalStyles";
 import { SignIn } from "./pages/SignIn";
 import { SignUp } from "./pages/SignUp";
-import { Navigate, Route, Routes } from "react-router-dom";
 import Creator from "./pages/Creator";
-import useMainStore from "./store/mainStore";
 import Profile from "./pages/Profile";
+import Home from "./pages/Home";
+import useMainStore from "./store/mainStore";
+import CreateShop from "./pages/CreateShop";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const setSession = useMainStore((state) => state.setSession);
   const session = useMainStore((state) => state.user);
   const onResize = useMainStore((state) => state.onResize);
+  const setRole = useMainStore((state) => state.setRole);
+  const role = useMainStore((state) => state.role);
 
   const [colorScheme, setColorScheme] = useLocalStorage({
     key: "mantine-color-scheme",
@@ -82,6 +87,7 @@ function App() {
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
+      setRole(session.user.id);
     });
 
     supabase.auth.onAuthStateChange((_event, session) => {
@@ -108,8 +114,26 @@ function App() {
         <NotificationsProvider>
           <Global styles={bodyStyles} />
           <Routes>
+            <Route path="/" element={<Home />} />
             <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp />} />
+            <Route path="/signup" element={<SignUp create={false} />} />
+            <Route path="/adminsignup" element={<SignUp create={true} />} />
+            <Route
+              path="/createshop"
+              element={
+                <PrivateRoute user={session}>
+                  <CreateShop />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/dashboard/:id"
+              element={
+                <AdminRoute role={role}>
+                  <Dashboard />
+                </AdminRoute>
+              }
+            />
             <Route
               path="/profile"
               element={
@@ -118,7 +142,7 @@ function App() {
                 </PrivateRoute>
               }
             />
-            <Route path="/" element={<Creator />} />
+            <Route path="/creator" element={<Creator />} />
           </Routes>
         </NotificationsProvider>
       </MantineProvider>
@@ -134,6 +158,18 @@ const PrivateRoute = ({ user, children }) => {
       styles: notificationStyles,
     });
     return <Navigate to="/signin" replace />;
+  }
+
+  return children;
+};
+
+const AdminRoute = ({ role, children }) => {
+  if (role !== "owner") {
+    showNotification({
+      title: "Looks like you were lost",
+      styles: notificationStyles,
+    });
+    return <Navigate to="/" replace />;
   }
 
   return children;

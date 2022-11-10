@@ -1,11 +1,14 @@
 import create from "zustand";
+import { devtools, persist } from "zustand/middleware";
 import { supabase } from "../utils/supabaseClient";
 
 const mainStore = (set) => ({
   menuOpen: false,
   isDesktop: true,
-  user: "null",
+  user: null,
+  role: null,
 
+  /* AUTH FUNCTION */
   useAuth() {
     const { data, error } = supabase.auth.getSession();
     set(() => ({
@@ -14,12 +17,32 @@ const mainStore = (set) => ({
     return data;
   },
 
+  async handleLogOut() {
+    let { error } = await supabase.auth.signOut();
+    set(() => ({
+      user: null,
+      role: null,
+    }));
+  },
+
+  async setRole(userId) {
+    const role = await supabase
+      .from("profiles")
+      .select("role")
+      .eq("id", userId);
+
+    set(() => ({
+      role: role.data[0].role,
+    }));
+  },
+
   setSession(session) {
     set(() => ({
       user: session,
     }));
   },
 
+  /* UI FUNCTION */
   onResize: () => {
     document
       .querySelector(":root")
@@ -36,7 +59,6 @@ const mainStore = (set) => ({
     }));
   },
 });
-
-const useMainStore = create(mainStore);
+const useMainStore = create(persist(devtools(mainStore)));
 
 export default useMainStore;

@@ -52,6 +52,6 @@ const characterStore = (set) => ({
   },
 });
 
-const useCharacterStore = create(devtools(characterStore));
+const useCharacterStore = create(persist(devtools(characterStore)));
 
 export default useCharacterStore;

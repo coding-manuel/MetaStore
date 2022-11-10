@@ -19,7 +19,7 @@ import Logo from "/assets/type-logo.svg";
 import { showNotification } from "@mantine/notifications";
 import { notificationStyles } from "../globalStyles";
 
-export function SignUp() {
+export function SignUp({ create }) {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -54,12 +54,13 @@ export function SignUp() {
 
       if (error) throw error;
 
-      showNotification({
-        title: "Login using your credentials",
-        styles: notificationStyles,
-      });
+      !create &&
+        showNotification({
+          title: "Login using your credentials",
+          styles: notificationStyles,
+        });
 
-      navigate("/signin");
+      create ? navigate("/createshop") : navigate("/signin");
     } catch (error) {
       showNotification({
         title: error.error_description || error.message,

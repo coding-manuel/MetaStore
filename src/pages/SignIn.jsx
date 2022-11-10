@@ -18,11 +18,13 @@ import { Link, useNavigate } from "react-router-dom";
 import Logo from "/assets/type-logo.svg";
 import { showNotification } from "@mantine/notifications";
 import { notificationStyles } from "../globalStyles";
+import useMainStore from "../store/mainStore";
 
 export function SignIn() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const setRole = useMainStore((state) => state.setRole);
 
   const navigate = useNavigate();
 
@@ -44,6 +46,8 @@ export function SignIn() {
         email: values.email,
         password: values.password,
       });
+
+      setRole(data.user.id);
 
       setLoading(false);
 

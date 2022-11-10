@@ -118,15 +118,12 @@ export const globalStyles = {
     }),
   },
 
-  Textarea: {
-    styles: () => ({
-      input: {
-        paddingTop: "8px !important",
-        paddingBottom: "4px !important",
-        height: "35px",
-      },
-    }),
-  },
+  // MultiSelect: {
+  //   styles: () => ({
+  //     input: {
+  //     },
+  //   }),
+  // },
 };
 
 export const notificationStyles = (theme) => ({
@@ -182,8 +179,8 @@ export const bodyStyles = () => ({
   },
 
   'body': {
-    overflow: 'hidden',
-    height: 'calc(100 * var(--vh))'
+    // overflow: 'hidden',
+    height: 'calc(100 * var(--vh) - 1px)'
   },
 
   '#root': {

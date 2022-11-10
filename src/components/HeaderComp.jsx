@@ -101,10 +101,7 @@ export function HeaderComp() {
   const { classes, theme } = useStyles();
   const session = useMainStore((state) => state.user);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
-
-  const handleLogOut = async () => {
-    let { error } = await supabase.auth.signOut();
-  };
+  const handleLogOut = useMainStore((state) => state.handleLogOut);
 
   return (
     <Box>
