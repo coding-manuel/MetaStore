@@ -4,10 +4,6 @@ import {
   Group,
   Button,
   UnstyledButton,
-  Text,
-  SimpleGrid,
-  ThemeIcon,
-  Anchor,
   Divider,
   Center,
   Box,
@@ -17,11 +13,12 @@ import {
   Avatar,
   ActionIcon,
   Menu,
+  Image,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { CaretDown, SignOut, User } from "phosphor-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Logo from "/assets/type-logo.svg";
 import useMainStore from "../store/mainStore";
 import { supabase } from "../utils/supabaseClient";
@@ -100,18 +97,26 @@ export function HeaderComp() {
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
   const { classes, theme } = useStyles();
 
-  const session = useMainStore((state) => state.user);
+  const userId = useMainStore((state) => state.user);
+  const shopName = useMainStore((state) => state.shopName);
   const role = useMainStore((state) => state.role);
-  const [userMenuOpened, setUserMenuOpened] = useState(false);
   const handleLogOut = useMainStore((state) => state.handleLogOut);
+
+  const navigate = useNavigate();
+
+  const [userMenuOpened, setUserMenuOpened] = useState(false);
 
   return (
     <Box>
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
-          <img src={Logo} style={{ height: 20 }} />
+          <img
+            onClick={() => navigate("/")}
+            src={Logo}
+            style={{ height: 20, cursor: "pointer" }}
+          />
 
-          <Group className={classes.hiddenMobile} hidden={session}>
+          <Group className={classes.hiddenMobile} hidden={userId}>
             <Button component={Link} to="/signin" variant="default">
               Log in
             </Button>
@@ -120,7 +125,7 @@ export function HeaderComp() {
             </Button>
           </Group>
 
-          {session !== null && (
+          {userId !== null && (
             <Group className={classes.hiddenMobile}>
               <Menu
                 width={180}
@@ -140,7 +145,7 @@ export function HeaderComp() {
                   {role == "owner" ? (
                     <Menu.Item
                       component={Link}
-                      to="/dashboard"
+                      to={`/dashboard/${shopName}`}
                       icon={<User size={16} />}
                     >
                       Shop Page
@@ -214,7 +219,7 @@ export function HeaderComp() {
           />
 
           <Group
-            hidden={session !== null}
+            hidden={userId !== null}
             position="center"
             grow
             pb="xl"
@@ -229,7 +234,7 @@ export function HeaderComp() {
           </Group>
 
           <Group
-            hidden={session === null}
+            hidden={userId === null}
             position="center"
             grow
             pb="xl"

@@ -19,8 +19,8 @@ import CreateShop from "./pages/CreateShop";
 import Dashboard from "./pages/Dashboard";
 
 function App() {
-  const setSession = useMainStore((state) => state.setSession);
-  const session = useMainStore((state) => state.user);
+  const setUserData = useMainStore((state) => state.setUserData);
+  const userId = useMainStore((state) => state.user);
   const onResize = useMainStore((state) => state.onResize);
   const setRole = useMainStore((state) => state.setRole);
   const role = useMainStore((state) => state.role);
@@ -86,12 +86,11 @@ function App() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setRole(session.user.id);
+      setUserData(session);
     });
 
     supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
+      setUserData(session);
     });
   }, []);
 
@@ -121,7 +120,7 @@ function App() {
             <Route
               path="/createshop"
               element={
-                <PrivateRoute user={session}>
+                <PrivateRoute user={userId}>
                   <CreateShop />
                 </PrivateRoute>
               }
@@ -137,7 +136,7 @@ function App() {
             <Route
               path="/profile"
               element={
-                <PrivateRoute user={session}>
+                <PrivateRoute user={userId}>
                   <Profile />
                 </PrivateRoute>
               }

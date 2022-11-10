@@ -45,7 +45,7 @@ export default function CreateShop() {
   const [shopName, setShopName] = useState("");
   const [shopNameError, setShopNameError] = useState("");
   const [scale, setScale] = useState(1);
-  const session = useMainStore((state) => state.user);
+  const userId = useMainStore((state) => state.user);
 
   const navigate = useNavigate();
 
@@ -100,7 +100,7 @@ export default function CreateShop() {
         });
 
       const { error } = await supabase.from("shops").insert({
-        id: session.user.id,
+        id: userId,
         shop_name: shopName,
         shop_description: values.description,
         shop_address: values.address,
@@ -119,7 +119,7 @@ export default function CreateShop() {
           role: "owner",
           shop_id: shop_id.data[0].shop_id,
         })
-        .eq("id", session.user.id);
+        .eq("id", userId);
 
       navigate(`/dashboard/${shopName}`);
     } catch (error) {

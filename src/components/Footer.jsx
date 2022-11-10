@@ -30,7 +30,7 @@ export default function Footer() {
   const { classes } = useStyles();
   const links = [
     {
-      label: "Retailers",
+      label: "Shop Setup",
       link: "/adminsignup",
     },
     {

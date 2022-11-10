@@ -7,6 +7,7 @@ const mainStore = (set) => ({
   isDesktop: true,
   user: null,
   role: null,
+  shopName: null,
 
   /* AUTH FUNCTION */
   useAuth() {
@@ -22,23 +23,27 @@ const mainStore = (set) => ({
     set(() => ({
       user: null,
       role: null,
+      shopName: null,
     }));
   },
 
-  async setRole(userId) {
+  async setUserData(session) {
+    const userId = session.user.id;
+
     const role = await supabase
       .from("profiles")
       .select("role")
       .eq("id", userId);
 
-    set(() => ({
-      role: role.data[0].role,
-    }));
-  },
+    const shop = await supabase
+      .from("shops")
+      .select("shop_name")
+      .eq("id", userId);
 
-  setSession(session) {
     set(() => ({
-      user: session,
+      user: userId,
+      role: role.data[0].role,
+      shopName: shop.data[0].shop_name,
     }));
   },
 
