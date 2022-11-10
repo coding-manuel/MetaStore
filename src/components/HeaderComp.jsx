@@ -99,7 +99,9 @@ export function HeaderComp() {
     useDisclosure(false);
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
   const { classes, theme } = useStyles();
+
   const session = useMainStore((state) => state.user);
+  const role = useMainStore((state) => state.role);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
   const handleLogOut = useMainStore((state) => state.handleLogOut);
 
@@ -135,13 +137,23 @@ export function HeaderComp() {
                   </UnstyledButton>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Item
-                    component={Link}
-                    to="/profile"
-                    icon={<User size={16} />}
-                  >
-                    Profile
-                  </Menu.Item>
+                  {role == "owner" ? (
+                    <Menu.Item
+                      component={Link}
+                      to="/dashboard"
+                      icon={<User size={16} />}
+                    >
+                      Shop Page
+                    </Menu.Item>
+                  ) : (
+                    <Menu.Item
+                      component={Link}
+                      to="/profile"
+                      icon={<User size={16} />}
+                    >
+                      Profile
+                    </Menu.Item>
+                  )}
                   <Menu.Item
                     component={Link}
                     to="/signin"

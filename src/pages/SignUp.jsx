@@ -50,9 +50,9 @@ export function SignUp({ create }) {
         },
       });
 
-      setLoading(false);
-
       if (error) throw error;
+
+      setLoading(false);
 
       !create &&
         showNotification({

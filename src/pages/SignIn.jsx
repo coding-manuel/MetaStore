@@ -47,14 +47,15 @@ export function SignIn() {
         password: values.password,
       });
 
+      if (error) throw error;
+
       setRole(data.user.id);
 
       setLoading(false);
 
-      if (error) throw error;
-
       navigate("/");
     } catch (error) {
+      console.log(error.error_description);
       showNotification({
         title: error.error_description || error.message,
         styles: notificationStyles,
