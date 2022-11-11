@@ -24,7 +24,7 @@ export function SignIn() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const setRole = useMainStore((state) => state.setRole);
+  const setUserData = useMainStore((state) => state.setUserData);
 
   const navigate = useNavigate();
 
@@ -49,13 +49,14 @@ export function SignIn() {
 
       if (error) throw error;
 
-      setRole(data.user.id);
+      setUserData(data.user.id);
 
       setLoading(false);
 
       navigate("/");
     } catch (error) {
-      console.log(error.error_description);
+      setLoading(false);
+
       showNotification({
         title: error.error_description || error.message,
         styles: notificationStyles,
