@@ -126,11 +126,13 @@ function App() {
               }
             />
             <Route
-              path="/dashboard/:id"
+              path="/dashboard/:shop_id"
               element={
-                <AdminRoute role={role}>
-                  <Dashboard />
-                </AdminRoute>
+                <PrivateRoute user={userId}>
+                  <AdminRoute role={role}>
+                    <Dashboard />
+                  </AdminRoute>
+                </PrivateRoute>
               }
             />
             <Route

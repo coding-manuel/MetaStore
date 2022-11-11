@@ -37,14 +37,24 @@ const mainStore = (set) => ({
 
     const shop = await supabase
       .from("shops")
-      .select("shop_name")
+      .select("shop_id")
       .eq("id", userId);
 
     set(() => ({
       user: userId,
       role: role.data[0].role,
-      shopName: shop.data[0].shop_name,
+      shopName: shop.data[0].shop_id,
     }));
+  },
+
+  async fetchShop(shop_id) {
+    const shop = await supabase
+      .from("shops")
+      .select("*")
+      .eq("shop_id", shop_id)
+      .single();
+
+    return shop;
   },
 
   /* UI FUNCTION */

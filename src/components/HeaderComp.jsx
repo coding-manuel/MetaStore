@@ -240,14 +240,28 @@ export function HeaderComp() {
             pb="xl"
             px="md"
           >
-            <Button component={Link} to="/profile" icon={<User size={16} />}>
-              Profile
-            </Button>
+            {role == "owner" ? (
+              <Button
+                component={Link}
+                to={`/dashboard/${shopName}`}
+                leftIcon={<User size={16} />}
+              >
+                Shop Page
+              </Button>
+            ) : (
+              <Button
+                component={Link}
+                to="/profile"
+                leftIcon={<User size={16} />}
+              >
+                Profile
+              </Button>
+            )}
             <Button
               component={Link}
               to="/signin"
               onClick={handleLogOut}
-              icon={<SignOut size={16} />}
+              leftIcon={<SignOut size={16} />}
               color="red"
             >
               Log out

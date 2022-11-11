@@ -121,7 +121,7 @@ export default function CreateShop() {
         })
         .eq("id", userId);
 
-      navigate(`/dashboard/${shopName}`);
+      navigate(`/dashboard/${shop_id.data[0].shop_id}`);
     } catch (error) {
       console.log(error);
     } finally {
