@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import {
   TextInput,
@@ -15,12 +15,15 @@ import {
 
 import { supabase } from "../utils/supabaseClient";
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "/assets/type-logo.svg";
 import { showNotification } from "@mantine/notifications";
 import { notificationStyles } from "../globalStyles";
+import useMainStore from "../store/mainStore";
+import { FootLayout } from "../components/Layout";
 
-export function SignUp({ create }) {
+export function SignUp() {
   const [loading, setLoading] = useState(false);
+  const userId = useMainStore((state) => state.user);
+  const setUserData = useMainStore((state) => state.setUserData);
 
   const navigate = useNavigate();
 
@@ -29,10 +32,13 @@ export function SignUp({ create }) {
       name: "",
       email: "",
       password: "",
+      verifypassword: "",
     },
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
       name: (value) => (value.length < 3 ? "Invalid Name" : null),
+      verifypassword: (value, values) =>
+        value !== values.password ? "Passwords did not match" : null,
     },
   });
 
@@ -54,14 +60,21 @@ export function SignUp({ create }) {
 
       setLoading(false);
 
-      !create &&
-        showNotification({
-          title: "Login using your credentials",
-          styles: notificationStyles,
-        });
+      const { logInData, logInError } = await supabase.auth.signInWithPassword({
+        email: values.email,
+        password: values.password,
+      });
 
-      create ? navigate("/createshop") : navigate("/signin");
+      if (error) throw error;
+
+      setUserData(data);
+
+      setLoading(false);
+
+      navigate("/");
     } catch (error) {
+      setLoading(false);
+
       showNotification({
         title: error.error_description || error.message,
         styles: notificationStyles,
@@ -69,8 +82,12 @@ export function SignUp({ create }) {
     }
   };
 
+  useEffect(() => {
+    if (userId !== null) navigate("/");
+  }, []);
+
   return (
-    <Stack py={40} sx={{ height: "100%" }} justify="space-between">
+    <FootLayout>
       <Container size={420}>
         <Title align="center" order={3}>
           Welcome!
@@ -103,6 +120,12 @@ export function SignUp({ create }) {
               {...form.getInputProps("password")}
               mt="md"
             />
+            <PasswordInput
+              label="Repeat Password"
+              required
+              {...form.getInputProps("verifypassword")}
+              mt="md"
+            />
             <Group position="apart" mt="md">
               <Anchor
                 onClick={(event) => event.preventDefault()}
@@ -118,7 +141,6 @@ export function SignUp({ create }) {
           </form>
         </Paper>
       </Container>
-      <img src={Logo} style={{ height: 20 }} />
-    </Stack>
+    </FootLayout>
   );
 }

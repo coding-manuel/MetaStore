@@ -2,7 +2,7 @@ import { Container, Group, LoadingOverlay, Stack, Title } from "@mantine/core";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
-import Layout from "../components/Layout";
+import { HeadFootLayout } from "../components/Layout";
 import useMainStore from "../store/mainStore";
 import { supabase } from "../utils/supabaseClient";
 
@@ -17,7 +17,7 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <Layout>
+    <HeadFootLayout>
       <LoadingOverlay
         visible={shopInfo === null}
         overlayBlur={2}
@@ -37,6 +37,6 @@ export default function Dashboard() {
           </Group>
         </Container>
       )}
-    </Layout>
+    </HeadFootLayout>
   );
 }

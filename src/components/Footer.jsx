@@ -31,7 +31,7 @@ export default function Footer() {
   const links = [
     {
       label: "Shop Setup",
-      link: "/adminsignup",
+      link: "/createshop",
     },
     {
       label: "Register",

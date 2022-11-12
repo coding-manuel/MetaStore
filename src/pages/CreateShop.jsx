@@ -1,9 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useForm } from "@mantine/form";
 import {
   TextInput,
-  PasswordInput,
-  Anchor,
   Paper,
   Title,
   Text,
@@ -39,13 +37,14 @@ var urlPattern = new RegExp(
 ); // validate fragment locator
 
 export default function CreateShop() {
+  const userId = useMainStore((state) => state.user);
+  const refreshUserData = useMainStore((state) => state.refreshUserData);
   const [loading, setLoading] = useState(false);
   const [coverDropLoad, setCoverDropLoad] = useState(false);
   const [artAccepted, setArtAccepted] = useState(false);
   const [shopName, setShopName] = useState("");
   const [shopNameError, setShopNameError] = useState("");
   const [scale, setScale] = useState(1);
-  const userId = useMainStore((state) => state.user);
 
   const navigate = useNavigate();
 
@@ -93,12 +92,14 @@ export default function CreateShop() {
     ];
 
     try {
+      //upload image
       const { data, strerror } = await supabase.storage
         .from("avatars")
         .upload(`${name}`, avatarFile[0], {
           cacheControl: "3600",
         });
 
+      //create shop page
       const { error } = await supabase.from("shops").insert({
         id: userId,
         shop_name: shopName,
@@ -108,11 +109,13 @@ export default function CreateShop() {
         shop_website: values.website,
       });
 
+      //get shop id
       const shop_id = await supabase
         .from("shops")
         .select("shop_id")
         .eq("shop_name", shopName);
 
+      //making user a owner
       const { err } = await supabase
         .from("profiles")
         .update({
@@ -120,6 +123,8 @@ export default function CreateShop() {
           shop_id: shop_id.data[0].shop_id,
         })
         .eq("id", userId);
+
+      await refreshUserData();
 
       navigate(`/dashboard/${shop_id.data[0].shop_id}`);
     } catch (error) {
@@ -173,6 +178,10 @@ export default function CreateShop() {
         : setShopNameError("Name Already Exists");
     }
   };
+
+  useEffect(() => {
+    if (userId === null) navigate("/signup");
+  });
 
   return (
     <Stack
@@ -283,7 +292,11 @@ export default function CreateShop() {
           </Paper>
         </MediaQuery>
       </Container>
-      <img src={Logo} style={{ height: 20 }} />
+      <img
+        src={Logo}
+        onClick={() => navigate("/")}
+        style={{ height: 20, cursor: "pointer" }}
+      />
     </Stack>
   );
 }

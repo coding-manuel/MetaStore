@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import {
   TextInput,
@@ -19,12 +19,14 @@ import Logo from "/assets/type-logo.svg";
 import { showNotification } from "@mantine/notifications";
 import { notificationStyles } from "../globalStyles";
 import useMainStore from "../store/mainStore";
+import { FootLayout } from "../components/Layout";
 
 export function SignIn() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const setUserData = useMainStore((state) => state.setUserData);
+  const userId = useMainStore((state) => state.user);
 
   const navigate = useNavigate();
 
@@ -47,25 +49,31 @@ export function SignIn() {
         password: values.password,
       });
 
+      console.log(data);
+
       if (error) throw error;
 
-      setUserData(data.user.id);
+      setUserData(data);
 
       setLoading(false);
 
       navigate("/");
     } catch (error) {
-      setLoading(false);
-
       showNotification({
         title: error.error_description || error.message,
         styles: notificationStyles,
       });
+
+      setLoading(false);
     }
   };
 
+  useEffect(() => {
+    if (userId !== null) navigate("/signin");
+  }, []);
+
   return (
-    <Stack py={40} sx={{ height: "100%" }} justify="space-between">
+    <FootLayout>
       <Container size={420}>
         <Title align="center" order={3}>
           Welcome!
@@ -115,7 +123,6 @@ export function SignIn() {
           </form>
         </Paper>
       </Container>
-      <img src={Logo} style={{ height: 20 }} />
-    </Stack>
+    </FootLayout>
   );
 }

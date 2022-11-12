@@ -35,16 +35,30 @@ const mainStore = (set) => ({
       .select("role")
       .eq("id", userId);
 
-    const shop = await supabase
-      .from("shops")
-      .select("shop_id")
-      .eq("id", userId);
+    if (role.data[0].role === "owner") {
+      const shop = await supabase
+        .from("shops")
+        .select("shop_id")
+        .eq("id", userId);
 
-    set(() => ({
-      user: userId,
-      role: role.data[0].role,
-      shopName: shop.data[0].shop_id,
-    }));
+      set(() => ({
+        user: userId,
+        role: role.data[0].role,
+        shopName: shop.data[0].shop_id,
+      }));
+    } else {
+      set(() => ({
+        user: userId,
+        role: role.data[0].role,
+        shopName: null,
+      }));
+    }
+  },
+
+  async refreshUserData() {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      get().setUserData(session);
+    });
   },
 
   async fetchShop(shop_id) {

@@ -86,6 +86,7 @@ function App() {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log(session);
       setUserData(session);
     });
 
@@ -115,8 +116,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp create={false} />} />
-            <Route path="/adminsignup" element={<SignUp create={true} />} />
+            <Route path="/signup" element={<SignUp />} />
             <Route
               path="/createshop"
               element={
