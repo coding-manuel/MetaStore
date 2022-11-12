@@ -38,7 +38,9 @@ var urlPattern = new RegExp(
 
 export default function CreateShop() {
   const userId = useMainStore((state) => state.user);
+  const role = useMainStore((state) => state.role);
   const refreshUserData = useMainStore((state) => state.refreshUserData);
+
   const [loading, setLoading] = useState(false);
   const [coverDropLoad, setCoverDropLoad] = useState(false);
   const [artAccepted, setArtAccepted] = useState(false);
@@ -181,6 +183,13 @@ export default function CreateShop() {
 
   useEffect(() => {
     if (userId === null) navigate("/signup");
+    if (role === "owner") {
+      showNotification({
+        title: "Only one shop per account",
+        styles: notificationStyles,
+      });
+      navigate(-1);
+    }
   });
 
   return (

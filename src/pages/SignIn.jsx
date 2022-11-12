@@ -49,8 +49,6 @@ export function SignIn() {
         password: values.password,
       });
 
-      console.log(data);
-
       if (error) throw error;
 
       setUserData(data);

@@ -1,8 +1,9 @@
+import { showNotification } from "@mantine/notifications";
 import create from "zustand";
 import { devtools, persist } from "zustand/middleware";
 import { supabase } from "../utils/supabaseClient";
 
-const mainStore = (set) => ({
+const mainStore = (set, get) => ({
   menuOpen: false,
   isDesktop: true,
   user: null,
@@ -28,6 +29,11 @@ const mainStore = (set) => ({
   },
 
   async setUserData(session) {
+    if (session === null) {
+      get().handleLogOut;
+      return;
+    }
+
     const userId = session.user.id;
 
     const role = await supabase

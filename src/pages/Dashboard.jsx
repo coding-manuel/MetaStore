@@ -13,7 +13,6 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchShop(shop_id).then((data) => setShopInfo(data.data));
-    console.log(shopInfo);
   }, []);
 
   return (
