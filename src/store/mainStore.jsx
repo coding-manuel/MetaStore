@@ -84,7 +84,7 @@ const mainStore = (set, get) => ({
       .style.setProperty("--vh", window.innerHeight / 100 + "px");
 
     set(() => ({
-      isDesktop: window.innerWidth > 700,
+      isDesktop: window.innerWidth > 800,
     }));
   },
 

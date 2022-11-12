@@ -47,6 +47,7 @@ export default function CreateShop() {
   const [shopName, setShopName] = useState("");
   const [shopNameError, setShopNameError] = useState("");
   const [scale, setScale] = useState(1);
+  const [characterCount, setCharacterCount] = useState(0);
 
   const navigate = useNavigate();
 
@@ -201,7 +202,7 @@ export default function CreateShop() {
     >
       <Container size={600}>
         <MediaQuery
-          query="(min-width: 700px)"
+          query="(min-width: 800px)"
           styles={{
             width: 600,
           }}
@@ -282,14 +283,23 @@ export default function CreateShop() {
                   onChange={(event) => handleShopName(event)}
                   onBlur={handleShopName}
                 />
-                <Textarea
-                  label="Shop Description"
-                  required
-                  withAsterisk
-                  {...form.getInputProps("description")}
-                />
+                <Stack spacing={0}>
+                  <Textarea
+                    label="Shop Description"
+                    maxLength={200}
+                    onKeyUp={(e) => setCharacterCount(e.target.value.length)}
+                    required
+                    autosize
+                    withAsterisk
+                    {...form.getInputProps("description")}
+                  />
+                  <Text align="right" size="sm" p={8}>
+                    {characterCount}/200
+                  </Text>
+                </Stack>
                 <Textarea
                   label="Shop Address"
+                  autosize
                   {...form.getInputProps("address")}
                 />
                 <TextInput label="Website" {...form.getInputProps("website")} />
