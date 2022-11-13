@@ -77,6 +77,12 @@ const mainStore = (set, get) => ({
     return shop;
   },
 
+  async fetchPopularShops() {
+    const shop = await supabase.from("shops").select("*");
+
+    return shop;
+  },
+
   /* UI FUNCTION */
   onResize: () => {
     document

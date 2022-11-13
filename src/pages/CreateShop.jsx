@@ -6,25 +6,22 @@ import {
   Title,
   Text,
   Container,
-  Group,
   Button,
   Stack,
-  Slider,
   Textarea,
   MediaQuery,
   Loader,
 } from "@mantine/core";
 import imageCompression from "browser-image-compression";
-import AvatarEditor from "react-avatar-editor";
-import { Dropzone } from "@mantine/dropzone";
 
 import Logo from "/assets/type-logo.svg";
-import { Camera, Check } from "phosphor-react";
+import { Check } from "phosphor-react";
 import { notificationStyles } from "../globalStyles";
 import { supabase } from "../utils/supabaseClient";
 import { showNotification } from "@mantine/notifications";
 import useMainStore from "../store/mainStore";
 import { useNavigate } from "react-router-dom";
+import AvatarEditorComp from "../components/AvatarEditorComp";
 
 var urlPattern = new RegExp(
   "^(https?:\\/\\/)?" + // validate protocol
@@ -42,11 +39,9 @@ export default function CreateShop() {
   const refreshUserData = useMainStore((state) => state.refreshUserData);
 
   const [loading, setLoading] = useState(false);
-  const [coverDropLoad, setCoverDropLoad] = useState(false);
   const [artAccepted, setArtAccepted] = useState(false);
   const [shopName, setShopName] = useState("");
   const [shopNameError, setShopNameError] = useState("");
-  const [scale, setScale] = useState(1);
   const [characterCount, setCharacterCount] = useState(0);
 
   const navigate = useNavigate();
@@ -64,16 +59,6 @@ export default function CreateShop() {
         value.length === 0 || urlPattern.test(value) ? null : "Invalid URL",
     },
   });
-
-  const handleDrop = (files, type) => {
-    setCoverDropLoad(true);
-    var reader = new FileReader();
-    reader.onload = (e) => {
-      setArtAccepted([files, e.target.result]);
-      setCoverDropLoad(false);
-    };
-    reader.readAsDataURL(files[0]);
-  };
 
   const handleSubmit = async (values) => {
     setLoading(true);
@@ -217,55 +202,11 @@ export default function CreateShop() {
             <form onSubmit={form.onSubmit(handleSubmit)}>
               <Stack sx={{ width: "100%" }}>
                 <Title order={5}>Create a Shop</Title>
-                {artAccepted ? (
-                  <>
-                    <AvatarEditor
-                      style={{ zIndex: 10000, borderRadius: 8, margin: "auto" }}
-                      image={artAccepted[1]}
-                      width={200}
-                      height={200}
-                      scale={scale}
-                      rotate={0}
-                      border={0}
-                      ref={editor}
-                    />
-                    <Stack sx={{ width: "50%", margin: "auto" }} pt={16}>
-                      <Slider
-                        color="red"
-                        size="xs"
-                        radius="xs"
-                        value={scale}
-                        label={null}
-                        min={1}
-                        max={2.1}
-                        step={0.01}
-                        onChange={setScale}
-                      />
-                      <Button
-                        color="gray"
-                        size="xs"
-                        variant="outline"
-                        compact
-                        onClick={() => setArtAccepted(false)}
-                      >
-                        Remove Image
-                      </Button>
-                    </Stack>
-                  </>
-                ) : (
-                  <Dropzone
-                    padding={0}
-                    multiple={false}
-                    accept={["image/png", "image/jpeg"]}
-                    onDrop={(files) => handleDrop(files, "image")}
-                    onReject={(files) => handleReject(files, "image")}
-                    disabled={artAccepted}
-                    loading={coverDropLoad}
-                    style={{ width: 200, height: 200, margin: "auto" }}
-                  >
-                    <PictureTemplate />
-                  </Dropzone>
-                )}
+                <AvatarEditorComp
+                  editor={editor}
+                  artAccepted={artAccepted}
+                  setArtAccepted={setArtAccepted}
+                />
                 <TextInput
                   label="Shop Name"
                   required
@@ -317,16 +258,5 @@ export default function CreateShop() {
         style={{ height: 20, cursor: "pointer" }}
       />
     </Stack>
-  );
-}
-
-export function PictureTemplate() {
-  return (
-    <Group position="center" spacing="sm" style={{ height: 200, width: 200 }}>
-      <Camera size={18} weight="fill" />
-      <Text size="sm" color="dimmed">
-        Upload Image
-      </Text>
-    </Group>
   );
 }

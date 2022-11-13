@@ -17,7 +17,6 @@ export default function Customisation() {
       sx={
         isDesktop
           ? {
-              margin: "0 16px",
               height: "100%",
               maxWidth: 900,
             }

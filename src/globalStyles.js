@@ -39,7 +39,7 @@ export const globalStyles = {
         padding: "6px 8px",
         margin: "2px 0",
         color: theme.colors.gray[1],
-        '&[data-hovered]': {
+        "&[data-hovered]": {
           backgroundColor: theme.colors.yellow[4],
           color: theme.white,
         },
@@ -57,7 +57,7 @@ export const globalStyles = {
       },
       tabLabel: {
         color: `${theme.white}!important`,
-        fontWeight: 500
+        fontWeight: 500,
       },
       body: { padding: "16px 0px" },
     }),
@@ -66,7 +66,7 @@ export const globalStyles = {
   InputWrapper: {
     styles: (theme) => ({
       label: { fontWeight: 600, marginBottom: 4 },
-    })
+    }),
   },
 
   TextInput: {
@@ -89,6 +89,39 @@ export const globalStyles = {
       },
       error: { fontSize: 12 },
     }),
+  },
+
+  Paper: {
+    styles: (theme) => ({
+      root: {
+        backgroundColor: theme.colors.dark[7],
+      },
+    }),
+  },
+
+  Modal: {
+    styles: (theme) => ({
+      modal: {
+        padding: "0px!important"
+      },
+      header: {
+        width: '100%',
+        borderBottom: "1px solid white",
+        padding: '16px 20px',
+        margin: 0
+      },
+      body: {
+        padding: '16px 20px'
+      }
+    }),
+  },
+
+  Carousel: {
+    styles: () => ({
+      viewport: {
+        padding: "8px 8px",
+      }
+    })
   },
 
   Button: {
@@ -158,32 +191,30 @@ export const bodyStyles = () => ({
 
   // "::selection": { background: "#eea02b" },
 
-  '::-webkit-scrollbar-track':
-  {
-    webkitBoxShadow: 'inset 0 0 6px #333333',
-    backgroundColor: '#111111',
+  "::-webkit-scrollbar-track": {
+    webkitBoxShadow: "inset 0 0 6px #333333",
+    backgroundColor: "#111111",
   },
 
-  '::-webkit-scrollbar':
-  {
+  "::-webkit-scrollbar": {
     width: 8,
     borderRadius: 20,
-    backgroundColor: '#555555',
+    backgroundColor: "#555555",
   },
 
-  '::-webkit-scrollbar-thumb':
-  {
+  "::-webkit-scrollbar-thumb": {
     borderRadius: 20,
-    backgroundColor: '#eea02b',
-	  border: 'none',
+    backgroundColor: "#eea02b",
+    border: "none",
   },
 
-  'body': {
+  body: {
     // overflow: 'hidden',
-    height: 'calc(100 * var(--vh) - 1px)'
+    backgroundColor: '#141517',
+    height: "calc(100 * var(--vh) - 1px)",
   },
 
-  '#root': {
-    height: 'inherit'
-  }
+  "#root": {
+    height: "inherit",
+  },
 });

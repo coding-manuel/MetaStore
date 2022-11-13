@@ -17,6 +17,8 @@ import Home from "./pages/Home";
 import useMainStore from "./store/mainStore";
 import CreateShop from "./pages/CreateShop";
 import Dashboard from "./pages/Dashboard";
+import AvatarEditorComp from "./components/AvatarEditorComp";
+import { ModalsProvider } from "@mantine/modals";
 
 function App() {
   const setUserData = useMainStore((state) => state.setUserData);
@@ -109,43 +111,46 @@ function App() {
       colorScheme={colorScheme}
       toggleColorScheme={toggleColorScheme}
     >
-      <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
-        <NotificationsProvider>
-          <Global styles={bodyStyles} />
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/signin" element={<SignIn />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route
-              path="/createshop"
-              element={
-                <PrivateRoute user={userId}>
-                  <CreateShop />
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/dashboard/:shop_id"
-              element={
-                <PrivateRoute user={userId}>
-                  <AdminRoute role={role}>
-                    <Dashboard />
-                  </AdminRoute>
-                </PrivateRoute>
-              }
-            />
-            <Route
-              path="/profile"
-              element={
-                <PrivateRoute user={userId}>
-                  <Profile />
-                </PrivateRoute>
-              }
-            />
-            <Route path="/creator" element={<Creator />} />
-          </Routes>
-        </NotificationsProvider>
-      </MantineProvider>
+      <ModalsProvider>
+        <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
+          <NotificationsProvider>
+            <Global styles={bodyStyles} />
+            <Routes>
+              <Route path="/test" element={<AvatarEditorComp />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/signin" element={<SignIn />} />
+              <Route path="/signup" element={<SignUp />} />
+              <Route
+                path="/createshop"
+                element={
+                  <PrivateRoute user={userId}>
+                    <CreateShop />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/dashboard/:shop_id"
+                element={
+                  <PrivateRoute user={userId}>
+                    <AdminRoute role={role}>
+                      <Dashboard />
+                    </AdminRoute>
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/profile"
+                element={
+                  <PrivateRoute user={userId}>
+                    <Profile />
+                  </PrivateRoute>
+                }
+              />
+              <Route path="/creator" element={<Creator />} />
+            </Routes>
+          </NotificationsProvider>
+        </MantineProvider>
+      </ModalsProvider>
     </ColorSchemeProvider>
   );
 }
