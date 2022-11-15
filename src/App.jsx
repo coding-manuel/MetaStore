@@ -19,6 +19,7 @@ import CreateShop from "./pages/CreateShop";
 import Dashboard from "./pages/Dashboard";
 import AvatarEditorComp from "./components/AvatarEditorComp";
 import { ModalsProvider } from "@mantine/modals";
+import CreateProduct from "./components/CreateProduct";
 
 function App() {
   const setUserData = useMainStore((state) => state.setUserData);
@@ -120,6 +121,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
+              <Route path="/creator" element={<Creator />} />
               <Route
                 path="/createshop"
                 element={
@@ -139,6 +141,16 @@ function App() {
                 }
               />
               <Route
+                path="/dashboard/create_product"
+                element={
+                  <PrivateRoute user={userId}>
+                    <AdminRoute role={role}>
+                      <CreateProduct />
+                    </AdminRoute>
+                  </PrivateRoute>
+                }
+              />
+              <Route
                 path="/profile"
                 element={
                   <PrivateRoute user={userId}>
@@ -146,7 +158,6 @@ function App() {
                   </PrivateRoute>
                 }
               />
-              <Route path="/creator" element={<Creator />} />
             </Routes>
           </NotificationsProvider>
         </MantineProvider>

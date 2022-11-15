@@ -198,6 +198,7 @@ export const bodyStyles = () => ({
 
   "::-webkit-scrollbar": {
     width: 8,
+    height: 8,
     borderRadius: 20,
     backgroundColor: "#555555",
   },

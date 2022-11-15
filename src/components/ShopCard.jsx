@@ -35,7 +35,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
   };
 });
 
-export function ShopCard({ image, link }) {
+export function ShopCard({ image, updated_at }) {
   const { classes, theme } = useStyles();
 
   return (
@@ -47,14 +47,18 @@ export function ShopCard({ image, link }) {
         className={classes.card}
         radius="md"
         component="a"
-        href={link}
+        // href={link}
         target="_blank"
       >
         <div
           className={classes.image}
           style={{
             backgroundImage: `url(${
-              import.meta.env.VITE_SUPABASE_PUBLIC_URL + "/" + image
+              import.meta.env.VITE_SUPABASE_PUBLIC_URL +
+              "/" +
+              image +
+              "?" +
+              updated_at
             })`,
           }}
         />

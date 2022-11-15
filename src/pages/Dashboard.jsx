@@ -1,14 +1,11 @@
 import {
   ActionIcon,
-  Anchor,
-  Box,
   Button,
   Container,
   Group,
   LoadingOverlay,
-  MediaQuery,
   Modal,
-  Overlay,
+  Tooltip,
   Paper,
   Stack,
   Text,
@@ -19,14 +16,16 @@ import {
 } from "@mantine/core";
 import {
   FacebookLogo,
+  Globe,
   InstagramLogo,
-  Link,
   Link as LinkIcon,
+  Plus,
+  ShareNetwork,
   TwitterLogo,
 } from "phosphor-react";
 import React, { useEffect, useRef } from "react";
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import AvatarEditorComp from "../components/AvatarEditorComp";
 import { HeadFootLayout } from "../components/Layout";
 import useMainStore from "../store/mainStore";
@@ -69,9 +68,11 @@ export default function Dashboard() {
           >
             <img
               src={
-                `${import.meta.env.VITE_SUPABASE_PUBLIC_URL}/${
-                  shopInfo.shop_avatar_url
-                }?` + new Date().getTime()
+                import.meta.env.VITE_SUPABASE_PUBLIC_URL +
+                "/" +
+                shopInfo.shop_avatar_url +
+                "?" +
+                shopInfo.updated_at
               }
               alt="Shop Image"
               style={{
@@ -88,8 +89,16 @@ export default function Dashboard() {
             </Stack>
           </Group>
           <Paper shadow="sm" p="md" mt="md">
-            <Group position="apart">
+            <Group position={isDesktop ? "apart" : "center"}>
               <Group>
+                <Button
+                  component={Link}
+                  to="/dashboard/create_product"
+                  variant="outline"
+                  leftIcon={<Plus size={16} />}
+                >
+                  Add Product
+                </Button>
                 <Button onClick={() => setEditPageModalOpen(true)}>
                   Edit Shop
                 </Button>
@@ -98,17 +107,23 @@ export default function Dashboard() {
                 </Button>
               </Group>
               <Group>
-                <CustomLink website={shopInfo.shop_website}>
-                  <Link size={24} />
+                <CustomLink website={shopInfo.shop_website} tooltip="Website">
+                  <Globe size={24} />
                 </CustomLink>
-                <CustomLink website={shopInfo.shop_instagram}>
+                <CustomLink
+                  website={shopInfo.shop_instagram}
+                  tooltip="Instagram"
+                >
                   <InstagramLogo size={24} />
                 </CustomLink>
-                <CustomLink website={shopInfo.shop_facebook}>
+                <CustomLink website={shopInfo.shop_facebook} tooltip="Facebook">
                   <FacebookLogo size={24} />
                 </CustomLink>
-                <CustomLink website={shopInfo.shop_twitter}>
+                <CustomLink website={shopInfo.shop_twitter} tooltip="Twitter">
                   <TwitterLogo size={24} />
+                </CustomLink>
+                <CustomLink website={shopInfo.shop_website} tooltip="Share">
+                  <ShareNetwork size={24} />
                 </CustomLink>
               </Group>
             </Group>
@@ -131,13 +146,15 @@ export default function Dashboard() {
   );
 }
 
-export function CustomLink({ website, children }) {
+export function CustomLink({ website, tooltip, children }) {
   return (
     website !== null &&
     website !== "" && (
-      <ActionIcon component="a" href={website} target="_blank">
-        {children}
-      </ActionIcon>
+      <Tooltip position="bottom" label={tooltip} offset={8}>
+        <ActionIcon component="a" href={website} target="_blank">
+          {children}
+        </ActionIcon>
+      </Tooltip>
     )
   );
 }
@@ -182,6 +199,13 @@ export function EditImageModal({
           cacheControl: "360",
           upsert: true,
         });
+
+      const { error } = await supabase
+        .from("shops")
+        .update({
+          shop_avatar_url: name,
+        })
+        .eq("shop_id", shopInfo.shop_id);
 
       setEditImageModalOpen(false);
       setArtAccepted(false);

@@ -18,7 +18,7 @@ export function HeadFootLayout({ children }) {
 export function FootLayout({ children }) {
   const navigate = useNavigate();
   return (
-    <Stack py={40} sx={{ height: "100%" }} justify="space-between">
+    <Stack py={40} sx={{ minHeight: "100%" }} justify="space-between">
       {children}
       <img
         src={Logo}

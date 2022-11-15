@@ -43,7 +43,12 @@ export function PopularShopsComp() {
         {shops !== null ? (
           <>
             {shops.map((shop) => {
-              return <ShopCard image={shop.shop_avatar_url} />;
+              return (
+                <ShopCard
+                  image={shop.shop_avatar_url}
+                  updated_at={shop.updated_at}
+                />
+              );
             })}
           </>
         ) : (
