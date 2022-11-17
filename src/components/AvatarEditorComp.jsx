@@ -185,29 +185,18 @@ export function ProductPictureEditorComp({
   );
 }
 
-export function ProductPictureUploadComp({
-  artAccepted,
-  setArtAccepted,
-  handleUploadImage,
-}) {
+export function ProductPictureUploadComp({ handleUploadImage }) {
   const [coverDropLoad, setCoverDropLoad] = useState(false);
-  const [scale, setScale] = useState(1);
   const asp = useRef(null);
   const editor = useRef(null);
 
-  const handleDrop = (files, type) => {
+  const handleDrop = async (files, type) => {
     setCoverDropLoad(true);
-    var reader = new FileReader();
-    reader.onload = (e) => {
-      setArtAccepted([files, e.target.result]);
-      setCoverDropLoad(false);
-    };
-    reader.readAsDataURL(files[0]);
-  };
 
-  const handleUploadCrop = async () => {
-    const data = await handleCrop(editor);
-    handleUploadImage(data);
+    var uploadImage = await handleImage(files[0]);
+
+    handleUploadImage(uploadImage);
+    setCoverDropLoad(false);
   };
 
   return (
@@ -217,107 +206,82 @@ export function ProductPictureUploadComp({
         sx={{ width: "100%", maxWidth: 250, margin: "auto" }}
         ref={asp}
       >
-        {artAccepted ? (
-          <AvatarEditor
-            style={{
-              zIndex: 10000,
-              borderRadius: 8,
-            }}
-            image={artAccepted[1]}
-            scale={scale}
-            rotate={0}
-            border={0}
-            width={asp.current.scrollWidth}
-            height={asp.current.scrollHeight}
-            ref={editor}
-          />
-        ) : (
-          <Dropzone
-            padding={0}
-            multiple={false}
-            accept={["image/png", "image/jpeg"]}
-            onDrop={(files) => handleDrop(files, "image")}
-            onReject={(files) => handleReject(files, "image")}
-            disabled={artAccepted}
-            loading={coverDropLoad}
-          >
-            <Stack align="center" spacing="sm">
-              <Camera size={18} weight="fill" />
-              <Text size="sm" color="dimmed">
-                Upload Image
-              </Text>
-            </Stack>
-          </Dropzone>
-        )}
+        <Dropzone
+          padding={0}
+          multiple={false}
+          accept={["image/png", "image/jpeg"]}
+          onDrop={(files) => handleDrop(files, "image")}
+          onReject={(files) => handleReject(files, "image")}
+          loading={coverDropLoad}
+        >
+          <Stack align="center" spacing="sm">
+            <Camera size={18} weight="fill" />
+            <Text size="sm" color="dimmed">
+              Upload Image
+            </Text>
+          </Stack>
+        </Dropzone>
       </AspectRatio>
-      {artAccepted && (
-        <Stack mx={56} pt={16}>
-          <Slider
-            color="red"
-            size="xs"
-            radius="xs"
-            value={scale}
-            label={null}
-            min={1}
-            max={2.1}
-            step={0.01}
-            onChange={setScale}
-          />
-          <Group noWrap grow>
-            <Button
-              color="gray"
-              size="xs"
-              variant="outline"
-              compact
-              onClick={() => setArtAccepted(false)}
-            >
-              Remove Image
-            </Button>
-            <Button
-              size="xs"
-              variant="outline"
-              compact
-              onClick={() => handleUploadCrop()}
-            >
-              Add Image
-            </Button>
-          </Group>
-        </Stack>
-      )}
     </Stack>
   );
 }
 
-export const handleCrop = async (editor) => {
-  var dataurl = editor.current.getImage().toDataURL();
+export const handleImage = async (imgfile) => {
+  var dataurl = URL.createObjectURL(imgfile);
 
-  var arr = dataurl.split(","),
-    mime = arr[0].match(/:(.*?);/)[1],
-    bstr = atob(arr[1]),
-    n = bstr.length,
-    u8arr = new Uint8Array(n);
-  while (n--) {
-    u8arr[n] = bstr.charCodeAt(n);
-  }
-  const blob = new Blob([u8arr], { type: mime });
-  const file = new File([blob], `path.jpg`, {
+  var blob = imgfile.slice(0, imgfile.size, "image/png");
+
+  const file = new File([blob], `${uuid()}.jpg`, {
     type: "image/jpeg",
     lastModified: new Date(),
   });
 
   const options = {
-    maxSizeMB: 5,
+    maxSizeMB: 3,
     useWebWorker: true,
   };
 
   const compressedFile = await imageCompression(file, options);
 
-  const avatarFile = [
-    new File([compressedFile], `${uuid()}.jpg`, {
+  const imageFile = [
+    new File([compressedFile], compressedFile.name, {
       type: "image/jpeg",
       lastModified: new Date(),
     }),
   ];
 
-  return [avatarFile, dataurl, uuid()];
+  return [imageFile, dataurl, imageFile[0].name];
 };
+// export const handleImage = async (editor) => {
+//   var dataurl = editor.current.getImage().toDataURL();
+
+//   var arr = dataurl.split(","),
+//     mime = arr[0].match(/:(.*?);/)[1],
+//     bstr = atob(arr[1]),
+//     n = bstr.length,
+//     u8arr = new Uint8Array(n);
+//   while (n--) {
+//     u8arr[n] = bstr.charCodeAt(n);
+//   }
+//   const blob = new Blob([u8arr], { type: mime });
+//   const file = new File([blob], `path.jpg`, {
+//     type: "image/jpeg",
+//     lastModified: new Date(),
+//   });
+
+//   const options = {
+//     maxSizeMB: 5,
+//     useWebWorker: true,
+//   };
+
+//   const compressedFile = await imageCompression(file, options);
+
+//   const avatarFile = [
+//     new File([compressedFile], `${uuid()}.jpg`, {
+//       type: "image/jpeg",
+//       lastModified: new Date(),
+//     }),
+//   ];
+
+//   return [avatarFile, dataurl, uuid()];
+// };

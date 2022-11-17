@@ -151,12 +151,13 @@ export const globalStyles = {
     }),
   },
 
-  // MultiSelect: {
-  //   styles: () => ({
-  //     input: {
-  //     },
-  //   }),
-  // },
+  Carousel: {
+    styles: (theme) => ({
+      indicator: {
+        backgroundColor: theme.colors.orange[5]
+      },
+    }),
+  },
 };
 
 export const notificationStyles = (theme) => ({
@@ -187,9 +188,9 @@ export const notificationStyles = (theme) => ({
 });
 
 export const bodyStyles = () => ({
-  // "::-moz-selection": { background: "#eea02b" },
+  "::-moz-selection": { color: "white", background: "#eea02b" },
 
-  // "::selection": { background: "#eea02b" },
+  "::selection": { color: "white", background: "#eea02b" },
 
   "::-webkit-scrollbar-track": {
     webkitBoxShadow: "inset 0 0 6px #333333",
