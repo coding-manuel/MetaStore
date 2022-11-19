@@ -1,5 +1,6 @@
 import { Card, Text, Group, Center, createStyles } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
+import envHelper from "../utils/envHelper";
 
 const useStyles = createStyles((theme, _params, getRef) => {
   const image = getRef("image");
@@ -54,7 +55,7 @@ export function ShopCard({ image, updated_at }) {
           className={classes.image}
           style={{
             backgroundImage: `url(${
-              import.meta.env.VITE_SUPABASE_PUBLIC_URL +
+              envHelper(VITE_SUPABASE_PUBLIC_URL) +
               "/" +
               image +
               "?" +

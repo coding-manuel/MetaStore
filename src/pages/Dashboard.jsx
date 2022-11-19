@@ -34,6 +34,7 @@ import imageCompression from "browser-image-compression";
 import { useForm } from "@mantine/form";
 import { DataTable } from "mantine-datatable";
 import DashboardTable from "../components/DashboardTable";
+import envHelper from "../utils/envHelper";
 
 export default function Dashboard() {
   let { shop_id } = useParams();
@@ -70,7 +71,7 @@ export default function Dashboard() {
           >
             <img
               src={
-                import.meta.env.VITE_SUPABASE_PUBLIC_URL +
+                envHelper(VITE_SUPABASE_PUBLIC_URL) +
                 "/" +
                 shopInfo.shop_avatar_url +
                 "?" +
