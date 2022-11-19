@@ -1588,13 +1588,18 @@ export default function DashboardTable({ shopId }) {
   const [page, setPage] = useState(1);
   const [totalRecords, setTotalRecords] = useState(null);
 
-  const PAGE_SIZE = 30;
+  const PAGE_SIZE = 10;
 
   useEffect(() => {
-    getProductsList();
+    getProductsList(page);
   }, []);
 
-  const getProductsList = async () => {
+  const setNewPage = async (page) => {
+    setPage(page);
+    await getProductsList(page);
+  };
+
+  const getProductsList = async (page) => {
     try {
       setFetching(true);
 
@@ -1608,7 +1613,6 @@ export default function DashboardTable({ shopId }) {
         .range(from, to);
 
       setProductsList(data);
-
       setTotalRecords(count);
     } catch (error) {
       console.log(error);
@@ -1627,12 +1631,12 @@ export default function DashboardTable({ shopId }) {
       highlightOnHover
       horizontalSpacing="sm"
       noRecordsText="No Products to show"
-      records={rc}
+      records={productsList}
       fetching={fetching}
-      totalRecords={rc.length}
+      totalRecords={totalRecords}
       recordsPerPage={PAGE_SIZE}
       page={page}
-      onPageChange={(p) => setPage(p)}
+      onPageChange={(p) => setNewPage(p)}
       columns={[
         {
           accessor: "id",
