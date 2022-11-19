@@ -15,6 +15,24 @@ import { Dropzone } from "@mantine/dropzone";
 
 import { Camera } from "phosphor-react";
 import uuid from "react-uuid";
+import { showNotification } from "@mantine/notifications";
+import { notificationStyles } from "../globalStyles";
+
+export const handleReject = (files, size) => {
+  let title, message;
+  if (files[0].errors[0].code === "file-too-large") {
+    title = "File uploaded is too large";
+    message = "Image uploaded is above " + size;
+  } else if (files[0].errors[0].code === "file-invalid-type") {
+    title = "File uploaded is not an image";
+    message = "Are you a dumbo?";
+  }
+  showNotification({
+    title: title,
+    message: message,
+    styles: notificationStyles,
+  });
+};
 
 export default function AvatarEditorComp({
   editor,
@@ -73,11 +91,12 @@ export default function AvatarEditorComp({
         </>
       ) : (
         <Dropzone
+          maxSize={5000000}
           padding={0}
           multiple={false}
           accept={["image/png", "image/jpeg"]}
           onDrop={(files) => handleDrop(files, "image")}
-          onReject={(files) => handleReject(files, "image")}
+          onReject={(files) => handleReject(files, "5MB")}
           disabled={artAccepted}
           loading={coverDropLoad}
           style={{ width: 200, height: 200, margin: "auto" }}
@@ -140,11 +159,12 @@ export function ProductPictureEditorComp({
           />
         ) : (
           <Dropzone
+            maxSize={10000000}
             padding={0}
             multiple={false}
             accept={["image/png", "image/jpeg"]}
             onDrop={(files) => handleDrop(files, "image")}
-            onReject={(files) => handleReject(files, "image")}
+            onReject={(files) => handleReject(files, "10MB")}
             disabled={artAccepted}
             loading={coverDropLoad}
           >
@@ -207,11 +227,12 @@ export function ProductPictureUploadComp({ handleUploadImage }) {
         ref={asp}
       >
         <Dropzone
+          maxSize={5000000}
           padding={0}
           multiple={false}
           accept={["image/png", "image/jpeg"]}
           onDrop={(files) => handleDrop(files, "image")}
-          onReject={(files) => handleReject(files, "image")}
+          onReject={(files) => handleReject(files, "5MB")}
           loading={coverDropLoad}
         >
           <Stack align="center" spacing="sm">

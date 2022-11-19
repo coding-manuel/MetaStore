@@ -17,10 +17,8 @@ import {
   NumberInput,
   Popover,
   AspectRatio,
-  Flex,
   SimpleGrid,
   Accordion,
-  List,
 } from "@mantine/core";
 import { FootLayout } from "./Layout";
 import {
@@ -31,9 +29,13 @@ import { useForm } from "@mantine/form";
 import { CurrencyInr, Info, Trash } from "phosphor-react";
 import { useBeforeunload } from "react-beforeunload";
 import { Carousel } from "@mantine/carousel";
+import { useNavigate } from "react-router-dom";
+import uuid from "react-uuid";
+import axios from "axios";
+import * as CryptoJS from "crypto-js";
+
 import useMainStore from "../store/mainStore";
 import { supabase } from "../utils/supabaseClient";
-import { useNavigate } from "react-router-dom";
 
 export default function CreateProduct() {
   const [active, setActive] = useState(0);
@@ -175,6 +177,7 @@ export function CreateProductStep2({
   const form = useForm({
     initialValues: {
       product_name: "",
+      product_sku: "",
       product_brand: "",
       product_description: "",
       product_type: "",
@@ -183,14 +186,19 @@ export function CreateProductStep2({
       product_material: "",
       product_mrp: 0,
       product_price: 0,
+      product_discount: 0,
     },
+    validateInputOnChange: ["product_price", "product_mrp"],
     validate: {
       product_price: (value, values) =>
         value > values.product_mrp ? "Price cannot be higher than MRP" : null,
+      product_mrp: (value, values) =>
+        value < values.product_price ? "Price cannot be higher than MRP" : null,
     },
   });
 
   const handleSubmit = (value) => {
+    value.product_discount = calculateDiscount();
     setFormData(value);
     nextStep();
   };
@@ -213,6 +221,15 @@ export function CreateProductStep2({
     );
   };
 
+  const calculateDiscount = () => {
+    const x = Math.floor(
+      ((form.values.product_mrp - form.values.product_price) /
+        form.values.product_mrp) *
+        100
+    );
+    return x;
+  };
+
   useEffect(() => {
     if (formData) {
       form.setValues({
@@ -225,6 +242,8 @@ export function CreateProductStep2({
         product_material: formData.product_material,
         product_mrp: formData.product_mrp,
         product_price: formData.product_price,
+        product_discount: formData.product_discount,
+        product_sku: formData.product_sku,
       });
     }
   }, []);
@@ -280,6 +299,10 @@ export function CreateProductStep2({
               </Paper>
             )}
           </Stack>
+          <TextInput
+            label="Product SKU"
+            {...form.getInputProps("product_sku")}
+          />
           <TextInput
             label="Product Name"
             required
@@ -357,6 +380,12 @@ export function CreateProductStep2({
               icon={<CurrencyInr size={16} />}
               {...form.getInputProps("product_price")}
             />
+            <TextInput
+              required
+              label="Discount"
+              value={calculateDiscount() + "%"}
+              disabled
+            />
           </Group>
         </Stack>
         <Group position="right" mt="xl">
@@ -383,18 +412,50 @@ export function CreateProductFinal({
 
   const navigate = useNavigate();
 
-  const calculateDiscount = () => {
-    const x = Math.floor(
-      ((productData.product_mrp - productData.product_price) /
-        productData.product_mrp) *
-        100
-    );
-    return x;
+  const getUploadDetails = async () => {
+    let res = await axios.get("http://localhost:8080/uploadurl");
+    return res.data;
   };
+
+  const uploadFile = async (file, product_id, path, data) => {
+    const reader = new FileReader();
+    reader.onload = function () {
+      const hash = CryptoJS.SHA1(CryptoJS.enc.Latin1.parse(reader.result));
+      // Data hashed. Now perform upload.
+
+      // console.log(`${product_id}/product-img${index}`);
+
+      axios({
+        method: "post",
+        url: data.uploadUrl,
+        headers: {
+          "Content-Type": "image/png",
+          Authorization: data.authorizationToken,
+          "X-Bz-File-Name": path,
+          "X-Bz-Content-Sha1": hash,
+        },
+        data: file,
+      });
+    };
+    reader.readAsBinaryString(file);
+  };
+
   const handleSubmit = async () => {
     try {
       setLoading(true);
-      //create shop page
+      const product_id = uuid();
+      let imagesPath = [];
+
+      const promises = await productImages.map(async (image, index) => {
+        let data = await getUploadDetails();
+        let path = `${product_id}/product-img-${index}`;
+        imagesPath.push(path);
+        await uploadFile(image[0][0], product_id, path, data);
+      });
+
+      await Promise.all(promises);
+
+      // create shop page
       const { error } = await supabase.from("products").insert({
         shop_id: shopId,
         product_name: productData.product_name,
@@ -406,6 +467,9 @@ export function CreateProductFinal({
         product_material: productData.product_material,
         product_mrp: productData.product_mrp,
         product_price: productData.product_price,
+        product_discount: productData.product_discount,
+        product_sku: productData.product_sku,
+        product_images: imagesPath,
       });
       navigate(`/dashboard/${shopId}`);
     } catch (error) {
@@ -428,7 +492,11 @@ export function CreateProductFinal({
             return (
               <Carousel.Slide>
                 <AspectRatio sx={{ minWidth: 250 }} ratio={720 / 1080}>
-                  <img src={productImage[1]} alt="" />
+                  <img
+                    style={{ objectFit: "contain" }}
+                    src={productImage[1]}
+                    alt=""
+                  />
                 </AspectRatio>
               </Carousel.Slide>
             );
@@ -440,14 +508,16 @@ export function CreateProductFinal({
           <Text mt={16} size={28} weight={700}>
             ₹{productData.product_price}
           </Text>
-          <Group spacing={4} align="center">
-            <Text size="lg" strikethrough color="dimmed">
-              ₹{productData.product_mrp}
-            </Text>
-            <Text size={16} color="orange">
-              {calculateDiscount()}% off
-            </Text>
-          </Group>
+          {productData.product_discount !== 0 && (
+            <Group spacing={4} align="center">
+              <Text size="lg" strikethrough color="dimmed">
+                ₹{productData.product_mrp}
+              </Text>
+              <Text size={16} color="orange">
+                {productData.product_discount}% off
+              </Text>
+            </Group>
+          )}
           <Accordion
             radius={8}
             my={16}
@@ -483,7 +553,12 @@ export function CreateProductFinal({
         </Stack>
       </SimpleGrid>
       <Group position="right" mt="xl">
-        <Button type="none" variant="default" onClick={prevStep}>
+        <Button
+          disabled={loading}
+          type="none"
+          variant="default"
+          onClick={prevStep}
+        >
           Edit Listing
         </Button>
         <Button loading={loading} onClick={handleSubmit}>

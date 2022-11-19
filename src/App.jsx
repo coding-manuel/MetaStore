@@ -20,6 +20,7 @@ import Dashboard from "./pages/Dashboard";
 import AvatarEditorComp from "./components/AvatarEditorComp";
 import { ModalsProvider } from "@mantine/modals";
 import CreateProduct from "./components/CreateProduct";
+import Test from "./components/Test";
 
 function App() {
   const setUserData = useMainStore((state) => state.setUserData);
@@ -117,7 +118,7 @@ function App() {
           <NotificationsProvider>
             <Global styles={bodyStyles} />
             <Routes>
-              <Route path="/test" element={<AvatarEditorComp />} />
+              <Route path="/test" element={<Test />} />
               <Route path="/" element={<Home />} />
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />

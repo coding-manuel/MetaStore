@@ -32,6 +32,8 @@ import useMainStore from "../store/mainStore";
 import { supabase } from "../utils/supabaseClient";
 import imageCompression from "browser-image-compression";
 import { useForm } from "@mantine/form";
+import { DataTable } from "mantine-datatable";
+import DashboardTable from "../components/DashboardTable";
 
 export default function Dashboard() {
   let { shop_id } = useParams();
@@ -91,14 +93,6 @@ export default function Dashboard() {
           <Paper shadow="sm" p="md" mt="md">
             <Group position={isDesktop ? "apart" : "center"}>
               <Group>
-                <Button
-                  component={Link}
-                  to="/dashboard/create_product"
-                  variant="outline"
-                  leftIcon={<Plus size={16} />}
-                >
-                  Add Product
-                </Button>
                 <Button onClick={() => setEditPageModalOpen(true)}>
                   Edit Shop
                 </Button>
@@ -127,6 +121,19 @@ export default function Dashboard() {
                 </CustomLink>
               </Group>
             </Group>
+          </Paper>
+          <Paper shadow="sm" p="md" mt="md">
+            <Stack>
+              <Button
+                component={Link}
+                to="/dashboard/create_product"
+                variant="outline"
+                leftIcon={<Plus size={16} />}
+              >
+                Add Product
+              </Button>
+              <DashboardTable shopId={shop_id} />
+            </Stack>
           </Paper>
           <EditImageModal
             editImageModalOpen={editImageModalOpen}

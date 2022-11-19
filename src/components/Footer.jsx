@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
   footer: {
-    marginTop: 120,
     borderTop: `1px solid white`,
     background: theme.colors.dark[7],
   },
