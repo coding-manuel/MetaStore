@@ -1623,7 +1623,6 @@ export default function DashboardTable({ shopId }) {
 
   return (
     <DataTable
-      height={450}
       withBorder
       borderRadius="md"
       shadow="sm"
@@ -1641,6 +1640,19 @@ export default function DashboardTable({ shopId }) {
         {
           accessor: "id",
           title: "#",
+          width: 40,
+          render: (record) => productsList.indexOf(record) + 1,
+        },
+        {
+          accessor: "product_images",
+          title: "Image",
+          render: (record) => (
+            <img
+              src={
+                import.meta.env.VITE_PRODUCTIMG_URL + record.product_images[0]
+              }
+            />
+          ),
         },
         { accessor: "product_name", title: "Name" },
         { accessor: "product_brand", title: "Brand" },

@@ -12,7 +12,6 @@ import {
   MediaQuery,
   Loader,
 } from "@mantine/core";
-import imageCompression from "browser-image-compression";
 
 import Logo from "/assets/type-logo.svg";
 import { Check } from "phosphor-react";
@@ -22,6 +21,7 @@ import { showNotification } from "@mantine/notifications";
 import useMainStore from "../store/mainStore";
 import { useNavigate } from "react-router-dom";
 import AvatarEditorComp from "../components/AvatarEditorComp";
+import { resizeFile } from "../utils/utilFunctions";
 
 var urlPattern = new RegExp(
   "^(https?:\\/\\/)?" + // validate protocol
@@ -140,12 +140,7 @@ export default function CreateShop() {
       lastModified: new Date(),
     });
 
-    const options = {
-      maxSizeMB: 2,
-      useWebWorker: true,
-    };
-
-    const compressedFile = await imageCompression(file, options);
+    const compressedFile = await resizeFile(file);
 
     return compressedFile;
   };

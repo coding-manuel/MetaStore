@@ -413,7 +413,7 @@ export function CreateProductFinal({
   const navigate = useNavigate();
 
   const getUploadDetails = async () => {
-    let res = await axios.get("http://localhost:8080/uploadurl");
+    let res = await axios.get(`${import.meta.env.VITE_API_ADDRESS}/uploadurl`);
     return res.data;
   };
 

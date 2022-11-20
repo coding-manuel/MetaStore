@@ -30,15 +30,17 @@ import AvatarEditorComp from "../components/AvatarEditorComp";
 import { HeadFootLayout } from "../components/Layout";
 import useMainStore from "../store/mainStore";
 import { supabase } from "../utils/supabaseClient";
-import imageCompression from "browser-image-compression";
 import { useForm } from "@mantine/form";
 import { DataTable } from "mantine-datatable";
 import DashboardTable from "../components/DashboardTable";
+import { resizeFile } from "../utils/utilFunctions";
 
 export default function Dashboard() {
   let { shop_id } = useParams();
+  const [loading, setLoading] = useState(false);
   const fetchShop = useMainStore((state) => state.fetchShop);
   const isDesktop = useMainStore((state) => state.isDesktop);
+  const [avatarLast, setAvatarLast] = useState("");
   const userId = useMainStore((state) => state.user);
 
   const [editImageModalOpen, setEditImageModalOpen] = useState(false);
@@ -49,14 +51,34 @@ export default function Dashboard() {
     refreshShopInfo();
   }, []);
 
+  useEffect(() => {
+    if (shopInfo) {
+      var date_test = dateToTicks(new Date(Date.parse(shopInfo.updated_at)));
+      setAvatarLast(date_test);
+    }
+  }, [shopInfo]);
+
+  function dateToTicks(date) {
+    const epochOffset = 621355968000000000;
+    const ticksPerMillisecond = 10000;
+
+    const ticks = date.getTime() * ticksPerMillisecond + epochOffset;
+
+    return ticks;
+  }
+
   const refreshShopInfo = () => {
-    fetchShop(shop_id).then((data) => setShopInfo(data.data));
+    setLoading(true);
+    fetchShop(shop_id).then((data) => {
+      setShopInfo(data.data);
+      setLoading(false);
+    });
   };
 
   return (
     <HeadFootLayout>
       <LoadingOverlay
-        visible={shopInfo === null}
+        visible={loading}
         overlayBlur={2}
         radius="xs"
         transitionDuration={250}
@@ -73,8 +95,8 @@ export default function Dashboard() {
                 import.meta.env.VITE_SUPABASE_PUBLIC_URL +
                 "/" +
                 shopInfo.shop_avatar_url +
-                "?" +
-                shopInfo.updated_at
+                "?lastmod=" +
+                avatarLast
               }
               alt="Shop Image"
               style={{
@@ -169,6 +191,7 @@ export function CustomLink({ website, tooltip, children }) {
 export function EditImageModal({
   editImageModalOpen,
   setEditImageModalOpen,
+  refreshShopInfo,
   shopInfo,
 }) {
   const theme = useMantineTheme();
@@ -199,7 +222,7 @@ export function EditImageModal({
     try {
       setLoading(true);
 
-      //upload image
+      // upload image
       const { data, strerror } = await supabase.storage
         .from("avatars")
         .update(`${name}`, avatarFile[0], {
@@ -212,10 +235,13 @@ export function EditImageModal({
         .update({
           shop_avatar_url: name,
         })
-        .eq("shop_id", shopInfo.shop_id);
+        .eq("shop_id", "d7945c5b-74eb-4af5-be10-9353191cd02a");
+
+      console.log(error);
 
       setEditImageModalOpen(false);
       setArtAccepted(false);
+      refreshShopInfo();
     } catch (error) {
       console.log(error);
     } finally {
@@ -241,12 +267,7 @@ export function EditImageModal({
       lastModified: new Date(),
     });
 
-    const options = {
-      maxSizeMB: 2,
-      useWebWorker: true,
-    };
-
-    const compressedFile = await imageCompression(file, options);
+    const compressedFile = await resizeFile(file);
 
     return compressedFile;
   };

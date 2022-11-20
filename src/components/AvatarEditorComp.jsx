@@ -9,7 +9,6 @@ import {
   Loader,
   AspectRatio,
 } from "@mantine/core";
-import imageCompression from "browser-image-compression";
 import AvatarEditor from "react-avatar-editor";
 import { Dropzone } from "@mantine/dropzone";
 
@@ -17,6 +16,7 @@ import { Camera } from "phosphor-react";
 import uuid from "react-uuid";
 import { showNotification } from "@mantine/notifications";
 import { notificationStyles } from "../globalStyles";
+import { resizeFile } from "../utils/utilFunctions";
 
 export const handleReject = (files, size) => {
   let title, message;
@@ -262,7 +262,7 @@ export const handleImage = async (imgfile) => {
     useWebWorker: true,
   };
 
-  const compressedFile = await imageCompression(file, options);
+  const compressedFile = await resizeFile(file, options);
 
   const imageFile = [
     new File([compressedFile], compressedFile.name, {
