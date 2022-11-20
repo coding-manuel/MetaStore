@@ -2,14 +2,12 @@ import React, { useEffect, useRef, useState } from "react";
 import { Button, Group, Stack, Title, Text } from "@mantine/core";
 
 import { ProductPictureEditorComp } from "../AvatarEditorComp";
+import useMainStore from "../../store/mainStore";
+import { Link } from "react-router-dom";
 
-export function CreateProductStep1({
-  prevStep,
-  nextStep,
-  active,
-  formData,
-  setFormData,
-}) {
+export function CreateProductStep1({ nextStep, formData, setFormData }) {
+  const shop_id = useMainStore((state) => state.shopName);
+
   const frontEditor = useRef(null);
   const backEditor = useRef(null);
   const [frontImage, setFrontImage] = useState(false);
@@ -46,11 +44,9 @@ export function CreateProductStep1({
         />
       </Group>
       <Group position="right" mt="xl">
-        {active !== 0 && (
-          <Button variant="default" onClick={prevStep}>
-            Back
-          </Button>
-        )}
+        <Button component={Link} to={`/dashboard/${shop_id}`} variant="default">
+          Back
+        </Button>
         <Button disabled={!frontImage || !backImage} onClick={handleSubmit}>
           Next step
         </Button>

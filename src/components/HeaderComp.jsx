@@ -11,17 +11,14 @@ import {
   Drawer,
   ScrollArea,
   Avatar,
-  ActionIcon,
   Menu,
-  Image,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { CaretDown, SignOut, User } from "phosphor-react";
+import { SignOut, User } from "phosphor-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "/assets/type-logo.svg";
 import useMainStore from "../store/mainStore";
-import { supabase } from "../utils/supabaseClient";
 
 const useStyles = createStyles((theme) => ({
   link: {
