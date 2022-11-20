@@ -36,6 +36,8 @@ import * as CryptoJS from "crypto-js";
 
 import useMainStore from "../store/mainStore";
 import { supabase } from "../utils/supabaseClient";
+import { showNotification } from "@mantine/notifications";
+import { notificationStyles } from "../globalStyles";
 
 export default function CreateProduct() {
   const [active, setActive] = useState(0);
@@ -209,8 +211,15 @@ export function CreateProductStep2({
   };
 
   const handleUploadImage = (data) => {
-    setUploadedImages((prevState) => [...prevState, data]);
-    setArtAccepted(false);
+    if (data.length + uploadedImages.length > 7) {
+      showNotification({
+        title: "More than 7 files are not allowed",
+        styles: notificationStyles,
+      });
+    } else {
+      setUploadedImages((prevState) => [...prevState, ...data]);
+      setArtAccepted(false);
+    }
   };
 
   const handleDelete = (key) => {

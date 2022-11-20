@@ -213,7 +213,21 @@ export function ProductPictureUploadComp({ handleUploadImage }) {
   const handleDrop = async (files, type) => {
     setCoverDropLoad(true);
 
-    var uploadImage = await handleImage(files[0]);
+    if (files.length > 7) {
+      showNotification({
+        title: "More than 7 files are not allowed",
+        styles: notificationStyles,
+      });
+      setCoverDropLoad(false);
+      return;
+    }
+
+    let uploadImage = [];
+    let promises = await files.map(async (file) => {
+      uploadImage.push(await handleImage(file));
+    });
+
+    await Promise.all(promises);
 
     handleUploadImage(uploadImage);
     setCoverDropLoad(false);
@@ -229,7 +243,7 @@ export function ProductPictureUploadComp({ handleUploadImage }) {
         <Dropzone
           maxSize={5000000}
           padding={0}
-          multiple={false}
+          multiple
           accept={["image/png", "image/jpeg"]}
           onDrop={(files) => handleDrop(files, "image")}
           onReject={(files) => handleReject(files, "5MB")}
