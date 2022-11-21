@@ -9,24 +9,6 @@ export const globalStyles = {
     }),
   },
 
-  ActionIcon: {
-    styles: (theme) => ({
-      root: {
-        width: "32px",
-        height: "32px",
-        padding: "5px",
-        color: `${theme.colorScheme === "dark" ? theme.white : theme.black}`,
-        border: `1px solid ${
-          theme.colorScheme === "dark" ? theme.white : theme.black
-        }`,
-        "&:hover": {
-          color: theme.white,
-          background: `${theme.colors.orange[5]}`,
-        },
-      },
-    }),
-  },
-
   Avatar: {
     styles: () => ({
       placeholder: { backgroundColor: "transparent" },
@@ -40,7 +22,7 @@ export const globalStyles = {
         margin: "2px 0",
         color: theme.colors.gray[1],
         "&[data-hovered]": {
-          backgroundColor: theme.colors.yellow[4],
+          backgroundColor: theme.colors.yellow[5],
           color: theme.white,
         },
       },
@@ -124,21 +106,6 @@ export const globalStyles = {
     })
   },
 
-  Button: {
-    styles: (theme) => ({
-      filled: {
-        border: `1px solid ${
-          theme.colorScheme === "dark" ? theme.white : theme.black
-        } !important`,
-        transition: ".2s ease",
-        "&:hover": {
-          background: `${theme.colors.orange[5]}!important`,
-          transform: "translate(0px, -3px)",
-        },
-      },
-    }),
-  },
-
   Dropzone: {
     styles: () => ({
       root: { padding: 0, borderStyle: "solid" },
@@ -154,7 +121,7 @@ export const globalStyles = {
   Carousel: {
     styles: (theme) => ({
       indicator: {
-        backgroundColor: theme.colors.orange[5]
+        backgroundColor: theme.colors.yellow[5]
       },
     }),
   },
@@ -165,7 +132,7 @@ export const notificationStyles = (theme) => ({
     backgroundColor: `${
       theme.colorScheme === "dark" ? theme.black : theme.white
     }`,
-    borderColor: theme.colors.orange[4],
+    borderColor: theme.colors.yellow[4],
     borderWidth: 2,
     paddingLeft: 12,
 
@@ -183,7 +150,7 @@ export const notificationStyles = (theme) => ({
   closeButton: {
     color: `${theme.colorScheme === "dark" ? theme.white : theme.black}`,
     transition: "0.1s ease-out",
-    "&:hover": { backgroundColor: theme.colors.orange[4] },
+    "&:hover": { backgroundColor: theme.colors.yellow[4] },
   },
 });
 
@@ -194,7 +161,7 @@ export const bodyStyles = () => ({
 
   "::-webkit-scrollbar-track": {
     webkitBoxShadow: "inset 0 0 6px #333333",
-    backgroundColor: "#111111",
+    backgroundColor: "#212121",
   },
 
   "::-webkit-scrollbar": {

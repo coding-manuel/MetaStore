@@ -18,7 +18,7 @@ import useMainStore from "./store/mainStore";
 import CreateShop from "./pages/CreateShop";
 import Dashboard from "./pages/Dashboard";
 import { ModalsProvider } from "@mantine/modals";
-import CreateProduct from "./components/CreateProduct";
+import CreateProduct from "./components/CreateProduct/CreateProduct";
 
 function App() {
   const setUserData = useMainStore((state) => state.setUserData);
@@ -40,18 +40,30 @@ function App() {
     components: globalStyles,
     colorScheme,
     primaryColor: "yellow",
-    primaryShade: 4,
+    primaryShade: 5,
 
     black: "#323232",
 
     colors: {
+      red: [
+        "#ffe3e3",
+        "#feb6b6",
+        "#f78888",
+        "#f25959",
+        "#d41212",
+        "#ed2b2b",
+        "#a60b0d",
+        "#770608",
+        "#4a0203",
+        "#200000",
+      ],
       yellow: [
         "#fff3dc",
         "#fbdfb3",
         "#f6ca86",
         "#f1b559",
         "#eea02b",
-        "#d48611",
+        "#e1921c",
         "#a5690b",
         "#774b06",
         "#482c00",

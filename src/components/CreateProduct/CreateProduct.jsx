@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Stepper, Container } from "@mantine/core";
 import { useBeforeunload } from "react-beforeunload";
 
-import { FootLayout } from "./Layout";
-import { CreateProductStep1 } from "./CreateProduct/CreateProductStep1";
-import { CreateProductStep2 } from "./CreateProduct/CreateProductStep2";
-import { CreateProductStep3 } from "./CreateProduct/CreateProductStep3";
+import { FootLayout } from "../Layout";
+import { CreateProductStep1 } from "./CreateProductStep1";
+import { CreateProductStep2 } from "./CreateProductStep2";
+import { CreateProductStep3 } from "./CreateProductStep3";
 
 export default function CreateProduct() {
   const [active, setActive] = useState(0);

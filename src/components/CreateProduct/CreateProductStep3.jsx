@@ -17,7 +17,7 @@ import * as CryptoJS from "crypto-js";
 
 import useMainStore from "../../store/mainStore";
 import { supabase } from "../../utils/supabaseClient";
-import { Keyboard } from "phosphor-react";
+import { Article, Keyboard } from "phosphor-react";
 
 export function CreateProductStep3({ productData, productImages, prevStep }) {
   const [loading, setLoading] = useState(false);
@@ -70,6 +70,7 @@ export function CreateProductStep3({ productData, productImages, prevStep }) {
 
       // create shop page
       const { error } = await supabase.from("products").insert({
+        product_id: product_id,
         shop_id: shopId,
         product_name: productData.product_name,
         product_brand: productData.product_brand,
@@ -140,7 +141,7 @@ export function CreateProductStep3({ productData, productImages, prevStep }) {
             <Accordion.Item value="customization">
               <Accordion.Control>
                 <Group spacing={8} align="center">
-                  Product Details <Keyboard size={18} />
+                  Product Details <Article size={18} />
                 </Group>
               </Accordion.Control>
               <Accordion.Panel>

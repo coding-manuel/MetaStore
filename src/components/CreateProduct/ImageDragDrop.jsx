@@ -8,12 +8,20 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { arrayMove, SortableContext } from "@dnd-kit/sortable";
+import {
+  arrayMove,
+  rectSortingStrategy,
+  SortableContext,
+} from "@dnd-kit/sortable";
 import {} from "@dnd-kit/modifiers";
 import SortableItem from "./SortableItem";
 import { Group, Paper } from "@mantine/core";
 
-export default function ImageDragDrop({ uploadedImages, setUploadedImages }) {
+export default function ImageDragDrop({
+  uploadedImages,
+  setUploadedImages,
+  setDeletedImages,
+}) {
   const mouseSensor = useSensor(MouseSensor);
   const touchSensor = useSensor(TouchSensor);
   const keyboardSensor = useSensor(KeyboardSensor);
@@ -23,6 +31,8 @@ export default function ImageDragDrop({ uploadedImages, setUploadedImages }) {
   const handleDelete = (key) => {
     setUploadedImages((prevState) =>
       prevState.filter(function (item) {
+        if (typeof item[0] !== "object" && item[2] === key)
+          setDeletedImages((imgs) => [...imgs, item]);
         return item[2] !== key;
       })
     );
@@ -46,8 +56,13 @@ export default function ImageDragDrop({ uploadedImages, setUploadedImages }) {
       onDragEnd={handleDragEnd}
       sensors={sensors}
     >
-      <SortableContext items={uploadedImages}>
-        <Paper shadow="sm" p="md" sx={{ overflowY: "hidden", width: "100%" }}>
+      <SortableContext strategy={rectSortingStrategy} items={uploadedImages}>
+        <Paper
+          hidden={uploadedImages.length === 0}
+          shadow="sm"
+          p="md"
+          sx={{ overflowY: "hidden", width: "100%" }}
+        >
           <Group position="center">
             {uploadedImages.map((img) => (
               <SortableItem

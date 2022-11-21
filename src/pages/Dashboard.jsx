@@ -4,48 +4,57 @@ import {
   Container,
   Group,
   LoadingOverlay,
-  Modal,
   Tooltip,
   Paper,
   Stack,
   Text,
-  Textarea,
-  TextInput,
   Title,
-  useMantineTheme,
+  Select,
 } from "@mantine/core";
 import {
+  DeviceTablet,
   FacebookLogo,
   Globe,
   InstagramLogo,
-  Link as LinkIcon,
   Plus,
+  Rows,
   ShareNetwork,
   TwitterLogo,
 } from "phosphor-react";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import AvatarEditorComp from "../components/AvatarEditorComp";
 import { HeadFootLayout } from "../components/Layout";
 import useMainStore from "../store/mainStore";
-import { supabase } from "../utils/supabaseClient";
-import { useForm } from "@mantine/form";
-import { DataTable } from "mantine-datatable";
-import DashboardTable from "../components/DashboardTable";
-import { resizeFile } from "../utils/utilFunctions";
+import DashboardTable from "../components/Dashboard/DashboardTable";
+import { EditImageModal } from "../components/Dashboard/EditImageModal";
+import { EditPageModal } from "../components/Dashboard/EditPageModal";
+import { useToggle } from "@mantine/hooks";
+import CustomActionIcon from "../components/CustomActionIcon";
+import EditProductModal from "../components/Dashboard/EditProductModal";
 
 export default function Dashboard() {
   let { shop_id } = useParams();
   const [loading, setLoading] = useState(false);
-  const fetchShop = useMainStore((state) => state.fetchShop);
-  const isDesktop = useMainStore((state) => state.isDesktop);
   const [avatarLast, setAvatarLast] = useState("");
-  const userId = useMainStore((state) => state.user);
-
   const [editImageModalOpen, setEditImageModalOpen] = useState(false);
   const [editPageModalOpen, setEditPageModalOpen] = useState(false);
+  const [refreshProductList, setRefreshProductList] = useState(false);
+
+  const [editProductModalOpen, setEditProductModalOpen] = useState(false);
+  const [activeProduct, setActiveProduct] = useState(null);
+  const [tableView, setTableView] = useToggle(["compact", "expand"]);
+
+  const fetchShop = useMainStore((state) => state.fetchShop);
+  const isDesktop = useMainStore((state) => state.isDesktop);
+  const userId = useMainStore((state) => state.user);
+
   const [shopInfo, setShopInfo] = useState(null);
+
+  const handleEditProductModalOpen = (product) => {
+    setActiveProduct(product);
+    setEditProductModalOpen(true);
+  };
 
   useEffect(() => {
     refreshShopInfo();
@@ -122,39 +131,68 @@ export default function Dashboard() {
                   Edit Image
                 </Button>
               </Group>
-              <Group>
+              <Group spacing={8}>
                 <CustomLink website={shopInfo.shop_website} tooltip="Website">
-                  <Globe size={24} />
+                  <Globe size={16} />
                 </CustomLink>
                 <CustomLink
                   website={shopInfo.shop_instagram}
                   tooltip="Instagram"
                 >
-                  <InstagramLogo size={24} />
+                  <InstagramLogo size={16} />
                 </CustomLink>
                 <CustomLink website={shopInfo.shop_facebook} tooltip="Facebook">
-                  <FacebookLogo size={24} />
+                  <FacebookLogo size={16} />
                 </CustomLink>
                 <CustomLink website={shopInfo.shop_twitter} tooltip="Twitter">
-                  <TwitterLogo size={24} />
+                  <TwitterLogo size={16} />
                 </CustomLink>
-                <CustomLink website={shopInfo.shop_website} tooltip="Share">
-                  <ShareNetwork size={24} />
+                <CustomLink
+                  website={`${
+                    import.meta.env.VITE_APP_ADDRESS
+                  }/shop/${shop_id}`}
+                  tooltip="Share"
+                >
+                  <ShareNetwork size={16} />
                 </CustomLink>
               </Group>
             </Group>
           </Paper>
           <Paper shadow="sm" p="md" mt="md">
             <Stack>
-              <Button
-                component={Link}
-                to="/dashboard/create_product"
-                variant="outline"
-                leftIcon={<Plus size={16} />}
-              >
-                Add Product
-              </Button>
-              <DashboardTable shopId={shop_id} />
+              <Group position="apart">
+                <Button
+                  component={Link}
+                  to="/dashboard/create_product"
+                  variant="outline"
+                  leftIcon={<Plus size={16} />}
+                >
+                  Add Product
+                </Button>
+              </Group>
+              <Group>
+                <Tooltip
+                  position="bottom"
+                  label={
+                    tableView === "compact" ? "Expaned View" : "Compact View"
+                  }
+                  offset={8}
+                >
+                  <CustomActionIcon onClick={() => setTableView()}>
+                    {tableView === "compact" ? (
+                      <DeviceTablet size={16} />
+                    ) : (
+                      <Rows size={16} />
+                    )}
+                  </CustomActionIcon>
+                </Tooltip>
+              </Group>
+              <DashboardTable
+                refreshProductList={refreshProductList}
+                tableView={tableView}
+                shopId={shop_id}
+                handleEditProductModalOpen={handleEditProductModalOpen}
+              />
             </Stack>
           </Paper>
           <EditImageModal
@@ -169,6 +207,12 @@ export default function Dashboard() {
             shopInfo={shopInfo}
             refreshShopInfo={refreshShopInfo}
           />
+          <EditProductModal
+            editProductModalOpen={editProductModalOpen}
+            setEditProductModalOpen={setEditProductModalOpen}
+            productInfo={activeProduct}
+            setRefreshProductList={setRefreshProductList}
+          />
         </Container>
       )}
     </HeadFootLayout>
@@ -180,262 +224,15 @@ export function CustomLink({ website, tooltip, children }) {
     website !== null &&
     website !== "" && (
       <Tooltip position="bottom" label={tooltip} offset={8}>
-        <ActionIcon component="a" href={website} target="_blank">
+        <CustomActionIcon
+          variant="outline"
+          component="a"
+          href={website}
+          target="_blank"
+        >
           {children}
-        </ActionIcon>
+        </CustomActionIcon>
       </Tooltip>
     )
-  );
-}
-
-export function EditImageModal({
-  editImageModalOpen,
-  setEditImageModalOpen,
-  refreshShopInfo,
-  shopInfo,
-}) {
-  const theme = useMantineTheme();
-  const [loading, setLoading] = useState(false);
-  const [artAccepted, setArtAccepted] = useState(false);
-  const editor = useRef();
-
-  const handleModalClose = () => {
-    if (!artAccepted) setEditImageModalOpen(false);
-    else {
-      confirm(
-        "Are you sure you want to close this modal? This action is permanent and cannot be undone?"
-      ) && setEditImageModalOpen(false);
-      setArtAccepted(false);
-    }
-  };
-
-  const handleSubmit = async () => {
-    const pf = await handleCrop();
-    const name = shopInfo.shop_name.concat("-picture");
-    const avatarFile = [
-      new File([pf], `${name}.jpg`, {
-        type: "image/jpeg",
-        lastModified: new Date(),
-      }),
-    ];
-
-    try {
-      setLoading(true);
-
-      // upload image
-      const { data, strerror } = await supabase.storage
-        .from("avatars")
-        .update(`${name}`, avatarFile[0], {
-          cacheControl: "360",
-          upsert: true,
-        });
-
-      const { error } = await supabase
-        .from("shops")
-        .update({
-          shop_avatar_url: name,
-        })
-        .eq("shop_id", "d7945c5b-74eb-4af5-be10-9353191cd02a");
-
-      console.log(error);
-
-      setEditImageModalOpen(false);
-      setArtAccepted(false);
-      refreshShopInfo();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCrop = async () => {
-    // const img =
-    var dataurl = editor.current.getImage().toDataURL();
-
-    var arr = dataurl.split(","),
-      mime = arr[0].match(/:(.*?);/)[1],
-      bstr = atob(arr[1]),
-      n = bstr.length,
-      u8arr = new Uint8Array(n);
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-    const blob = new Blob([u8arr], { type: mime });
-    const file = new File([blob], `path.jpg`, {
-      type: "image/jpeg",
-      lastModified: new Date(),
-    });
-
-    const compressedFile = await resizeFile(file);
-
-    return compressedFile;
-  };
-
-  return (
-    <Modal
-      title="Edit Shop Image"
-      overlayColor={theme.colors.dark[9]}
-      overlayOpacity={0.55}
-      overlayBlur={3}
-      closeOnClickOutside
-      closeOnEscape
-      onClose={handleModalClose}
-      opened={editImageModalOpen}
-      exitTransitionDuration={250}
-    >
-      <Stack align="flex-end">
-        <AvatarEditorComp
-          editor={editor}
-          artAccepted={artAccepted}
-          setArtAccepted={setArtAccepted}
-        />
-        <Group>
-          <Button
-            loading={loading}
-            onClick={handleSubmit}
-            disabled={!artAccepted}
-          >
-            Save Changes
-          </Button>
-          <Button onClick={handleModalClose} variant="outline" color="red">
-            Cancel
-          </Button>
-        </Group>
-      </Stack>
-    </Modal>
-  );
-}
-
-var urlPattern = new RegExp(
-  "^(https?:\\/\\/)?" + // validate protocol
-    "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // validate domain name
-    "((\\d{1,3}\\.){3}\\d{1,3}))" + // validate OR ip (v4) address
-    "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // validate port and path
-    "(\\?[;&a-z\\d%_.~+=-]*)?" + // validate query string
-    "(\\#[-a-z\\d_]*)?$",
-  "i"
-); // validate fragment locator
-
-export function EditPageModal({
-  editPageModalOpen,
-  setEditPageModalOpen,
-  shopInfo,
-  refreshShopInfo,
-}) {
-  const theme = useMantineTheme();
-  const [characterCount, setCharacterCount] = useState(0);
-  const [loading, setLoading] = useState(false);
-
-  const form = useForm({
-    initialValues: {
-      description: "",
-      address: "",
-      website: "",
-      instagram: "",
-      facebook: "",
-      twitter: "",
-    },
-    validate: {
-      website: (value) =>
-        value.length === 0 || urlPattern.test(value) ? null : "Invalid URL",
-      instagram: (value) =>
-        value.length === 0 || urlPattern.test(value) ? null : "Invalid URL",
-      twitter: (value) =>
-        value.length === 0 || urlPattern.test(value) ? null : "Invalid URL",
-      facebook: (value) =>
-        value.length === 0 || urlPattern.test(value) ? null : "Invalid URL",
-    },
-  });
-
-  const handleModalClose = () => {
-    confirm(
-      "Are you sure you want to close this modal? This action is permanent and cannot be undone?"
-    ) && setEditPageModalOpen(false);
-  };
-
-  const handleSubmit = async (values) => {
-    try {
-      setLoading(true);
-      const { error } = await supabase
-        .from("shops")
-        .update({
-          shop_description: values.description,
-          shop_address: values.address,
-          shop_website: values.website,
-          shop_instagram: values.instagram,
-          shop_twitter: values.twitter,
-          shop_facebook: values.facebook,
-        })
-        .eq("shop_id", shopInfo.shop_id);
-      refreshShopInfo();
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-    setEditPageModalOpen(false);
-  };
-
-  useEffect(() => {
-    form.setValues({
-      description: shopInfo.shop_description,
-      address: shopInfo.shop_address,
-      website: shopInfo.shop_website,
-      instagram: shopInfo.shop_instagram,
-      facebook: shopInfo.shop_facebook,
-      twitter: shopInfo.shop_twitter,
-    });
-    setCharacterCount(shopInfo.shop_description.length);
-  }, []);
-
-  return (
-    <Modal
-      title="Edit Shop"
-      overlayColor={theme.colors.dark[9]}
-      overlayOpacity={0.55}
-      overlayBlur={3}
-      closeOnClickOutside
-      closeOnEscape
-      onClose={handleModalClose}
-      opened={editPageModalOpen}
-      exitTransitionDuration={250}
-    >
-      <Stack spacing={8}>
-        <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Stack spacing={0}>
-            <Textarea
-              label="Shop Description"
-              maxLength={200}
-              onKeyUp={(e) => setCharacterCount(e.target.value.length)}
-              required
-              autosize
-              withAsterisk
-              {...form.getInputProps("description")}
-            />
-            <Text align="right" size="sm" p={8}>
-              {characterCount}/200
-            </Text>
-          </Stack>
-          <Textarea
-            label="Shop Address"
-            autosize
-            {...form.getInputProps("address")}
-          />
-          <TextInput label="Website" {...form.getInputProps("website")} />
-          <TextInput label="Instagram" {...form.getInputProps("instagram")} />
-          <TextInput label="Twitter" {...form.getInputProps("twitter")} />
-          <TextInput label="Facebook" {...form.getInputProps("facebook")} />
-          <Group mt={16} position="right">
-            <Button type="submit" loading={loading}>
-              Save Changes
-            </Button>
-            <Button onClick={handleModalClose} variant="outline" color="red">
-              Cancel
-            </Button>
-          </Group>
-        </form>
-      </Stack>
-    </Modal>
   );
 }

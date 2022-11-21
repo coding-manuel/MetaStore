@@ -23,11 +23,14 @@ import { notificationStyles } from "../../globalStyles";
 export function CreateProductStep2({
   prevStep,
   nextStep,
-  active,
   formData,
   setFormData,
   uploadedImages,
   setUploadedImages,
+  editProduct,
+  handleEditSubmit,
+  setDeletedImages,
+  finalLoading,
 }) {
   const [characterCount, setCharacterCount] = useState(0);
   const [artAccepted, setArtAccepted] = useState(false);
@@ -66,6 +69,7 @@ export function CreateProductStep2({
   });
 
   const handleSubmit = (value) => {
+    value.product_discount = calculateDiscount();
     if (uploadedImages.length === 0) {
       showNotification({
         title: "Whoops, you forgot to put the pictures",
@@ -74,9 +78,12 @@ export function CreateProductStep2({
       });
       return;
     }
-    value.product_discount = calculateDiscount();
-    setFormData(value);
-    nextStep();
+    if (editProduct) {
+      handleEditSubmit(value);
+    } else {
+      setFormData(value);
+      nextStep(value);
+    }
   };
 
   const handlePrevStep = () => {
@@ -125,8 +132,12 @@ export function CreateProductStep2({
 
   return (
     <Stack spacing={0}>
-      <Text weight={700}>Step 2 of 3</Text>
-      <Title order={4}>Product Metadata</Title>
+      {!editProduct && (
+        <>
+          <Text weight={700}>Step 2 of 3</Text>
+          <Title order={4}>Product Metadata</Title>
+        </>
+      )}
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <Stack spacing={16} my={16}>
           <Group spacing={4}>
@@ -144,7 +155,7 @@ export function CreateProductStep2({
             </Popover>
           </Group>
           <Stack>
-            {uploadedImages.length <= 7 && (
+            {uploadedImages.length < 7 && (
               <ProductPictureUploadComp
                 artAccepted={artAccepted}
                 setArtAccepted={setArtAccepted}
@@ -152,6 +163,7 @@ export function CreateProductStep2({
               />
             )}
             <ImageDragDrop
+              setDeletedImages={setDeletedImages}
               uploadedImages={uploadedImages}
               setUploadedImages={setUploadedImages}
             />
@@ -246,12 +258,18 @@ export function CreateProductStep2({
           </Group>
         </Stack>
         <Group position="right" mt="xl">
-          {active !== 0 && (
-            <Button type="none" variant="default" onClick={handlePrevStep}>
-              Back
+          {!editProduct ? (
+            <>
+              <Button type="none" variant="default" onClick={handlePrevStep}>
+                Back
+              </Button>
+              <Button type="submit">Finalise Listing</Button>
+            </>
+          ) : (
+            <Button type="submit" loading={finalLoading}>
+              Finalise Edit
             </Button>
           )}
-          <Button type="submit">Finalise Listing</Button>
         </Group>
       </form>
     </Stack>

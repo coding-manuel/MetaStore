@@ -67,6 +67,8 @@ const mainStore = (set, get) => ({
     });
   },
 
+  /* FETCH FUNCTIONS */
+
   async fetchShop(shop_id) {
     const shop = await supabase
       .from("shops")
@@ -84,6 +86,7 @@ const mainStore = (set, get) => ({
   },
 
   /* UI FUNCTION */
+
   onResize: () => {
     document
       .querySelector(":root")
