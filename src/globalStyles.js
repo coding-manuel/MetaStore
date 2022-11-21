@@ -21,6 +21,7 @@ export const globalStyles = {
         padding: "6px 8px",
         margin: "2px 0",
         color: theme.colors.gray[1],
+        transition: '.1s ease',
         "&[data-hovered]": {
           backgroundColor: theme.colors.yellow[5],
           color: theme.white,
@@ -115,6 +116,12 @@ export const globalStyles = {
   Tooltip: {
     styles: (theme) => ({
       body: { color: theme.white, backgroundColor: theme.black },
+    }),
+  },
+
+  Button: {
+    styles: (theme) => ({
+      root: { transition: '0.15s ease' },
     }),
   },
 

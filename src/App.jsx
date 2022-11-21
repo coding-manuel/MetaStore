@@ -4,6 +4,7 @@ import {
   NotificationsProvider,
   showNotification,
 } from "@mantine/notifications";
+import { ModalsProvider } from "@mantine/modals";
 import { useLocalStorage } from "@mantine/hooks";
 import { supabase } from "./utils/supabaseClient";
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -17,8 +18,8 @@ import Home from "./pages/Home";
 import useMainStore from "./store/mainStore";
 import CreateShop from "./pages/CreateShop";
 import Dashboard from "./pages/Dashboard";
-import { ModalsProvider } from "@mantine/modals";
 import CreateProduct from "./components/CreateProduct/CreateProduct";
+import NotFound from "./pages/NotFound";
 
 function App() {
   const setUserData = useMainStore((state) => state.setUserData);
@@ -168,6 +169,7 @@ function App() {
                   </PrivateRoute>
                 }
               />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </NotificationsProvider>
         </MantineProvider>

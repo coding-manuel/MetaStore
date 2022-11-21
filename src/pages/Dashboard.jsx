@@ -10,8 +10,11 @@ import {
   Text,
   Title,
   Select,
+  Skeleton,
+  CopyButton,
 } from "@mantine/core";
 import {
+  Check,
   DeviceTablet,
   FacebookLogo,
   Globe,
@@ -99,21 +102,23 @@ export default function Dashboard() {
             sx={{ flexDirection: !isDesktop && "column" }}
             noWrap
           >
-            <img
-              src={
-                import.meta.env.VITE_SUPABASE_PUBLIC_URL +
-                "/" +
-                shopInfo.shop_avatar_url +
-                "?lastmod=" +
-                avatarLast
-              }
-              alt="Shop Image"
-              style={{
-                width: 200,
-                height: "auto",
-                borderRadius: 8,
-              }}
-            />
+            <Skeleton width={200} height={200} visible={loading}>
+              <img
+                src={
+                  import.meta.env.VITE_SUPABASE_PUBLIC_URL +
+                  "/" +
+                  shopInfo.shop_avatar_url +
+                  "?lastmod=" +
+                  avatarLast
+                }
+                alt="Shop Image"
+                style={{
+                  width: 200,
+                  height: "auto",
+                  borderRadius: 8,
+                }}
+              />
+            </Skeleton>
             <Stack spacing={4} align={!isDesktop && "center"}>
               <Title order={4}>{shopInfo.shop_name}</Title>
               <Text sx={{ maxWidth: 500 }} align={!isDesktop && "center"}>
@@ -147,14 +152,32 @@ export default function Dashboard() {
                 <CustomLink website={shopInfo.shop_twitter} tooltip="Twitter">
                   <TwitterLogo size={16} />
                 </CustomLink>
-                <CustomLink
-                  website={`${
-                    import.meta.env.VITE_APP_ADDRESS
-                  }/shop/${shop_id}`}
-                  tooltip="Share"
+                <CopyButton
+                  value={`${import.meta.env.VITE_APP_ADDRESS}/shop/${shop_id}`}
+                  timeout={2000}
                 >
-                  <ShareNetwork size={16} />
-                </CustomLink>
+                  {({ copied, copy }) => (
+                    <Tooltip
+                      label={copied ? "Copied" : "Copy"}
+                      withArrow
+                      position="right"
+                    >
+                      <ActionIcon
+                        variant="filled"
+                        sx={{ width: 32, height: 32, transition: "0.15s ease" }}
+                        color={copied ? "green" : "yellow"}
+                        onClick={copy}
+                        tooltip="Share"
+                      >
+                        {copied ? (
+                          <Check size={16} />
+                        ) : (
+                          <ShareNetwork size={16} />
+                        )}
+                      </ActionIcon>
+                    </Tooltip>
+                  )}
+                </CopyButton>
               </Group>
             </Group>
           </Paper>
