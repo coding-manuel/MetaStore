@@ -12,6 +12,7 @@ import {
   ScrollArea,
   Avatar,
   Menu,
+  Container,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { SignOut, User } from "phosphor-react";
@@ -106,76 +107,78 @@ export function HeaderComp() {
   return (
     <Box>
       <Header height={60} px="md">
-        <Group position="apart" sx={{ height: "100%" }}>
-          <img
-            onClick={() => navigate("/")}
-            src={Logo}
-            style={{ height: 20, cursor: "pointer" }}
-          />
+        <Container size="xl" h={"100%"}>
+          <Group position="apart" sx={{ height: "100%" }}>
+            <img
+              onClick={() => navigate("/")}
+              src={Logo}
+              style={{ height: 20, cursor: "pointer" }}
+            />
 
-          <Group className={classes.hiddenMobile} hidden={userId}>
-            <Button component={Link} to="/signin" variant="default">
-              Log in
-            </Button>
-            <Button component={Link} to="/signup">
-              Sign up
-            </Button>
-          </Group>
-
-          {userId !== null && (
-            <Group className={classes.hiddenMobile}>
-              <Menu
-                width={180}
-                position="bottom-end"
-                transition="pop-top-right"
-                onClose={() => setUserMenuOpened(false)}
-                onOpen={() => setUserMenuOpened(true)}
-              >
-                <Menu.Target>
-                  <UnstyledButton>
-                    <Group spacing={7}>
-                      <Avatar radius="xl" />
-                    </Group>
-                  </UnstyledButton>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  {role == "owner" ? (
-                    <Menu.Item
-                      component={Link}
-                      to={`/dashboard/${shopName}`}
-                      icon={<User size={16} />}
-                    >
-                      Shop Page
-                    </Menu.Item>
-                  ) : (
-                    <Menu.Item
-                      component={Link}
-                      to="/profile"
-                      icon={<User size={16} />}
-                    >
-                      Profile
-                    </Menu.Item>
-                  )}
-                  <Menu.Item
-                    component={Link}
-                    to="/signin"
-                    onClick={handleLogOut}
-                    icon={<SignOut size={16} />}
-                    color="red"
-                  >
-                    Log out
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
+            <Group className={classes.hiddenMobile} hidden={userId}>
+              <Button component={Link} to="/signin" variant="default">
+                Log in
+              </Button>
+              <Button component={Link} to="/signup">
+                Sign up
+              </Button>
             </Group>
-          )}
 
-          <Burger
-            opened={drawerOpened}
-            onClick={toggleDrawer}
-            className={classes.hiddenDesktop}
-          />
-        </Group>
+            {userId !== null && (
+              <Group className={classes.hiddenMobile}>
+                <Menu
+                  width={180}
+                  position="bottom-end"
+                  transition="pop-top-right"
+                  onClose={() => setUserMenuOpened(false)}
+                  onOpen={() => setUserMenuOpened(true)}
+                >
+                  <Menu.Target>
+                    <UnstyledButton>
+                      <Group spacing={7}>
+                        <Avatar radius="xl" />
+                      </Group>
+                    </UnstyledButton>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    {role == "owner" ? (
+                      <Menu.Item
+                        component={Link}
+                        to={`/dashboard/${shopName}`}
+                        icon={<User size={16} />}
+                      >
+                        Shop Page
+                      </Menu.Item>
+                    ) : (
+                      <Menu.Item
+                        component={Link}
+                        to="/profile"
+                        icon={<User size={16} />}
+                      >
+                        Profile
+                      </Menu.Item>
+                    )}
+                    <Menu.Item
+                      component={Link}
+                      to="/signin"
+                      onClick={handleLogOut}
+                      icon={<SignOut size={16} />}
+                      color="red"
+                    >
+                      Log out
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              </Group>
+            )}
+
+            <Burger
+              opened={drawerOpened}
+              onClick={toggleDrawer}
+              className={classes.hiddenDesktop}
+            />
+          </Group>
+        </Container>
       </Header>
 
       <Drawer

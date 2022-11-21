@@ -46,10 +46,12 @@ export default function Footer() {
 
   return (
     <div className={classes.footer}>
-      <Group position="apart" className={classes.inner}>
-        <img src={Logo} style={{ height: 20 }} />
-        <Group className={classes.links}>{items}</Group>
-      </Group>
+      <Container size="xl" h={"100%"}>
+        <Group position="apart" className={classes.inner}>
+          <img src={Logo} style={{ height: 20 }} />
+          <Group className={classes.links}>{items}</Group>
+        </Group>
+      </Container>
     </div>
   );
 }
