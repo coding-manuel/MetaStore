@@ -21,7 +21,7 @@ export const globalStyles = {
         padding: "6px 8px",
         margin: "2px 0",
         color: theme.colors.gray[1],
-        transition: '.1s ease',
+        transition: ".1s ease",
         "&[data-hovered]": {
           backgroundColor: theme.colors.yellow[5],
           color: theme.white,
@@ -85,17 +85,31 @@ export const globalStyles = {
   Modal: {
     styles: (theme) => ({
       modal: {
-        padding: "0px!important"
+        padding: "0px!important",
       },
       header: {
-        width: '100%',
+        width: "100%",
         borderBottom: "1px solid white",
-        padding: '16px 20px',
-        margin: 0
+        padding: "16px 20px",
+        margin: 0,
       },
       body: {
-        padding: '16px 20px'
-      }
+        padding: "16px 20px",
+      },
+      close: {
+        width: 32,
+        height: 32,
+        color: `${theme.colorScheme === "dark" ? theme.white : theme.black}`,
+        border: `1px solid ${
+          theme.colorScheme === "dark" ? theme.colors.gray[7] : theme.black
+        }`,
+        "&:hover": {
+          color: theme.white,
+          background: theme.colors.yellow[5],
+          border: `1px solid transparent`,
+          transition: "0.15s ease",
+        },
+      },
     }),
   },
 
@@ -103,8 +117,8 @@ export const globalStyles = {
     styles: () => ({
       viewport: {
         padding: "8px 8px",
-      }
-    })
+      },
+    }),
   },
 
   Dropzone: {
@@ -121,14 +135,14 @@ export const globalStyles = {
 
   Button: {
     styles: (theme) => ({
-      root: { transition: '0.15s ease' },
+      root: { transition: "0.15s ease" },
     }),
   },
 
   Carousel: {
     styles: (theme) => ({
       indicator: {
-        backgroundColor: theme.colors.yellow[5]
+        backgroundColor: theme.colors.yellow[5],
       },
     }),
   },
@@ -186,7 +200,7 @@ export const bodyStyles = () => ({
 
   body: {
     // overflow: 'hidden',
-    backgroundColor: '#141517',
+    backgroundColor: "#141517",
     height: "calc(100 * var(--vh) - 1px)",
   },
 
