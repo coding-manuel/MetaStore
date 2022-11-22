@@ -135,14 +135,7 @@ export default function DashboardTable({
               children: (
                 <Stack>
                   <Text size="sm">Are you sure you want to delete?</Text>
-                  <Paper
-                    sx={(theme) => ({
-                      backgroundColor: theme.colors.dark[5],
-                    })}
-                    shadow="lg"
-                    p="sm"
-                    withBorder
-                  >
+                  <Paper shadow="lg" p="sm" withBorder>
                     {selectedRecords.map((rec) => {
                       return (
                         <Text size="sm" py={2}>

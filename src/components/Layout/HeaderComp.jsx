@@ -13,12 +13,15 @@ import {
   Avatar,
   Menu,
   Container,
+  useMantineColorScheme,
+  Switch,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { SignOut, User } from "phosphor-react";
+import { MoonStars, SignOut, SunDim, User } from "phosphor-react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "/assets/type-logo.svg";
+import LogoLight from "/assets/type-logo-light.svg";
+import LogoDark from "/assets/type-logo-dark.svg";
 import useMainStore from "../../store/mainStore";
 
 const useStyles = createStyles((theme) => ({
@@ -90,10 +93,13 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export function HeaderComp() {
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
-  const { classes, theme } = useStyles();
+  const [userMenuOpened, setUserMenuOpened] = useState(false);
+  const [darkMode, setDarkMode] = useState(colorScheme === "dark");
 
   const userId = useMainStore((state) => state.user);
   const shopName = useMainStore((state) => state.shopName);
@@ -101,84 +107,100 @@ export function HeaderComp() {
   const handleLogOut = useMainStore((state) => state.handleLogOut);
 
   const navigate = useNavigate();
+  const { classes, theme } = useStyles();
 
-  const [userMenuOpened, setUserMenuOpened] = useState(false);
+  const toggleColor = (cs) => {
+    toggleColorScheme();
+    setDarkMode(!(cs === "dark"));
+  };
 
   return (
     <Box>
       <Header height={60} px="md">
-        <Container size="xl" h={"100%"}>
-          <Group position="apart" sx={{ height: "100%" }}>
-            <img
-              onClick={() => navigate("/")}
-              src={Logo}
-              style={{ height: 20, cursor: "pointer" }}
-            />
+        <Group position="apart" sx={{ height: "100%" }}>
+          <img
+            onClick={() => navigate("/")}
+            src={darkMode ? LogoLight : LogoDark}
+            style={{ height: 20, cursor: "pointer" }}
+          />
 
-            <Group className={classes.hiddenMobile} hidden={userId}>
-              <Button component={Link} to="/signin" variant="default">
-                Log in
-              </Button>
-              <Button component={Link} to="/signup">
-                Sign up
-              </Button>
-            </Group>
+          <Group className={classes.hiddenMobile} hidden={userId}>
+            <Button component={Link} to="/signin" variant="default">
+              Log in
+            </Button>
+            <Button component={Link} to="/signup">
+              Sign up
+            </Button>
+          </Group>
 
-            {userId !== null && (
-              <Group className={classes.hiddenMobile}>
-                <Menu
-                  width={180}
-                  position="bottom-end"
-                  transition="pop-top-right"
-                  onClose={() => setUserMenuOpened(false)}
-                  onOpen={() => setUserMenuOpened(true)}
-                >
-                  <Menu.Target>
-                    <UnstyledButton>
-                      <Group spacing={7}>
-                        <Avatar radius="xl" />
-                      </Group>
-                    </UnstyledButton>
-                  </Menu.Target>
-                  <Menu.Dropdown>
-                    {role == "owner" ? (
-                      <Menu.Item
-                        component={Link}
-                        to={`/dashboard/${shopName}`}
-                        icon={<User size={16} />}
-                      >
-                        Shop Page
-                      </Menu.Item>
-                    ) : (
-                      <Menu.Item
-                        component={Link}
-                        to="/profile"
-                        icon={<User size={16} />}
-                      >
-                        Profile
-                      </Menu.Item>
-                    )}
+          {userId !== null && (
+            <Group className={classes.hiddenMobile}>
+              <Menu
+                width={180}
+                position="bottom-end"
+                transition="pop-top-right"
+                onClose={() => setUserMenuOpened(false)}
+                onOpen={() => setUserMenuOpened(true)}
+              >
+                <Menu.Target>
+                  <UnstyledButton>
+                    <Group spacing={7}>
+                      <Avatar radius="xl" />
+                    </Group>
+                  </UnstyledButton>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Item
+                    labelPosition="left"
+                    component={Switch}
+                    checked={darkMode}
+                    label="Dark Mode"
+                    onChange={() => toggleColor(colorScheme)}
+                    onLabel={<MoonStars color="white" size={14} />}
+                    offLabel={<SunDim size={14} />}
+                    closeMenuOnClick={false}
+                    sx={{
+                      width: "100%",
+                      cursor: "pointer",
+                    }}
+                  ></Menu.Item>
+                  {role == "owner" ? (
                     <Menu.Item
                       component={Link}
-                      to="/signin"
-                      onClick={handleLogOut}
-                      icon={<SignOut size={16} />}
-                      color="red"
+                      to={`/dashboard/${shopName}`}
+                      icon={<User size={16} />}
                     >
-                      Log out
+                      Shop Page
                     </Menu.Item>
-                  </Menu.Dropdown>
-                </Menu>
-              </Group>
-            )}
+                  ) : (
+                    <Menu.Item
+                      component={Link}
+                      to="/profile"
+                      icon={<User size={16} />}
+                    >
+                      Profile
+                    </Menu.Item>
+                  )}
+                  <Menu.Item
+                    component={Link}
+                    to="/signin"
+                    onClick={handleLogOut}
+                    icon={<SignOut size={16} />}
+                    color="red"
+                  >
+                    Log out
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+            </Group>
+          )}
 
-            <Burger
-              opened={drawerOpened}
-              onClick={toggleDrawer}
-              className={classes.hiddenDesktop}
-            />
-          </Group>
-        </Container>
+          <Burger
+            opened={drawerOpened}
+            onClick={toggleDrawer}
+            className={classes.hiddenDesktop}
+          />
+        </Group>
       </Header>
 
       <Drawer
@@ -186,7 +208,9 @@ export function HeaderComp() {
         onClose={closeDrawer}
         size="100%"
         padding="md"
-        title={<img src={Logo} style={{ height: 20 }} />}
+        title={
+          <img src={darkMode ? LogoLight : LogoDark} style={{ height: 20 }} />
+        }
         className={classes.hiddenDesktop}
         zIndex={1000000}
       >

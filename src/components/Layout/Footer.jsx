@@ -1,18 +1,29 @@
-import { createStyles, Container, Group, Anchor, Text } from "@mantine/core";
-import Logo from "/assets/type-logo.svg";
+import {
+  createStyles,
+  Container,
+  Group,
+  Anchor,
+  Text,
+  useMantineColorScheme,
+} from "@mantine/core";
+import LogoLight from "/assets/type-logo-light.svg";
+import LogoDark from "/assets/type-logo-dark.svg";
 import React from "react";
 import { Link } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
   footer: {
-    borderTop: `1px solid white`,
-    background: theme.colors.dark[7],
+    borderTop: `1px solid ${
+      theme.colorScheme === "dark" ? theme.white : theme.black
+    }`,
+    background:
+      theme.colorScheme === "dark" ? theme.colors.dark[7] : theme.white,
   },
 
   inner: {
     paddingTop: theme.spacing.xl,
     paddingBottom: theme.spacing.xl,
-    margin: "0 48px",
+    margin: "0 16px",
 
     [theme.fn.smallerThan("xs")]: {
       flexDirection: "column",
@@ -27,6 +38,8 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export default function Footer() {
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+
   const { classes } = useStyles();
   const links = [
     {
@@ -52,12 +65,13 @@ export default function Footer() {
 
   return (
     <div className={classes.footer}>
-      <Container size="xl" h={"100%"}>
-        <Group position="apart" className={classes.inner}>
-          <img src={Logo} style={{ height: 20 }} />
-          <Group className={classes.links}>{items}</Group>
-        </Group>
-      </Container>
+      <Group position="apart" className={classes.inner}>
+        <img
+          src={colorScheme === "dark" ? LogoLight : LogoDark}
+          style={{ height: 20 }}
+        />
+        <Group className={classes.links}>{items}</Group>
+      </Group>
     </div>
   );
 }

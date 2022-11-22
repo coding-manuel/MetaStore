@@ -15,7 +15,6 @@ import {
 
 import { supabase } from "../utils/supabaseClient";
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "/assets/type-logo.svg";
 import { showNotification } from "@mantine/notifications";
 import { notificationStyles } from "../globalStyles";
 import useMainStore from "../store/mainStore";
@@ -78,7 +77,7 @@ export function SignIn() {
         </Title>
         <Text color="dimmed" size="sm" align="center" mt={5}>
           Do not have an account yet?
-          <Anchor component={Link} to="/signup" pl={4} size="sm">
+          <Anchor component={Link} color="yellow" to="/signup" pl={4} size="sm">
             Create account
           </Anchor>
         </Text>
@@ -111,6 +110,7 @@ export function SignIn() {
                 onClick={(event) => event.preventDefault()}
                 href="#"
                 size="sm"
+                color="yellow"
               >
                 Forgot password?
               </Anchor>

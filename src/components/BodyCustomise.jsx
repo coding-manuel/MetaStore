@@ -25,11 +25,15 @@ export default function BodyCustomise() {
     <Paper
       shadow="sm"
       p="md"
-      sx={
+      sx={(theme) =>
         isDesktop
           ? {
               height: "100%",
               maxWidth: 900,
+              backgroundColor:
+                theme.colorScheme === "dark"
+                  ? theme.colors.dark[8]
+                  : theme.white,
             }
           : {
               position: "absolute",
@@ -87,7 +91,7 @@ const CustomSizeButton = ({ size }) => {
         cursor: "pointer",
         padding: "8px 8px",
         textAlign: "center",
-        backgroundColor: active ? theme.colors.yellow[4] : theme.colors.dark[5],
+        backgroundColor: active && theme.colors.yellow[4],
         color: active && theme.white,
       }}
       onClick={() => setPreset(size)}
@@ -114,16 +118,15 @@ function CustomSlider({ shapeKey, value }) {
           max={1}
         />
       </Stack>
-      <Box
+      <Paper
         sx={{
-          background: theme.colors.dark[6],
           padding: "8px 8px",
           borderRadius: 8,
           marginTop: 8,
         }}
       >
         {value.toFixed(2)}
-      </Box>
+      </Paper>
     </Group>
   );
 }

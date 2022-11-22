@@ -44,7 +44,7 @@ export function ShopCard({ shopInfo }) {
       <Card
         p="lg"
         m={0}
-        shadow="lg"
+        shadow="sm"
         className={classes.card}
         radius="md"
         component={Link}

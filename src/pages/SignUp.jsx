@@ -94,7 +94,7 @@ export function SignUp() {
         </Title>
         <Text color="dimmed" size="sm" align="center" mt={5}>
           Do you have an account?
-          <Anchor component={Link} to="/signin" pl={4} size="sm">
+          <Anchor component={Link} color="yellow" to="/signin" pl={4} size="sm">
             Log in
           </Anchor>
         </Text>
@@ -126,15 +126,6 @@ export function SignUp() {
               {...form.getInputProps("verifypassword")}
               mt="md"
             />
-            <Group position="apart" mt="md">
-              <Anchor
-                onClick={(event) => event.preventDefault()}
-                href="#"
-                size="sm"
-              >
-                Forgot password?
-              </Anchor>
-            </Group>
             <Button type="submit" fullWidth mt="xl" loading={loading}>
               Sign up
             </Button>

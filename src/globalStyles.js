@@ -17,10 +17,13 @@ export const globalStyles = {
 
   Menu: {
     styles: (theme) => ({
+      dropdown: {
+        backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0],
+      },
       item: {
         padding: "6px 8px",
         margin: "2px 0",
-        color: theme.colors.gray[1],
+        color: theme.colorScheme === "dark" ? theme.white : theme.black,
         transition: ".1s ease",
         "&[data-hovered]": {
           backgroundColor: theme.colors.yellow[5],
@@ -29,6 +32,14 @@ export const globalStyles = {
       },
     }),
   },
+
+  Switch: {
+    styles: (theme) => ({
+      label: {
+        color: theme.colorScheme === "dark" ? theme.white : theme.black,
+
+    }
+  })},
 
   Tabs: {
     styles: (theme) => ({
@@ -77,7 +88,11 @@ export const globalStyles = {
   Paper: {
     styles: (theme) => ({
       root: {
-        backgroundColor: theme.colors.dark[7],
+        backgroundColor: `${
+          theme.colorScheme === "dark"
+            ? theme.colors.dark[6]
+            : theme.colors.gray[0]
+        }`,
       },
     }),
   },
@@ -103,11 +118,11 @@ export const globalStyles = {
         border: `1px solid ${
           theme.colorScheme === "dark" ? theme.colors.gray[7] : theme.black
         }`,
+        transition: "0.1s ease",
         "&:hover": {
           color: theme.white,
           background: theme.colors.yellow[5],
           border: `1px solid transparent`,
-          transition: "0.15s ease",
         },
       },
     }),
@@ -129,7 +144,7 @@ export const globalStyles = {
 
   Tooltip: {
     styles: (theme) => ({
-      body: { color: theme.white, backgroundColor: theme.black },
+      tooltip: { color: `${theme.colorScheme === "dark" ? theme.black : theme.white}`, backgroundColor: `${theme.colorScheme === "dark" ? theme.white : theme.black}` },
     }),
   },
 
@@ -199,9 +214,10 @@ export const bodyStyles = () => ({
   },
 
   body: {
-    // overflow: 'hidden',
-    backgroundColor: "#141517",
-    height: "calc(100 * var(--vh) - 1px)",
+    styles: (theme) => ({
+      backgroundColor: `${theme.colorScheme === "#141517" ? theme.black: theme.white}`,
+      height: "calc(100 * var(--vh) - 1px)",
+    }),
   },
 
   "#root": {

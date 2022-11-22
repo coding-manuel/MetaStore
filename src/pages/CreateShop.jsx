@@ -13,7 +13,6 @@ import {
   Loader,
 } from "@mantine/core";
 
-import Logo from "/assets/type-logo.svg";
 import { Check } from "phosphor-react";
 import { notificationStyles } from "../globalStyles";
 import { supabase } from "../utils/supabaseClient";
@@ -22,6 +21,7 @@ import useMainStore from "../store/mainStore";
 import { useNavigate } from "react-router-dom";
 import AvatarEditorComp from "../components/AvatarEditorComp";
 import { resizeFile } from "../utils/utilFunctions";
+import { FootLayout, HeadFootLayout } from "../components/Layout/Layout";
 
 var urlPattern = new RegExp(
   "^(https?:\\/\\/)?" + // validate protocol
@@ -174,12 +174,7 @@ export default function CreateShop() {
   });
 
   return (
-    <Stack
-      py={40}
-      spacing={42}
-      justify="space-between"
-      sx={{ minHeight: "100%" }}
-    >
+    <FootLayout>
       <Container size={600}>
         <MediaQuery
           query="(min-width: 800px)"
@@ -247,11 +242,6 @@ export default function CreateShop() {
           </Paper>
         </MediaQuery>
       </Container>
-      <img
-        src={Logo}
-        onClick={() => navigate("/")}
-        style={{ height: 20, cursor: "pointer" }}
-      />
-    </Stack>
+    </FootLayout>
   );
 }

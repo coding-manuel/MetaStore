@@ -9,15 +9,16 @@ export default function OutfitCard({ type, name, path, img }) {
       sx={{
         cursor: "pointer",
         transition: "0.1s ease-out",
+        border: "1px solid #5e5e5e5e",
         "&:hover": {
+          border: "1px solid transparent",
           transform: "translate(0px, -2px)",
           boxShadow:
-            "0 14px 28px rgba(0,0,0,0.5), 0 10px 10px rgba(0,0,0,0.22)",
+            "0 14px 28px rgba(0,0,0,0.2), 0 10px 10px rgba(0,0,0,0.22)",
         },
       }}
       shadow="sm"
       radius="md"
-      withBorder
       onClick={() => updateTexture(type, path)}
     >
       <Card.Section>

@@ -1,9 +1,10 @@
-import { Stack } from "@mantine/core";
+import { Stack, useMantineColorScheme } from "@mantine/core";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import { HeaderComp } from "./HeaderComp";
-import Logo from "/assets/type-logo.svg";
+import LogoLight from "/assets/type-logo-light.svg";
+import LogoDark from "/assets/type-logo-dark.svg";
 
 export function HeadFootLayout({ children }) {
   return (
@@ -16,12 +17,14 @@ export function HeadFootLayout({ children }) {
 }
 
 export function FootLayout({ children }) {
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+
   const navigate = useNavigate();
   return (
-    <Stack py={40} sx={{ minHeight: "100%" }} justify="space-between">
+    <Stack py={40} sx={{ minHeight: "100vh" }} justify="space-between">
       {children}
       <img
-        src={Logo}
+        src={colorScheme === "dark" ? LogoLight : LogoDark}
         onClick={() => navigate("/")}
         style={{ height: 20, cursor: "pointer" }}
       />

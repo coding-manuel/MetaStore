@@ -10,7 +10,7 @@ export default function Profile() {
   const isDesktop = useMainStore((state) => state.isDesktop);
   const handleMenuToggle = useMainStore((state) => state.handleMenuToggle);
   return (
-    <Stack spacing={0} sx={{ height: "inherit" }}>
+    <Stack spacing={0} sx={{ height: "100vh" }}>
       <HeaderComp />
       <Group
         grow={isDesktop}
