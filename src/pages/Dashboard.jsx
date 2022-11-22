@@ -156,7 +156,11 @@ export default function Dashboard() {
                   timeout={2000}
                 >
                   {({ copied, copy }) => (
-                    <Tooltip label={copied ? "Copied" : "Copy"} withArrow>
+                    <Tooltip
+                      position="bottom"
+                      label={copied ? "Copied" : "Copy"}
+                      withArrow
+                    >
                       <ActionIcon
                         variant="filled"
                         sx={{ width: 32, height: 32, transition: "0.15s ease" }}
@@ -212,9 +216,30 @@ export function CustomLink({ website, tooltip, children }) {
     website !== null &&
     website !== "" && (
       <Tooltip position="bottom" label={tooltip} offset={8}>
-        <CustomActionIcon component="a" href={website} target="_blank">
+        <ActionIcon
+          sx={(theme) => ({
+            width: "32px",
+            height: "32px",
+            padding: "4px",
+            color: `${
+              theme.colorScheme === "dark" ? theme.white : theme.black
+            }`,
+            border: `1px solid ${
+              theme.colorScheme === "dark" ? theme.colors.gray[7] : theme.black
+            }`,
+            "&:hover": {
+              color: theme.white,
+              background: `${theme.colors.yellow[5]}`,
+              border: `1px solid transparent`,
+              transition: "0.15s ease",
+            },
+          })}
+          component="a"
+          href={website}
+          target="_blank"
+        >
           {children}
-        </CustomActionIcon>
+        </ActionIcon>
       </Tooltip>
     )
   );

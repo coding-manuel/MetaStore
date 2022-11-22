@@ -73,19 +73,16 @@ export default function DashboardTable({
         </Button>
       </Group>
       <Group>
-        <Tooltip
-          position="bottom"
-          label={tableView === "compact" ? "Expanded View" : "Compact View"}
-          offset={8}
+        <CustomActionIcon
+          tooltip={tableView === "compact" ? "Expanded View" : "Compact View"}
+          onClick={() => setTableView()}
         >
-          <CustomActionIcon onClick={() => setTableView()}>
-            {tableView === "compact" ? (
-              <DeviceTablet size={16} />
-            ) : (
-              <Rows size={16} />
-            )}
-          </CustomActionIcon>
-        </Tooltip>
+          {tableView === "compact" ? (
+            <DeviceTablet size={16} />
+          ) : (
+            <Rows size={16} />
+          )}
+        </CustomActionIcon>
       </Group>
       <DataTable
         withBorder
