@@ -1,5 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Stack, Button, Group, Tooltip } from "@mantine/core";
+import {
+  Stack,
+  Button,
+  Group,
+  Tooltip,
+  Title,
+  Text,
+  Paper,
+  List,
+} from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import {
   ArrowSquareOut,
@@ -7,12 +16,17 @@ import {
   DeviceTablet,
   Plus,
   Rows,
+  TrashSimple,
 } from "phosphor-react";
 import { supabase } from "../../utils/supabaseClient";
 
 import { Link } from "react-router-dom";
 import { useToggle } from "@mantine/hooks";
 import CustomActionIcon from "../CustomActionIcon";
+import { showNotification } from "@mantine/notifications";
+import { notificationStyles } from "../../globalStyles";
+import { deleteFile } from "../../utils/ImageFunctions";
+import { openConfirmModal } from "@mantine/modals";
 
 export default function DashboardTable({
   shopId,
@@ -29,13 +43,43 @@ export default function DashboardTable({
 
   const PAGE_SIZE = 10;
 
-  useEffect(() => {
-    getProductsList(page);
-  }, [refreshProductList]);
-
   const setNewPage = async (page) => {
     setPage(page);
     await getProductsList(page);
+  };
+
+  const handleDelete = async () => {
+    setFetching(true);
+    try {
+      const deletePromises = selectedRecords.map(async (rec) => {
+        const promises = rec.product_images.map(async (imageUrl) => {
+          await deleteFile(imageUrl);
+        });
+
+        await Promise.all(promises);
+      });
+
+      await Promise.all(deletePromises);
+
+      const promises = selectedRecords.map(async (rec) => {
+        const { error } = await supabase
+          .from("products")
+          .delete()
+          .eq("product_id", rec.product_id);
+      });
+
+      await Promise.all(promises);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      await getProductsList(page);
+      setSelectedRecords([]);
+      showNotification({
+        title: "Deleted Succesfully",
+        styles: notificationStyles,
+      });
+      setFetching(false);
+    }
   };
 
   const getProductsList = async (page) => {
@@ -60,7 +104,23 @@ export default function DashboardTable({
     }
   };
 
-  return (
+  useEffect(() => {
+    getProductsList(page);
+  }, [refreshProductList]);
+
+  return totalRecords === 0 ? (
+    <Stack align="center">
+      <Text size={18}>Looks empty Right?</Text>
+      <Button
+        component={Link}
+        to="/dashboard/create_product"
+        variant="outline"
+        leftIcon={<Plus size={16} />}
+      >
+        New Product
+      </Button>
+    </Stack>
+  ) : (
     <Stack>
       <Group position="apart">
         <Button
@@ -70,6 +130,42 @@ export default function DashboardTable({
           leftIcon={<Plus size={16} />}
         >
           Add Product
+        </Button>
+        <Button
+          variant="outline"
+          hidden={selectedRecords.length === 0}
+          color="red"
+          leftIcon={<TrashSimple size={16} />}
+          onClick={() => {
+            openConfirmModal({
+              title: "Deleting Products",
+              children: (
+                <Stack>
+                  <Text size="sm">Are you sure you want to delete?</Text>
+                  <Paper
+                    sx={(theme) => ({
+                      backgroundColor: theme.colors.dark[5],
+                    })}
+                    shadow="lg"
+                    p="sm"
+                    withBorder
+                  >
+                    {selectedRecords.map((rec) => {
+                      return (
+                        <Text size="sm" py={2}>
+                          {rec.product_brand} - {rec.product_name}
+                        </Text>
+                      );
+                    })}
+                  </Paper>
+                </Stack>
+              ),
+              labels: { confirm: "Delete Products", cancel: "Cancel" },
+              onConfirm: () => handleDelete(),
+            });
+          }}
+        >
+          Delete {selectedRecords.length} Products
         </Button>
       </Group>
       <Group>
@@ -86,21 +182,22 @@ export default function DashboardTable({
       </Group>
       <DataTable
         withBorder
-        borderRadius="md"
-        shadow="sm"
         withColumnBorders
         highlightOnHover
+        borderRadius={8}
+        shadow="xl"
         horizontalSpacing="sm"
-        noRecordsText="No Products to show"
+        noRecordsText="Nothing to see here"
         records={productsList}
         fetching={fetching}
         totalRecords={totalRecords}
         recordsPerPage={PAGE_SIZE}
-        page={page}
+        page={totalRecords ? page : null}
         onPageChange={(p) => setNewPage(p)}
         selectedRecords={selectedRecords}
         onSelectedRecordsChange={setSelectedRecords}
         idAccessor="product_id"
+        paginationWrapBreakpoint="sm"
         columns={[
           {
             accessor: "product_images",
@@ -112,7 +209,7 @@ export default function DashboardTable({
                 src={
                   import.meta.env.VITE_PRODUCTIMG_URL +
                   "/" +
-                  record.product_images[0]
+                  record.product_thumbnail
                 }
               />
             ),
@@ -127,10 +224,11 @@ export default function DashboardTable({
             title: "Row actions",
             render: (product) => (
               <Group spacing={4} position="center" noWrap>
-                <CustomActionIcon>
+                <CustomActionIcon tooltip="View Product">
                   <ArrowSquareOut size={16} />
                 </CustomActionIcon>
                 <CustomActionIcon
+                  tooltip="Edit Product"
                   onClick={() => handleEditProductModalOpen(product)}
                 >
                   <NotePencil size={16} />

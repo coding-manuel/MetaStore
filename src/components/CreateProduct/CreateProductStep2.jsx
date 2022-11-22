@@ -104,7 +104,7 @@ export function CreateProductStep2({
   };
 
   const calculateDiscount = () => {
-    const x = Math.floor(
+    const x = Math.ceil(
       ((form.values.product_mrp - form.values.product_price) /
         form.values.product_mrp) *
         100

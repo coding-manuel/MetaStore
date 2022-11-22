@@ -1,12 +1,15 @@
-import { Modal, useMantineTheme } from "@mantine/core";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Modal, useMantineTheme } from "@mantine/core";
 import uuid from "react-uuid";
-import * as CryptoJS from "crypto-js";
 
 import { supabase } from "../../utils/supabaseClient";
 import { CreateProductStep2 } from "../CreateProduct/CreateProductStep2";
 import { axiosInst } from "../../utils/axios";
+import {
+  deleteFile,
+  getUploadDetails,
+  uploadFile,
+} from "../../utils/ImageFunctions";
 
 export default function EditProductModal({
   editProductModalOpen,
@@ -26,40 +29,6 @@ export default function EditProductModal({
     }
   };
 
-  const getUploadDetails = async () => {
-    let res = await axiosInst.get("/uploadurl");
-    return res.data;
-  };
-
-  const uploadFile = async (file, product_id, path, data) => {
-    const reader = new FileReader();
-    reader.onload = function () {
-      const hash = CryptoJS.SHA1(CryptoJS.enc.Latin1.parse(reader.result));
-      // Data hashed. Now perform upload.
-
-      // console.log(`${product_id}/product-img${index}`);
-
-      axios({
-        method: "post",
-        url: data.uploadUrl,
-        headers: {
-          "Content-Type": "image/png",
-          Authorization: data.authorizationToken,
-          "X-Bz-File-Name": path,
-          "X-Bz-Content-Sha1": hash,
-        },
-        data: file,
-      });
-    };
-    reader.readAsBinaryString(file);
-  };
-
-  const deleteFile = async (key) => {
-    axiosInst.post(`${import.meta.env.VITE_API_ADDRESS}/deletefile`, {
-      fileName: key,
-    });
-  };
-
   const handleSubmit = async (value) => {
     try {
       setLoading(true);
@@ -75,7 +44,6 @@ export default function EditProductModal({
       await Promise.all(deletePromises);
 
       const promises = await uploadedImages.map(async (image, index) => {
-        console.log(typeof image[0]);
         if (typeof image[0] === "object") {
           let path = `${product_id}/${uuid()}-product-img`;
           imagesPath.push(path);
@@ -119,7 +87,7 @@ export default function EditProductModal({
   const setProductImages = () => {
     setUploadedImages(
       productInfo.product_images.map((img) => {
-        return [img, import.meta.env.VITE_PRODUCTIMG_URL + img, img];
+        return [img, import.meta.env.VITE_PRODUCTIMG_URL + "/" + img, img];
       })
     );
   };

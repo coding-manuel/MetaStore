@@ -39,7 +39,13 @@ export default function Footer() {
     },
   ];
   const items = links.map((link) => (
-    <Anchor component={Link} color="dimmed" to={link.link} size="sm">
+    <Anchor
+      key={link.link}
+      component={Link}
+      color="dimmed"
+      to={link.link}
+      size="sm"
+    >
       {link.label}
     </Anchor>
   ));

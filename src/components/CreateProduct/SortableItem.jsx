@@ -37,6 +37,7 @@ export default function SortableItem({ uploadedImage, id, handleDelete }) {
         <CustomActionIcon
           variant="filled"
           color="red"
+          tooltip="Delete"
           sx={{ position: "absolute", right: 5, top: 5 }}
           onClick={() => handleDelete(uploadedImage[2])}
         >

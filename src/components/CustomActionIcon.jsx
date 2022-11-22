@@ -3,7 +3,12 @@ import { ActionIcon, Tooltip } from "@mantine/core";
 
 export default function CustomActionIcon(props) {
   return (
-    <Tooltip position="bottom" label={props.tooltip} offset={8}>
+    <Tooltip
+      hidden={props.hideTooltip}
+      position="bottom"
+      label={props.tooltip}
+      offset={8}
+    >
       <ActionIcon
         sx={(theme) => ({
           width: "32px",

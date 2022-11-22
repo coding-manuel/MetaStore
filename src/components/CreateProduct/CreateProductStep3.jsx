@@ -12,46 +12,17 @@ import {
 import { Carousel } from "@mantine/carousel";
 import { useNavigate } from "react-router-dom";
 import uuid from "react-uuid";
-import axios from "axios";
-import * as CryptoJS from "crypto-js";
+import { Article } from "phosphor-react";
 
 import useMainStore from "../../store/mainStore";
 import { supabase } from "../../utils/supabaseClient";
-import { Article, Keyboard } from "phosphor-react";
+import { getUploadDetails, uploadFile } from "../../utils/ImageFunctions";
 
 export function CreateProductStep3({ productData, productImages, prevStep }) {
   const [loading, setLoading] = useState(false);
   const shopId = useMainStore((state) => state.shopName);
 
   const navigate = useNavigate();
-
-  const getUploadDetails = async () => {
-    let res = await axios.get(`${import.meta.env.VITE_API_ADDRESS}/uploadurl`);
-    return res.data;
-  };
-
-  const uploadFile = async (file, product_id, path, data) => {
-    const reader = new FileReader();
-    reader.onload = function () {
-      const hash = CryptoJS.SHA1(CryptoJS.enc.Latin1.parse(reader.result));
-      // Data hashed. Now perform upload.
-
-      // console.log(`${product_id}/product-img${index}`);
-
-      axios({
-        method: "post",
-        url: data.uploadUrl,
-        headers: {
-          "Content-Type": "image/png",
-          Authorization: data.authorizationToken,
-          "X-Bz-File-Name": path,
-          "X-Bz-Content-Sha1": hash,
-        },
-        data: file,
-      });
-    };
-    reader.readAsBinaryString(file);
-  };
 
   const handleSubmit = async () => {
     try {
@@ -60,9 +31,9 @@ export function CreateProductStep3({ productData, productImages, prevStep }) {
       let imagesPath = [];
 
       const promises = await productImages.map(async (image, index) => {
-        let data = await getUploadDetails();
-        let path = `${product_id}/product-img-${index}`;
+        let path = `${product_id}/${uuid()}-product-img`;
         imagesPath.push(path);
+        let data = await getUploadDetails();
         await uploadFile(image[0][0], product_id, path, data);
       });
 
@@ -104,7 +75,7 @@ export function CreateProductStep3({ productData, productImages, prevStep }) {
         <Carousel slideSize="100%" withIndicators align="start" slideGap="md">
           {productImages.map((productImage) => {
             return (
-              <Carousel.Slide>
+              <Carousel.Slide key={productImage[2]}>
                 <AspectRatio sx={{ minWidth: 250 }} ratio={720 / 1080}>
                   <img
                     style={{ objectFit: "contain" }}

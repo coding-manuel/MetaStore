@@ -124,8 +124,8 @@ function App() {
       colorScheme={colorScheme}
       toggleColorScheme={toggleColorScheme}
     >
-      <ModalsProvider>
-        <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
+      <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
+        <ModalsProvider>
           <NotificationsProvider>
             <Global styles={bodyStyles} />
             <Routes>
@@ -172,8 +172,8 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </NotificationsProvider>
-        </MantineProvider>
-      </ModalsProvider>
+        </ModalsProvider>
+      </MantineProvider>
     </ColorSchemeProvider>
   );
 }
