@@ -1,8 +1,8 @@
 import { Stack } from "@mantine/core";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Footer from "../components/Footer";
-import { HeaderComp } from "../components/HeaderComp";
+import Footer from "./Footer";
+import { HeaderComp } from "./HeaderComp";
 import Logo from "/assets/type-logo.svg";
 
 export function HeadFootLayout({ children }) {

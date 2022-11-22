@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Stepper, Container } from "@mantine/core";
 import { useBeforeunload } from "react-beforeunload";
 
-import { FootLayout } from "../Layout";
+import { FootLayout } from "../Layout/Layout";
 import { CreateProductStep1 } from "./CreateProductStep1";
 import { CreateProductStep2 } from "./CreateProductStep2";
 import { CreateProductStep3 } from "./CreateProductStep3";

@@ -4,7 +4,7 @@ import Customisation from "../components/Customisation";
 import { Group, Box, Button, Stack } from "@mantine/core";
 import { DotsThree } from "phosphor-react";
 import useMainStore from "../store/mainStore";
-import { HeaderComp } from "../components/HeaderComp";
+import { HeaderComp } from "../components/Layout/HeaderComp";
 
 export default function Creator() {
   const isDesktop = useMainStore((state) => state.isDesktop);

@@ -8,7 +8,7 @@ import {
 } from "@mantine/core";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { HeadFootLayout } from "../components/Layout";
+import { HeadFootLayout } from "../components/Layout/Layout";
 import { ShopCard } from "../components/ShopCard";
 import { Carousel } from "@mantine/carousel";
 import useMainStore from "../store/mainStore";
@@ -38,17 +38,19 @@ export function PopularShopsComp() {
   }, []);
   return (
     <Stack sx={{ width: "100%", heigth: "100%" }}>
-      <Title order={5}>Popular Shops</Title>
-      <Carousel slideSize="10%" slideGap="md" align="start">
+      <Title color="white" order={5}>
+        Popular Shops
+      </Title>
+      <Carousel
+        styles={{ viewport: { padding: 12 } }}
+        slideSize="10%"
+        slideGap="md"
+        align="start"
+      >
         {shops !== null ? (
           <>
             {shops.map((shop) => {
-              return (
-                <ShopCard
-                  image={shop.shop_avatar_url}
-                  updated_at={shop.updated_at}
-                />
-              );
+              return <ShopCard shopInfo={shop} />;
             })}
           </>
         ) : (

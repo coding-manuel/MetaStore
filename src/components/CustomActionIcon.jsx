@@ -34,3 +34,37 @@ export default function CustomActionIcon(props) {
     </Tooltip>
   );
 }
+
+export function CustomLink({ website, tooltip, children }) {
+  return (
+    website !== null &&
+    website !== "" && (
+      <Tooltip position="bottom" label={tooltip} offset={8}>
+        <ActionIcon
+          sx={(theme) => ({
+            width: "32px",
+            height: "32px",
+            padding: "4px",
+            color: `${
+              theme.colorScheme === "dark" ? theme.white : theme.black
+            }`,
+            border: `1px solid ${
+              theme.colorScheme === "dark" ? theme.colors.gray[7] : theme.black
+            }`,
+            "&:hover": {
+              color: theme.white,
+              background: `${theme.colors.yellow[5]}`,
+              border: `1px solid transparent`,
+              transition: "0.15s ease",
+            },
+          })}
+          component="a"
+          href={website}
+          target="_blank"
+        >
+          {children}
+        </ActionIcon>
+      </Tooltip>
+    )
+  );
+}

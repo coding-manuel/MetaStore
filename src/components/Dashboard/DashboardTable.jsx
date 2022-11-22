@@ -1,14 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  Stack,
-  Button,
-  Group,
-  Tooltip,
-  Title,
-  Text,
-  Paper,
-  List,
-} from "@mantine/core";
+import { Stack, Button, Group, Text, Paper } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import {
   ArrowSquareOut,
@@ -20,7 +11,7 @@ import {
 } from "phosphor-react";
 import { supabase } from "../../utils/supabaseClient";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useToggle } from "@mantine/hooks";
 import CustomActionIcon from "../CustomActionIcon";
 import { showNotification } from "@mantine/notifications";
@@ -29,7 +20,7 @@ import { deleteFile } from "../../utils/ImageFunctions";
 import { openConfirmModal } from "@mantine/modals";
 
 export default function DashboardTable({
-  shopId,
+  shopInfo,
   refreshProductList,
   handleEditProductModalOpen,
 }) {
@@ -42,6 +33,8 @@ export default function DashboardTable({
   const [tableView, setTableView] = useToggle(["compact", "expand"]);
 
   const PAGE_SIZE = 10;
+
+  const navigate = useNavigate();
 
   const setNewPage = async (page) => {
     setPage(page);
@@ -92,7 +85,7 @@ export default function DashboardTable({
       const { data, count } = await supabase
         .from("products")
         .select("*", { count: "exact" })
-        .eq("shop_id", shopId)
+        .eq("shop_id", shopInfo.shop_id)
         .range(from, to);
 
       setProductsList(data);
@@ -224,7 +217,14 @@ export default function DashboardTable({
             title: "Row actions",
             render: (product) => (
               <Group spacing={4} position="center" noWrap>
-                <CustomActionIcon tooltip="View Product">
+                <CustomActionIcon
+                  onClick={() =>
+                    navigate(
+                      `/product/${shopInfo.shop_name}/${product.product_id}`
+                    )
+                  }
+                  tooltip="View Product"
+                >
                   <ArrowSquareOut size={16} />
                 </CustomActionIcon>
                 <CustomActionIcon

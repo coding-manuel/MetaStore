@@ -20,6 +20,8 @@ import CreateShop from "./pages/CreateShop";
 import Dashboard from "./pages/Dashboard";
 import CreateProduct from "./components/CreateProduct/CreateProduct";
 import NotFound from "./pages/NotFound";
+import ShopPage from "./pages/ShopPage";
+import ProductPage from "./pages/ProductPage";
 
 function App() {
   const setUserData = useMainStore((state) => state.setUserData);
@@ -84,9 +86,11 @@ function App() {
       ],
     },
 
+    fontFamily: "Space Grotesk, sans-serif",
+
     lineHeight: 1.3,
     headings: {
-      fontFamily: "IBM Plex Sans, sans-serif",
+      fontFamily: "DM Sans, sans-serif",
       fontWeight: 500,
       sizes: {
         h1: { fontSize: "5.653rem" },
@@ -133,6 +137,11 @@ function App() {
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/creator" element={<Creator />} />
+              <Route path="/shop/:shop_id" element={<ShopPage />} />
+              <Route
+                path="/product/:shop_name/:product_id"
+                element={<ProductPage />}
+              />
               <Route
                 path="/createshop"
                 element={

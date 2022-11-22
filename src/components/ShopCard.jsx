@@ -1,5 +1,6 @@
 import { Card, Text, Group, Center, createStyles } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
+import { Link } from "react-router-dom";
 
 const useStyles = createStyles((theme, _params, getRef) => {
   const image = getRef("image");
@@ -35,7 +36,7 @@ const useStyles = createStyles((theme, _params, getRef) => {
   };
 });
 
-export function ShopCard({ image, updated_at }) {
+export function ShopCard({ shopInfo }) {
   const { classes, theme } = useStyles();
 
   return (
@@ -46,9 +47,8 @@ export function ShopCard({ image, updated_at }) {
         shadow="lg"
         className={classes.card}
         radius="md"
-        component="a"
-        // href={link}
-        target="_blank"
+        component={Link}
+        to={`shop/${shopInfo.shop_id}`}
       >
         <div
           className={classes.image}
@@ -56,9 +56,9 @@ export function ShopCard({ image, updated_at }) {
             backgroundImage: `url(${
               import.meta.env.VITE_SUPABASE_PUBLIC_URL +
               "/" +
-              image +
-              "?" +
-              updated_at
+              shopInfo.shop_avatar_url +
+              "?lastmod=" +
+              shopInfo.updated_at
             })`,
           }}
         />

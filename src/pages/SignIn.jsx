@@ -19,7 +19,7 @@ import Logo from "/assets/type-logo.svg";
 import { showNotification } from "@mantine/notifications";
 import { notificationStyles } from "../globalStyles";
 import useMainStore from "../store/mainStore";
-import { FootLayout } from "../components/Layout";
+import { FootLayout } from "../components/Layout/Layout";
 
 export function SignIn() {
   const [loading, setLoading] = useState(false);

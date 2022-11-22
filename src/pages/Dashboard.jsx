@@ -15,31 +15,26 @@ import {
 } from "@mantine/core";
 import {
   Check,
-  DeviceTablet,
   FacebookLogo,
   Globe,
   InstagramLogo,
-  Plus,
-  Rows,
   ShareNetwork,
   TwitterLogo,
 } from "phosphor-react";
 import React, { useEffect } from "react";
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { HeadFootLayout } from "../components/Layout";
+import { useParams } from "react-router-dom";
+import { HeadFootLayout } from "../components/Layout/Layout";
 import useMainStore from "../store/mainStore";
 import DashboardTable from "../components/Dashboard/DashboardTable";
 import { EditImageModal } from "../components/Dashboard/EditImageModal";
 import { EditPageModal } from "../components/Dashboard/EditPageModal";
-import { useToggle } from "@mantine/hooks";
-import CustomActionIcon from "../components/CustomActionIcon";
+import { CustomLink } from "../components/CustomActionIcon";
 import EditProductModal from "../components/Dashboard/EditProductModal";
 
 export default function Dashboard() {
   let { shop_id } = useParams();
   const [loading, setLoading] = useState(false);
-  const [avatarLast, setAvatarLast] = useState("");
   const [editImageModalOpen, setEditImageModalOpen] = useState(false);
   const [editPageModalOpen, setEditPageModalOpen] = useState(false);
   const [refreshProductList, setRefreshProductList] = useState(false);
@@ -47,7 +42,7 @@ export default function Dashboard() {
   const [editProductModalOpen, setEditProductModalOpen] = useState(false);
   const [activeProduct, setActiveProduct] = useState(null);
 
-  const fetchShop = useMainStore((state) => state.fetchShop);
+  const fetchShop = useMainStore((state) => state.fetchShopByID);
   const isDesktop = useMainStore((state) => state.isDesktop);
   const userId = useMainStore((state) => state.user);
 
@@ -61,22 +56,6 @@ export default function Dashboard() {
   useEffect(() => {
     refreshShopInfo();
   }, []);
-
-  useEffect(() => {
-    if (shopInfo) {
-      var date_test = dateToTicks(new Date(Date.parse(shopInfo.updated_at)));
-      setAvatarLast(date_test);
-    }
-  }, [shopInfo]);
-
-  function dateToTicks(date) {
-    const epochOffset = 621355968000000000;
-    const ticksPerMillisecond = 10000;
-
-    const ticks = date.getTime() * ticksPerMillisecond + epochOffset;
-
-    return ticks;
-  }
 
   const refreshShopInfo = () => {
     setLoading(true);
@@ -108,7 +87,7 @@ export default function Dashboard() {
                   "/" +
                   shopInfo.shop_avatar_url +
                   "?lastmod=" +
-                  avatarLast
+                  shopInfo.updated_at
                 }
                 alt="Shop Image"
                 style={{
@@ -183,7 +162,7 @@ export default function Dashboard() {
           <Paper shadow="sm" p="md" mt="md">
             <DashboardTable
               refreshProductList={refreshProductList}
-              shopId={shop_id}
+              shopInfo={shopInfo}
               handleEditProductModalOpen={handleEditProductModalOpen}
             />
           </Paper>
@@ -208,39 +187,5 @@ export default function Dashboard() {
         </Container>
       )}
     </HeadFootLayout>
-  );
-}
-
-export function CustomLink({ website, tooltip, children }) {
-  return (
-    website !== null &&
-    website !== "" && (
-      <Tooltip position="bottom" label={tooltip} offset={8}>
-        <ActionIcon
-          sx={(theme) => ({
-            width: "32px",
-            height: "32px",
-            padding: "4px",
-            color: `${
-              theme.colorScheme === "dark" ? theme.white : theme.black
-            }`,
-            border: `1px solid ${
-              theme.colorScheme === "dark" ? theme.colors.gray[7] : theme.black
-            }`,
-            "&:hover": {
-              color: theme.white,
-              background: `${theme.colors.yellow[5]}`,
-              border: `1px solid transparent`,
-              transition: "0.15s ease",
-            },
-          })}
-          component="a"
-          href={website}
-          target="_blank"
-        >
-          {children}
-        </ActionIcon>
-      </Tooltip>
-    )
   );
 }

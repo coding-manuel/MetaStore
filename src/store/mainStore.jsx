@@ -69,7 +69,7 @@ const mainStore = (set, get) => ({
 
   /* FETCH FUNCTIONS */
 
-  async fetchShop(shop_id) {
+  async fetchShopByID(shop_id) {
     const shop = await supabase
       .from("shops")
       .select("*")
@@ -79,8 +79,28 @@ const mainStore = (set, get) => ({
     return shop;
   },
 
+  async fetchShopByName(shop_name) {
+    const shop = await supabase
+      .from("shops")
+      .select("*")
+      .eq("shop_name", shop_name)
+      .single();
+
+    return shop;
+  },
+
   async fetchPopularShops() {
     const shop = await supabase.from("shops").select("*");
+
+    return shop;
+  },
+
+  async fetchProductByID(product_id) {
+    const shop = await supabase
+      .from("products")
+      .select("*")
+      .eq("product_id", product_id)
+      .single();
 
     return shop;
   },

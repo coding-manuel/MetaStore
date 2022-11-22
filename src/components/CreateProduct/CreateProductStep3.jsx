@@ -88,8 +88,10 @@ export function CreateProductStep3({ productData, productImages, prevStep }) {
           })}
         </Carousel>
         <Stack spacing={2}>
+          <Text size="xl" weight={600}>
+            {productData.product_brand}
+          </Text>
           <Title order={5}>{productData.product_name}</Title>
-          <Text size="xl">{productData.product_brand}</Text>
           <Text mt={{ base: 16, md: 32 }} size={32} weight={700}>
             ₹{productData.product_price}
           </Text>
