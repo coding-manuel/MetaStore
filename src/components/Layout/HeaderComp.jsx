@@ -15,6 +15,7 @@ import {
   Container,
   useMantineColorScheme,
   Switch,
+  Text,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { MoonStars, SignOut, SunDim, User } from "phosphor-react";
@@ -99,7 +100,6 @@ export function HeaderComp() {
     useDisclosure(false);
   const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
-  const [darkMode, setDarkMode] = useState(colorScheme === "dark");
 
   const userId = useMainStore((state) => state.user);
   const shopName = useMainStore((state) => state.shopName);
@@ -109,18 +109,13 @@ export function HeaderComp() {
   const navigate = useNavigate();
   const { classes, theme } = useStyles();
 
-  const toggleColor = (cs) => {
-    toggleColorScheme();
-    setDarkMode(!(cs === "dark"));
-  };
-
   return (
     <Box>
       <Header height={60} px="md">
         <Group position="apart" sx={{ height: "100%" }}>
           <img
             onClick={() => navigate("/")}
-            src={darkMode ? LogoLight : LogoDark}
+            src={colorScheme === "dark" ? LogoLight : LogoDark}
             style={{ height: 20, cursor: "pointer" }}
           />
 
@@ -150,20 +145,27 @@ export function HeaderComp() {
                   </UnstyledButton>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Item
-                    labelPosition="left"
-                    component={Switch}
-                    checked={darkMode}
-                    label="Dark Mode"
-                    onChange={() => toggleColor(colorScheme)}
-                    onLabel={<MoonStars color="white" size={14} />}
-                    offLabel={<SunDim size={14} />}
-                    closeMenuOnClick={false}
+                  <Group
+                    className={classes.link}
+                    position="apart"
+                    onClick={() => toggleColorScheme()}
+                    noWrap
                     sx={{
                       width: "100%",
+                      padding: "3px 8px",
                       cursor: "pointer",
                     }}
-                  ></Menu.Item>
+                  >
+                    <Text>Dark Mode</Text>
+                    <Switch
+                      sx={{ lineHeight: 0 }}
+                      labelPosition="left"
+                      checked={colorScheme === "dark"}
+                      onLabel={<MoonStars color="white" size={14} />}
+                      offLabel={<SunDim size={14} />}
+                    />
+                  </Group>
+                  <Menu.Divider />
                   {role == "owner" ? (
                     <Menu.Item
                       component={Link}
@@ -209,7 +211,10 @@ export function HeaderComp() {
         size="100%"
         padding="md"
         title={
-          <img src={darkMode ? LogoLight : LogoDark} style={{ height: 20 }} />
+          <img
+            src={colorScheme === "dark" ? LogoLight : LogoDark}
+            style={{ height: 20 }}
+          />
         }
         className={classes.hiddenDesktop}
         zIndex={1000000}
@@ -236,6 +241,29 @@ export function HeaderComp() {
           <a href="#" className={classes.link}>
             Academy
           </a>
+
+          <Divider
+            my="sm"
+            color={theme.colorScheme === "dark" ? "dark.5" : "gray.1"}
+          />
+
+          <Group
+            className={classes.link}
+            position="apart"
+            onClick={() => toggleColorScheme()}
+            noWrap
+            sx={{ width: "100%", cursor: "pointer" }}
+          >
+            <Text>Dark Mode</Text>
+            <Switch
+              sx={{ lineHeight: 0 }}
+              labelPosition="left"
+              size="md"
+              checked={colorScheme === "dark"}
+              onLabel={<MoonStars color="white" size={14} />}
+              offLabel={<SunDim size={14} />}
+            />
+          </Group>
 
           <Divider
             my="sm"
