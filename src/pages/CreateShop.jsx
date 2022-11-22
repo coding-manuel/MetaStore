@@ -140,7 +140,7 @@ export default function CreateShop() {
       lastModified: new Date(),
     });
 
-    const compressedFile = await resizeFile(file);
+    const compressedFile = await resizeFile(file, 250, 250);
 
     return compressedFile;
   };

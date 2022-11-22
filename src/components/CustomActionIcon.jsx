@@ -15,7 +15,7 @@ export default function CustomActionIcon(props) {
         "&:hover": {
           color: theme.white,
           background: `${
-            props.color ? theme.colors[props.color][5] : theme.colors.yellow[5]
+            props.color ? theme.colors.yellow[5] : theme.colors.yellow[5]
           }`,
           border: `1px solid transparent`,
           transition: "0.15s ease",

@@ -271,12 +271,7 @@ export const handleImage = async (imgfile) => {
     lastModified: new Date(),
   });
 
-  const options = {
-    maxSizeMB: 3,
-    useWebWorker: true,
-  };
-
-  const compressedFile = await resizeFile(file, options);
+  const compressedFile = await resizeFile(file, 720, 720);
 
   const imageFile = [
     new File([compressedFile], compressedFile.name, {

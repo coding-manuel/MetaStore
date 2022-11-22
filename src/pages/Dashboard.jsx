@@ -46,7 +46,6 @@ export default function Dashboard() {
 
   const [editProductModalOpen, setEditProductModalOpen] = useState(false);
   const [activeProduct, setActiveProduct] = useState(null);
-  const [tableView, setTableView] = useToggle(["compact", "expand"]);
 
   const fetchShop = useMainStore((state) => state.fetchShop);
   const isDesktop = useMainStore((state) => state.isDesktop);
@@ -157,11 +156,7 @@ export default function Dashboard() {
                   timeout={2000}
                 >
                   {({ copied, copy }) => (
-                    <Tooltip
-                      label={copied ? "Copied" : "Copy"}
-                      withArrow
-                      position="right"
-                    >
+                    <Tooltip label={copied ? "Copied" : "Copy"} withArrow>
                       <ActionIcon
                         variant="filled"
                         sx={{ width: 32, height: 32, transition: "0.15s ease" }}
@@ -182,41 +177,11 @@ export default function Dashboard() {
             </Group>
           </Paper>
           <Paper shadow="sm" p="md" mt="md">
-            <Stack>
-              <Group position="apart">
-                <Button
-                  component={Link}
-                  to="/dashboard/create_product"
-                  variant="outline"
-                  leftIcon={<Plus size={16} />}
-                >
-                  Add Product
-                </Button>
-              </Group>
-              <Group>
-                <Tooltip
-                  position="bottom"
-                  label={
-                    tableView === "compact" ? "Expaned View" : "Compact View"
-                  }
-                  offset={8}
-                >
-                  <CustomActionIcon onClick={() => setTableView()}>
-                    {tableView === "compact" ? (
-                      <DeviceTablet size={16} />
-                    ) : (
-                      <Rows size={16} />
-                    )}
-                  </CustomActionIcon>
-                </Tooltip>
-              </Group>
-              <DashboardTable
-                refreshProductList={refreshProductList}
-                tableView={tableView}
-                shopId={shop_id}
-                handleEditProductModalOpen={handleEditProductModalOpen}
-              />
-            </Stack>
+            <DashboardTable
+              refreshProductList={refreshProductList}
+              shopId={shop_id}
+              handleEditProductModalOpen={handleEditProductModalOpen}
+            />
           </Paper>
           <EditImageModal
             editImageModalOpen={editImageModalOpen}
@@ -247,12 +212,7 @@ export function CustomLink({ website, tooltip, children }) {
     website !== null &&
     website !== "" && (
       <Tooltip position="bottom" label={tooltip} offset={8}>
-        <CustomActionIcon
-          variant="outline"
-          component="a"
-          href={website}
-          target="_blank"
-        >
+        <CustomActionIcon component="a" href={website} target="_blank">
           {children}
         </CustomActionIcon>
       </Tooltip>
