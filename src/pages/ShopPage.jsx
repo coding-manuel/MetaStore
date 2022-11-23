@@ -99,7 +99,7 @@ export default function ShopPage() {
               </Text>
             </Stack>
           </Group>
-          <Paper shadow="sm" p="md" mt="md">
+          <Paper withBorder shadow="sm" p="md" mt="md">
             <Group spacing={8} position="right">
               <CustomLink website={shopData.shop_website} tooltip="Website">
                 <Globe size={16} />

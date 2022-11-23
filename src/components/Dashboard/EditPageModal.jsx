@@ -12,6 +12,7 @@ import React, { useEffect } from "react";
 import { useState } from "react";
 import { supabase } from "../../utils/supabaseClient";
 import { useForm } from "@mantine/form";
+import { urlPattern } from "../../utils/utilFunctions";
 
 export function EditPageModal({
   editPageModalOpen,

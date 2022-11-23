@@ -8,7 +8,7 @@ export default function ProductCard({ product, shopData }) {
 
   return (
     <Skeleton
-      sx={{ minHeight: loading && 350 }}
+      sx={{ height: loading && 480 }}
       p={{ base: 4, sm: 8 }}
       radius={4}
       visible={loading}
@@ -19,8 +19,7 @@ export default function ProductCard({ product, shopData }) {
           transition: "0.1s ease-out",
           "&:hover": {
             transform: "translate(0px, -2px)",
-            boxShadow:
-              "0 3px 12px rgb(0 0 0 / 19%), 0 3px 4px rgb(0 0 0 / 22%)",
+            boxShadow: "0 2px 8px rgb(0 0 0 / 32%)",
           },
         }}
         withBorder

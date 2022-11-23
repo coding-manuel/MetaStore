@@ -58,8 +58,6 @@ export function EditImageModal({
         })
         .eq("shop_id", "d7945c5b-74eb-4af5-be10-9353191cd02a");
 
-      console.log(error);
-
       setEditImageModalOpen(false);
       setArtAccepted(false);
       refreshShopInfo();

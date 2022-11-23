@@ -13,7 +13,7 @@ export default function OutfitCard({ type, name, path, img }) {
         "&:hover": {
           border: "1px solid transparent",
           transform: "translate(0px, -2px)",
-          boxShadow: "0 3px 12px rgb(0 0 0 / 19%), 0 3px 4px rgb(0 0 0 / 22%)",
+          boxShadow: "0 2px 8px rgb(0 0 0 / 32%)",
         },
       }}
       shadow="sm"

@@ -94,7 +94,7 @@ export default function Dashboard() {
                   width: 200,
                   height: "auto",
                   borderRadius: 8,
-                  border: "2px solid #5e5e5e",
+                  border: "1px solid #a6a6a6",
                 }}
               />
             </Skeleton>
@@ -105,7 +105,7 @@ export default function Dashboard() {
               </Text>
             </Stack>
           </Group>
-          <Paper shadow="md" p="md" mt="md">
+          <Paper withBorder shadow="md" p="md" mt="md">
             <Group position={isDesktop ? "apart" : "center"}>
               <Group>
                 <Button onClick={() => setEditPageModalOpen(true)}>
@@ -160,7 +160,7 @@ export default function Dashboard() {
               </Group>
             </Group>
           </Paper>
-          <Paper shadow="md" p="md" mt="md">
+          <Paper withBorder shadow="md" p="md" mt="md">
             <DashboardTable
               refreshProductList={refreshProductList}
               shopInfo={shopInfo}
