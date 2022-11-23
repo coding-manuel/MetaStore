@@ -43,17 +43,17 @@ export const globalStyles = {
 
   Tabs: {
     styles: (theme) => ({
-      tabsList: { gap: 8, color: "green" },
       tab: {
         border: `1px solid ${
           theme.colorScheme === "dark" ? theme.white : theme.black
-        }`,
-      },
-      tabLabel: {
-        color: `${theme.white}!important`,
+          }`,
+          '&[aria-selected="true"]': {
+              color: theme.white,
+            },
+        },
+        tabLabel: {
         fontWeight: 500,
       },
-      body: { padding: "16px 0px" },
     }),
   },
 

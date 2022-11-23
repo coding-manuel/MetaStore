@@ -158,7 +158,7 @@ export function HeaderComp() {
                   >
                     <Text>Dark Mode</Text>
                     <Switch
-                      sx={{ lineHeight: 0 }}
+                      sx={{ lineHeight: 0, pointerEvents: "none" }}
                       labelPosition="left"
                       checked={colorScheme === "dark"}
                       onLabel={<MoonStars color="white" size={14} />}
@@ -256,7 +256,7 @@ export function HeaderComp() {
           >
             <Text>Dark Mode</Text>
             <Switch
-              sx={{ lineHeight: 0 }}
+              sx={{ lineHeight: 0, pointerEvents: "none" }}
               labelPosition="left"
               size="md"
               checked={colorScheme === "dark"}

@@ -10,6 +10,7 @@ import {
   Title,
   Skeleton,
   CopyButton,
+  SimpleGrid,
 } from "@mantine/core";
 import {
   Check,
@@ -30,23 +31,29 @@ export default function ShopPage() {
   let { shop_id } = useParams();
   const [loading, setLoading] = useState(false);
 
-  const fetchShop = useMainStore((state) => state.fetchShopByID);
+  const fetchShopByID = useMainStore((state) => state.fetchShopByID);
+  const fetchProductsByShopID = useMainStore(
+    (state) => state.fetchProductsByShopID
+  );
   const isDesktop = useMainStore((state) => state.isDesktop);
   const userId = useMainStore((state) => state.user);
 
-  const [shopInfo, setShopInfo] = useState(null);
+  const [shopData, setShopData] = useState(null);
+  const [productData, setProductData] = useState(null);
+
+  const getData = async () => {
+    setLoading(true);
+    let shopdata = await fetchShopByID(shop_id);
+    setShopData(shopdata.data);
+    let productdata = await fetchProductsByShopID(shopdata.data.shop_id);
+    setProductData(productdata);
+
+    setLoading(false);
+  };
 
   useEffect(() => {
-    refreshShopInfo();
+    getData();
   }, []);
-
-  const refreshShopInfo = () => {
-    setLoading(true);
-    fetchShop(shop_id).then((data) => {
-      setShopInfo(data.data);
-      setLoading(false);
-    });
-  };
 
   return (
     <HeadFootLayout>
@@ -56,7 +63,7 @@ export default function ShopPage() {
         radius="xs"
         transitionDuration={250}
       />
-      {shopInfo !== null && (
+      {shopData !== null && productData != null && (
         <Container size="lg" my={16}>
           <Group
             align={isDesktop ? "flex-start" : "center"}
@@ -68,9 +75,9 @@ export default function ShopPage() {
                 src={
                   import.meta.env.VITE_SUPABASE_PUBLIC_URL +
                   "/" +
-                  shopInfo.shop_avatar_url +
+                  shopData.shop_avatar_url +
                   "?lastmod=" +
-                  shopInfo.updated_at
+                  shopData.updated_at
                 }
                 alt="Shop Image"
                 style={{
@@ -81,24 +88,24 @@ export default function ShopPage() {
               />
             </Skeleton>
             <Stack spacing={4} align={!isDesktop && "center"}>
-              <Title order={4}>{shopInfo.shop_name}</Title>
+              <Title order={4}>{shopData.shop_name}</Title>
               <Text sx={{ maxWidth: 500 }} align={!isDesktop && "center"}>
-                {shopInfo.shop_description}
+                {shopData.shop_description}
               </Text>
             </Stack>
           </Group>
           <Paper shadow="sm" p="md" mt="md">
             <Group spacing={8} position="right">
-              <CustomLink website={shopInfo.shop_website} tooltip="Website">
+              <CustomLink website={shopData.shop_website} tooltip="Website">
                 <Globe size={16} />
               </CustomLink>
-              <CustomLink website={shopInfo.shop_instagram} tooltip="Instagram">
+              <CustomLink website={shopData.shop_instagram} tooltip="Instagram">
                 <InstagramLogo size={16} />
               </CustomLink>
-              <CustomLink website={shopInfo.shop_facebook} tooltip="Facebook">
+              <CustomLink website={shopData.shop_facebook} tooltip="Facebook">
                 <FacebookLogo size={16} />
               </CustomLink>
-              <CustomLink website={shopInfo.shop_twitter} tooltip="Twitter">
+              <CustomLink website={shopData.shop_twitter} tooltip="Twitter">
                 <TwitterLogo size={16} />
               </CustomLink>
               <CopyButton
@@ -129,6 +136,7 @@ export default function ShopPage() {
               </CopyButton>
             </Group>
           </Paper>
+          <SimpleGrid></SimpleGrid>
         </Container>
       )}
     </HeadFootLayout>

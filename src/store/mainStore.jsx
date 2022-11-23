@@ -105,6 +105,15 @@ const mainStore = (set, get) => ({
     return shop;
   },
 
+  async fetchProductsByShopID(shop_id) {
+    const { data, count } = await supabase
+      .from("products")
+      .select("*", { count: "exact" })
+      .eq("shop_id", shop_id);
+
+    return data;
+  },
+
   /* UI FUNCTION */
 
   onResize: () => {
