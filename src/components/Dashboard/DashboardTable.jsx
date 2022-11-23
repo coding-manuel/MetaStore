@@ -18,6 +18,7 @@ import { showNotification } from "@mantine/notifications";
 import { notificationStyles } from "../../globalStyles";
 import { deleteFile } from "../../utils/ImageFunctions";
 import { openConfirmModal } from "@mantine/modals";
+import { getImageUrl } from "../../utils/utilFunctions";
 
 export default function DashboardTable({
   shopInfo,
@@ -192,11 +193,7 @@ export default function DashboardTable({
             render: (record) => (
               <img
                 style={{ height: tableView === "compact" ? 50 : 150 }}
-                src={
-                  import.meta.env.VITE_PRODUCTIMG_URL +
-                  "/" +
-                  record.product_thumbnail
-                }
+                src={getImageUrl(record.product_thumbnail)}
               />
             ),
           },

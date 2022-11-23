@@ -11,6 +11,8 @@ import {
   Skeleton,
   CopyButton,
   SimpleGrid,
+  Card,
+  Image,
 } from "@mantine/core";
 import {
   Check,
@@ -25,7 +27,9 @@ import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { CustomLink } from "../components/CustomActionIcon";
 import { HeadFootLayout } from "../components/Layout/Layout";
+import ProductCard from "../components/ProductCard";
 import useMainStore from "../store/mainStore";
+import { getImageUrl } from "../utils/utilFunctions";
 
 export default function ShopPage() {
   let { shop_id } = useParams();
@@ -84,6 +88,7 @@ export default function ShopPage() {
                   width: 200,
                   height: "auto",
                   borderRadius: 8,
+                  border: "1px solid #a6a6a6",
                 }}
               />
             </Skeleton>
@@ -136,7 +141,22 @@ export default function ShopPage() {
               </CopyButton>
             </Group>
           </Paper>
-          <SimpleGrid></SimpleGrid>
+          <SimpleGrid
+            mt="md"
+            cols={2}
+            spacing={8}
+            verticalSpacing={8}
+            breakpoints={[
+              { minWidth: "sm", cols: 3 },
+              { minWidth: "md", cols: 4 },
+            ]}
+          >
+            {productData.map((product) => (
+              <>
+                <ProductCard shopData={shopData} product={product} />
+              </>
+            ))}
+          </SimpleGrid>
         </Container>
       )}
     </HeadFootLayout>

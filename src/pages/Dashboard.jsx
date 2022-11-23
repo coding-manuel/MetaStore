@@ -94,6 +94,7 @@ export default function Dashboard() {
                   width: 200,
                   height: "auto",
                   borderRadius: 8,
+                  border: "2px solid #5e5e5e",
                 }}
               />
             </Skeleton>

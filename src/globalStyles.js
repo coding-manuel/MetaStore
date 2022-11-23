@@ -1,3 +1,5 @@
+import { TextAlignJustify } from "phosphor-react";
+
 export const globalStyles = {
   Header: {
     styles: (theme) => ({
@@ -18,7 +20,10 @@ export const globalStyles = {
   Menu: {
     styles: (theme) => ({
       dropdown: {
-        backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[6] : theme.colors.gray[0],
+        backgroundColor:
+          theme.colorScheme === "dark"
+            ? theme.colors.dark[6]
+            : theme.colors.gray[0],
       },
       item: {
         padding: "6px 8px",
@@ -37,21 +42,21 @@ export const globalStyles = {
     styles: (theme) => ({
       label: {
         color: theme.colorScheme === "dark" ? theme.white : theme.black,
-
-    }
-  })},
+      },
+    }),
+  },
 
   Tabs: {
     styles: (theme) => ({
       tab: {
         border: `1px solid ${
           theme.colorScheme === "dark" ? theme.white : theme.black
-          }`,
-          '&[aria-selected="true"]': {
-              color: theme.white,
-            },
+        }`,
+        '&[aria-selected="true"]': {
+          color: theme.white,
         },
-        tabLabel: {
+      },
+      tabLabel: {
         fontWeight: 500,
       },
     }),
@@ -144,7 +149,12 @@ export const globalStyles = {
 
   Tooltip: {
     styles: (theme) => ({
-      tooltip: { color: `${theme.colorScheme === "dark" ? theme.black : theme.white}`, backgroundColor: `${theme.colorScheme === "dark" ? theme.white : theme.black}` },
+      tooltip: {
+        color: `${theme.colorScheme === "dark" ? theme.black : theme.white}`,
+        backgroundColor: `${
+          theme.colorScheme === "dark" ? theme.white : theme.black
+        }`,
+      },
     }),
   },
 
@@ -190,7 +200,17 @@ export const notificationStyles = (theme) => ({
   },
 });
 
-export const bodyStyles = () => ({
+export const bodyStyles = (theme) => ({
+  html: {
+    [theme.fn.smallerThan('sm')]: {
+      fontSize: 12,
+    },
+
+    [theme.fn.largerThan("sm")]: {
+      fontSize: 14,
+    },
+  },
+
   "::-moz-selection": { color: "white", background: "#eea02b" },
 
   "::selection": { color: "white", background: "#eea02b" },
@@ -213,14 +233,8 @@ export const bodyStyles = () => ({
     border: "none",
   },
 
-  body: {
-    styles: (theme) => ({
-      backgroundColor: `${theme.colorScheme === "#141517" ? theme.black: theme.white}`,
-      height: "calc(100 * var(--vh) - 1px)",
-    }),
-  },
-
   "#root": {
     height: "inherit",
+    fontSize: "1rem!important",
   },
 });

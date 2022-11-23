@@ -99,8 +99,8 @@ function App() {
     },
 
     fontFamily: "Space Grotesk, sans-serif",
-
     lineHeight: 1.3,
+
     headings: {
       fontFamily: "DM Sans, sans-serif",
       fontWeight: 500,
@@ -110,7 +110,7 @@ function App() {
         h3: { fontSize: "2.827rem" },
         h4: { fontSize: "1.999rem" },
         h5: { fontSize: "1.614rem" },
-        h6: { fontSize: "0.707rem" },
+        h6: { fontSize: "1.107rem" },
       },
     },
   };
@@ -126,10 +126,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    document
-      .querySelector(":root")
-      .style.setProperty("--vh", window.innerHeight / 100 + "px");
-
     window.addEventListener("resize", onResize);
     onResize();
     return () => window.removeEventListener("resize", onResize);

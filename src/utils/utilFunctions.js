@@ -25,3 +25,7 @@ export const resizeFile = (file, width, height) =>
     "(\\#[-a-z\\d_]*)?$",
   "i"
 ); // validate fragment locator
+
+export const getImageUrl = (image_id) => {
+  return `${import.meta.env.VITE_PRODUCTIMG_URL}/${image_id}`
+}
