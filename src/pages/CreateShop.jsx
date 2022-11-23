@@ -71,7 +71,7 @@ export default function CreateShop() {
       return;
     }
     const pf = await handleCrop();
-    const name = shopName.concat("-picture");
+    const name = shopName.replace(/\s+/g, "").concat("-picture");
     const avatarFile = [
       new File([pf], `${name}.jpg`, {
         type: "image/jpeg",

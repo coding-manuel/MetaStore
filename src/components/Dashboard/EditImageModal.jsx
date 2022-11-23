@@ -32,7 +32,7 @@ export function EditImageModal({
 
   const handleSubmit = async () => {
     const pf = await handleCrop();
-    const name = shopInfo.shop_name.concat("-picture");
+    const name = shopInfo.shop_name.replace(/\s+/g, "").concat("-picture");
     const avatarFile = [
       new File([pf], `${name}.jpg`, {
         type: "image/jpeg",
@@ -56,7 +56,7 @@ export function EditImageModal({
         .update({
           shop_avatar_url: name,
         })
-        .eq("shop_id", "d7945c5b-74eb-4af5-be10-9353191cd02a");
+        .eq("shop_id", shopInfo.shop_id);
 
       setEditImageModalOpen(false);
       setArtAccepted(false);
