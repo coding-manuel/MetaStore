@@ -108,7 +108,7 @@ function App() {
         h1: { fontSize: "5.653rem" },
         h2: { fontSize: "3.998rem" },
         h3: { fontSize: "2.827rem" },
-        h4: { fontSize: "1.999rem" },
+        h4: { fontSize: "2.499rem" },
         h5: { fontSize: "1.614rem" },
         h6: { fontSize: "1.107rem" },
       },

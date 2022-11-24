@@ -8,6 +8,7 @@ import {
   AspectRatio,
   SimpleGrid,
   Accordion,
+  Paper,
 } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
 import { Article } from "phosphor-react";
@@ -54,6 +55,21 @@ export default function ProductContent({ productImages, productData }) {
             </Text>
           </Group>
         )}
+        <Stack my={16}>
+          <Text size="sm">Sizes Available</Text>
+          <Group>
+            {productData.product_size_available.map((size) => {
+              if (size.available !== 0)
+                return (
+                  <Paper w={50} shadow="xs" p="md">
+                    <Text fw={700} ta="center">
+                      {size.sizeName}
+                    </Text>
+                  </Paper>
+                );
+            })}
+          </Group>
+        </Stack>
         <Accordion
           radius={8}
           my={16}

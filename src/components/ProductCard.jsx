@@ -17,6 +17,7 @@ export default function ProductCard({ product, shopData }) {
         sx={{
           cursor: "pointer",
           transition: "0.1s ease-out",
+          height: "100%",
           "&:hover": {
             transform: "translate(0px, -2px)",
             boxShadow: "0 2px 8px rgb(0 0 0 / 32%)",

@@ -22,6 +22,7 @@ export default function EditProductModal({
 
   const [uploadedImages, setUploadedImages] = useState([]);
   const [deletedImages, setDeletedImages] = useState([]);
+  const [sizeData, setSizeData] = useState([]);
   const handleModalClose = () => {
     if (!loading) {
       setEditProductModalOpen(false);
@@ -94,6 +95,7 @@ export default function EditProductModal({
 
   useEffect(() => {
     if (productInfo) {
+      setSizeData(productInfo.product_size_available);
       setProductImages();
     }
   }, [productInfo]);
@@ -110,6 +112,7 @@ export default function EditProductModal({
       opened={editProductModalOpen}
       exitTransitionDuration={250}
       size="xl"
+      fullScreen
     >
       <CreateProductStep2
         uploadedImages={uploadedImages}
@@ -119,6 +122,7 @@ export default function EditProductModal({
         handleEditSubmit={handleSubmit}
         setDeletedImages={setDeletedImages}
         finalLoading={loading}
+        sizeData={sizeData}
       />
     </Modal>
   );

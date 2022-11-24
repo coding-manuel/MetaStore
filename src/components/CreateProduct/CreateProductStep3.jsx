@@ -8,6 +8,7 @@ import {
   AspectRatio,
   SimpleGrid,
   Accordion,
+  Paper,
 } from "@mantine/core";
 import { Carousel } from "@mantine/carousel";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +19,12 @@ import useMainStore from "../../store/mainStore";
 import { supabase } from "../../utils/supabaseClient";
 import { getUploadDetails, uploadFile } from "../../utils/ImageFunctions";
 
-export function CreateProductStep3({ productData, productImages, prevStep }) {
+export function CreateProductStep3({
+  productData,
+  productImages,
+  sizeData,
+  prevStep,
+}) {
   const [loading, setLoading] = useState(false);
   const shopId = useMainStore((state) => state.shopName);
 
@@ -29,15 +35,6 @@ export function CreateProductStep3({ productData, productImages, prevStep }) {
       setLoading(true);
       const product_id = uuid();
       let imagesPath = [];
-
-      const promises = await productImages.map(async (image, index) => {
-        let path = `${product_id}/${uuid()}-product-img`;
-        imagesPath.push(path);
-        let data = await getUploadDetails();
-        await uploadFile(image[0][0], product_id, path, data);
-      });
-
-      await Promise.all(promises);
 
       // create shop page
       const { error } = await supabase.from("products").insert({
@@ -55,7 +52,18 @@ export function CreateProductStep3({ productData, productImages, prevStep }) {
         product_discount: productData.product_discount,
         product_sku: productData.product_sku,
         product_images: imagesPath,
+        product_size_available: sizeData,
       });
+
+      const promises = await productImages.map(async (image, index) => {
+        let path = `${product_id}/${uuid()}-product-img`;
+        imagesPath.push(path);
+        let data = await getUploadDetails();
+        await uploadFile(image[0][0], product_id, path, data);
+      });
+
+      await Promise.all(promises);
+
       navigate(`/dashboard/${shopId}`);
     } catch (error) {
       console.log(error);
@@ -88,13 +96,13 @@ export function CreateProductStep3({ productData, productImages, prevStep }) {
           })}
         </Carousel>
         <Stack spacing={2}>
-          <Text size="xl" weight={600}>
+          <Text size="lg" weight={600}>
             {productData.product_brand}
           </Text>
-          <Title order={5}>{productData.product_name}</Title>
-          <Text mt={{ base: 16, md: 32 }} size={32} weight={700}>
+          <Title order={4}>{productData.product_name}</Title>
+          <Title mt={{ base: 16, md: 32 }} order={3} weight={700}>
             ₹{productData.product_price}
-          </Text>
+          </Title>
           {productData.product_discount !== 0 && (
             <Group spacing={4} align="center">
               <Text size="lg" strikethrough color="dimmed">
@@ -105,6 +113,21 @@ export function CreateProductStep3({ productData, productImages, prevStep }) {
               </Text>
             </Group>
           )}
+          <Stack my={16}>
+            <Text size="sm">Sizes Available</Text>
+            <Group>
+              {sizeData.map((size) => {
+                if (size.available !== 0)
+                  return (
+                    <Paper w={50} shadow="xs" p="md">
+                      <Text fw={700} ta="center">
+                        {size.sizeName}
+                      </Text>
+                    </Paper>
+                  );
+              })}
+            </Group>
+          </Stack>
           <Accordion
             radius={8}
             my={16}

@@ -8,10 +8,42 @@ import { CreateProductStep2 } from "./CreateProductStep2";
 import { CreateProductStep3 } from "./CreateProductStep3";
 
 export default function CreateProduct() {
-  const [active, setActive] = useState(0);
+  const [active, setActive] = useState(1);
   const [stepOneData, setStepOneData] = useState(null);
   const [stepTwoData, setStepTwoData] = useState(null);
   const [uploadedImages, setUploadedImages] = useState([]);
+  const [sizeData, setSizeData] = useState([
+    {
+      sizeName: "XS",
+      sizeMeasurements: [39, 26, 7],
+      available: 0,
+    },
+    {
+      sizeName: "S",
+      sizeMeasurements: [40, 7.5, 27],
+      available: 0,
+    },
+    {
+      sizeName: "M",
+      sizeMeasurements: [42, 28, 8],
+      available: 0,
+    },
+    {
+      sizeName: "L",
+      sizeMeasurements: [44, 29, 8.5],
+      available: 0,
+    },
+    {
+      sizeName: "XL",
+      sizeMeasurements: [],
+      available: 0,
+    },
+    {
+      sizeName: "XXL",
+      sizeMeasurements: ["", "", ""],
+      available: 0,
+    },
+  ]);
 
   const nextStep = () => {
     setActive((current) => (current < 3 ? current + 1 : current));
@@ -43,12 +75,15 @@ export default function CreateProduct() {
               setFormData={setStepTwoData}
               uploadedImages={uploadedImages}
               setUploadedImages={setUploadedImages}
+              sizeData={sizeData}
+              setSizeData={setSizeData}
             />
           </Stepper.Step>
           <Stepper.Step>
             <CreateProductStep3
               productData={stepTwoData}
               productImages={uploadedImages}
+              sizeData={sizeData}
               prevStep={prevStep}
             />
           </Stepper.Step>

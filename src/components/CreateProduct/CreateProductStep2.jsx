@@ -19,6 +19,7 @@ import { showNotification } from "@mantine/notifications";
 import ImageDragDrop from "./ImageDragDrop";
 import { ProductPictureUploadComp } from "../AvatarEditorComp";
 import { notificationStyles } from "../../globalStyles";
+import SizeInput from "./SizeInput";
 
 export function CreateProductStep2({
   prevStep,
@@ -31,6 +32,8 @@ export function CreateProductStep2({
   handleEditSubmit,
   setDeletedImages,
   finalLoading,
+  sizeData,
+  setSizeData,
 }) {
   const [characterCount, setCharacterCount] = useState(0);
   const [artAccepted, setArtAccepted] = useState(false);
@@ -131,7 +134,7 @@ export function CreateProductStep2({
   }, []);
 
   return (
-    <Stack spacing={0}>
+    <Stack spacing={0} sx={{ width: "100%" }}>
       {!editProduct && (
         <>
           <Text weight={700}>Step 2 of 3</Text>
@@ -201,6 +204,13 @@ export function CreateProductStep2({
             data={productTypes}
             {...form.getInputProps("product_type")}
           />
+          {sizeData.length !== 0 && (
+            <SizeInput
+              editProduct={editProduct}
+              sizeData={sizeData}
+              setSizeData={setSizeData}
+            />
+          )}
           <Radio.Group
             name="Gender"
             label="Gender"

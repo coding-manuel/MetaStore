@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Stack, Button, Group, Text, Paper } from "@mantine/core";
+import { Stack, Button, Group, Text, Paper, AspectRatio } from "@mantine/core";
 import { DataTable } from "mantine-datatable";
 import {
   ArrowSquareOut,
@@ -191,10 +191,15 @@ export default function DashboardTable({
             title: "Image",
             textAlignment: "center",
             render: (record) => (
-              <img
-                style={{ height: tableView === "compact" ? 50 : 150 }}
-                src={getImageUrl(record.product_thumbnail)}
-              />
+              <AspectRatio
+                ratio={9 / 16}
+                sx={{ width: tableView === "compact" ? 50 : 150 }}
+              >
+                <img
+                  style={{ objectFit: "contain" }}
+                  src={getImageUrl(record.product_thumbnail)}
+                />
+              </AspectRatio>
             ),
           },
           { accessor: "product_name", title: "Name" },
