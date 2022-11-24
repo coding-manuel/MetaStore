@@ -22,6 +22,7 @@ import CreateProduct from "./components/CreateProduct/CreateProduct";
 import NotFound from "./pages/NotFound";
 import ShopPage from "./pages/ShopPage";
 import ProductPage from "./pages/ProductPage";
+import ARView from "./pages/ARView";
 
 function App() {
   const setUserData = useMainStore((state) => state.setUserData);
@@ -145,6 +146,7 @@ function App() {
               <Route path="/signin" element={<SignIn />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/creator" element={<Creator />} />
+              <Route path="/experience" element={<ARView />} />
               <Route path="/shop/:shop_id" element={<ShopPage />} />
               <Route
                 path="/product/:shop_name/:product_id"

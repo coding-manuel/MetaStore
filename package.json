@@ -28,6 +28,7 @@
     "@react-three/postprocessing": "^2.6.2",
     "@rollup/plugin-inject": "^5.0.2",
     "@supabase/supabase-js": "^2.0.5",
+    "@zappar/zappar-react-three-fiber": "^2.1.2",
     "allotment": "^1.17.0",
     "axios": "^1.1.3",
     "backblaze-b2": "^1.7.0",
