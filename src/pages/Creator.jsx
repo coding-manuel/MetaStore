@@ -5,6 +5,8 @@ import { Group, Box, Button, Stack } from "@mantine/core";
 import { DotsThree } from "phosphor-react";
 import useMainStore from "../store/mainStore";
 import { HeaderComp } from "../components/Layout/HeaderComp";
+import { Allotment } from "allotment";
+import "allotment/dist/style.css";
 
 export default function Creator() {
   const isDesktop = useMainStore((state) => state.isDesktop);
@@ -19,28 +21,46 @@ export default function Creator() {
         spacing={0}
         sx={{ flexGrow: 1, overflow: "hidden" }}
       >
-        <Customisation />
-        <Box
-          sx={{
-            width: "100%",
-            height: "100%",
-          }}
-        >
-          <Experience />
-        </Box>
-        {!isDesktop && (
-          <Button
-            onClick={handleMenuToggle}
-            sx={{
-              position: "absolute",
-              bottom: 0,
-              right: 0,
-              margin: "0 20px 20px 0",
-              borderRadius: "200px",
-            }}
-          >
-            <DotsThree size={32} weight="bold" />
-          </Button>
+        {isDesktop ? (
+          <Allotment>
+            <Allotment.Pane minSize={200}>
+              <Customisation />
+            </Allotment.Pane>
+            <Allotment.Pane>
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                <Experience />
+              </Box>
+            </Allotment.Pane>
+          </Allotment>
+        ) : (
+          <>
+            <Customisation />
+            <Box
+              sx={{
+                width: "100%",
+                height: "100%",
+              }}
+            >
+              <Experience />
+            </Box>
+            <Button
+              onClick={handleMenuToggle}
+              sx={{
+                position: "absolute",
+                bottom: 0,
+                right: 0,
+                margin: "0 20px 20px 0",
+                borderRadius: "200px",
+              }}
+            >
+              <DotsThree size={32} weight="bold" />
+            </Button>
+          </>
         )}
       </Group>
     </Stack>

@@ -211,6 +211,8 @@ export const bodyStyles = (theme) => ({
     },
   },
 
+  "--separator-border": "rgb(225 146 28)",
+
   "::-moz-selection": { color: "white", background: "#eea02b" },
 
   "::selection": { color: "white", background: "#eea02b" },

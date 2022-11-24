@@ -1,4 +1,5 @@
 import React, { Suspense, useRef, useEffect } from "react";
+import { Loader as MantineLoader } from "@mantine/core";
 import { Canvas } from "@react-three/fiber";
 import {
   EffectComposer,
@@ -12,10 +13,20 @@ import {
   MeshReflectorMaterial,
   OrbitControls,
   PerspectiveCamera,
+  Html,
+  useProgress,
 } from "@react-three/drei";
 import Character from "./Character";
 
 function Experience() {
+  function Loader() {
+    const { progress } = useProgress();
+    return (
+      <Html center>
+        <MantineLoader />
+      </Html>
+    );
+  }
   return (
     <Canvas dpr={[1, 2]} shadows>
       <ambientLight intensity={0.2} />
@@ -24,7 +35,7 @@ function Experience() {
         minPolarAngle={Math.PI / 2.3}
         maxPolarAngle={Math.PI / 2.3}
       />
-      <Suspense fallback={null}>
+      <Suspense fallback={<Loader />}>
         <EffectComposer>
           <PerspectiveCamera makeDefault fov={50} position={[0, 20, 13]} />
           <Character />
