@@ -2,7 +2,7 @@ import { Stack, Group, Box, Button } from "@mantine/core";
 import React from "react";
 import useMainStore from "../store/mainStore";
 import { HeaderComp } from "../components/Layout/HeaderComp";
-import Experience from "../components/Experience";
+import Experience from "../components/Creator/Experience";
 import BodyCustomise from "../components/BodyCustomise";
 import { DotsThree } from "phosphor-react";
 

@@ -15,8 +15,20 @@ const characterStore = (set) => ({
     hands: 1,
   },
 
+  material: {
+    shoe: "Shoes-Black-01",
+  },
+
   texture: {
     top: "/assets/orange.png",
+  },
+
+  updateMaterial(item, name) {
+    set((state) =>
+      produce(state, (draftState) => {
+        draftState.material[item] = name;
+      })
+    );
   },
 
   updateTexture(type, path) {

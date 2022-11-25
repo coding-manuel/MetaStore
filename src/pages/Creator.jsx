@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import Experience from "../components/Experience";
-import Customisation from "../components/Customisation";
+import Experience from "../components/Creator/Experience";
+import Customisation from "../components/Creator/Customisation";
 import { Group, Box, Button, Stack } from "@mantine/core";
 import { DotsThree } from "phosphor-react";
 import useMainStore from "../store/mainStore";
