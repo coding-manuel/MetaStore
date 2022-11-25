@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { VRButton, ARButton, XR, Controllers, Hands } from "@react-three/xr";
 import { Canvas } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
-import Character from "../Components/Creator/Character";
+import Character from "../components/Creator/Character";
 
 function Experience() {
   return (
