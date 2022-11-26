@@ -3,6 +3,7 @@ import { useLoader } from "@react-three/fiber";
 import { useGLTF, useAnimations, useHelper } from "@react-three/drei";
 import { TextureLoader } from "three";
 import useCharacterStore from "../../store/characterStore";
+import { XR, ARButton, useHitTest } from "@react-three/xr";
 
 export default function Model({ addShoe }) {
   const group = useRef(null);
@@ -20,8 +21,17 @@ export default function Model({ addShoe }) {
     "Armature.001|mixamo.com|Layer0"
   );
 
+  useHitTest((hitTestMatrix) => {
+    if (group.current) {
+      hitTestMatrix.decompose(
+        group.current.position,
+        group.current.quaternion,
+        group.current.scale
+      );
+    }
+  });
+
   useEffect(() => {
-    console.log(nodes, materials);
     actions[selectedAction]?.reset().fadeIn(0.5).play();
     return () => void actions[selectedAction]?.fadeOut(0.5);
   }, [selectedAction]);
