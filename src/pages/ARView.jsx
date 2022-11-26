@@ -22,32 +22,41 @@ function Experience() {
     //     </XR>
     //   </Canvas>
     // </div>
+    // <model-viewer
+    //   style={{ height: "100vh", width: "100vw" }}
+    //   src="/assets/models/male_model.glb"
+    //   ar
+    //   ar-scale="fixed"
+    //   camera-controls
+    //   shadow-intensity="1"
+    //   autoplay
+    //   exposure="1"
+    //   xr-environment
+    // >
+    //   <Group
+    //     slot="poster"
+    //     position="center"
+    //     sx={{ width: "100%", height: "100%" }}
+    //   >
+    //     <Loader />
+    //   </Group>
+    //   {/* <Stack
+    //     slot="ar-button"
+    //     justify="flex-end"
+    //     sx={{ width: "100%", height: "100%" }}
+    //   >
+    //     <Button>View in AR</Button>
+    //   </Stack> */}
+    // </model-viewer>
     <model-viewer
-      style={{ height: "100vh", width: "100vw" }}
       src="/assets/models/male_model.glb"
       ar
       ar-scale="fixed"
       camera-controls
-      shadow-intensity="1"
-      autoplay
-      exposure="1"
+      touch-action="pan-y"
+      alt="A 3D model of an astronaut"
       xr-environment
-    >
-      <Group
-        slot="poster"
-        position="center"
-        sx={{ width: "100%", height: "100%" }}
-      >
-        <Loader />
-      </Group>
-      {/* <Stack
-        slot="ar-button"
-        justify="flex-end"
-        sx={{ width: "100%", height: "100%" }}
-      >
-        <Button>View in AR</Button>
-      </Stack> */}
-    </model-viewer>
+    ></model-viewer>
   );
 }
 
