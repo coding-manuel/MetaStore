@@ -27,12 +27,12 @@ function Experience() {
       src="/assets/models/male_model.glb"
       ar
       ar-scale="fixed"
-      ar-modes="webxr scene-viewer quick-look"
       camera-controls
       poster="poster.webp"
       shadow-intensity="1"
       autoplay
       exposure="1"
+      xr-environment
     >
       <Group
         slot="poster"
