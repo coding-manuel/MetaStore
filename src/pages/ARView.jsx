@@ -28,7 +28,6 @@ function Experience() {
       ar
       ar-scale="fixed"
       camera-controls
-      poster="poster.webp"
       shadow-intensity="1"
       autoplay
       exposure="1"
