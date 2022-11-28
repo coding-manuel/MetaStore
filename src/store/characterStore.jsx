@@ -16,17 +16,40 @@ const characterStore = (set) => ({
   },
 
   material: {
+    hairMesh: "Hair-02",
+    hairColor: "Hair-Black-01",
+    glasses: "none",
     shoe: "Shoes-Black-01",
   },
 
   texture: {
+    skin: "pale",
+    face: "pale",
+    hair: "#111111",
     top: "/assets/orange.png",
+  },
+
+  updateHairColor(color) {
+    set((state) =>
+      produce(state, (draftState) => {
+        draftState.texture.hair = color;
+      })
+    );
   },
 
   updateMaterial(item, name) {
     set((state) =>
       produce(state, (draftState) => {
         draftState.material[item] = name;
+      })
+    );
+  },
+
+  updateSkin(key) {
+    set((state) =>
+      produce(state, (draftState) => {
+        draftState.texture.skin = key;
+        draftState.texture.face = key;
       })
     );
   },

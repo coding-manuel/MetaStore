@@ -38,9 +38,7 @@ export function PopularShopsComp() {
   }, []);
   return (
     <Stack sx={{ width: "100%", heigth: "100%" }}>
-      <Title color="white" order={5}>
-        Popular Shops
-      </Title>
+      <Title order={5}>Popular Shops</Title>
       <Carousel
         styles={{ viewport: { padding: 12 } }}
         slideSize="10%"

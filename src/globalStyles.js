@@ -202,7 +202,7 @@ export const notificationStyles = (theme) => ({
 
 export const bodyStyles = (theme) => ({
   html: {
-    [theme.fn.smallerThan('sm')]: {
+    [theme.fn.smallerThan("sm")]: {
       fontSize: 12,
     },
 
@@ -211,27 +211,27 @@ export const bodyStyles = (theme) => ({
     },
   },
 
-  "--separator-border": "rgb(225 146 28)",
+  "--separator-border": theme.colors.yellow[5],
 
-  "::-moz-selection": { color: "white", background: "#eea02b" },
+  "::-moz-selection": { color: "white", background: theme.colors.yellow[5] },
 
-  "::selection": { color: "white", background: "#eea02b" },
-
-  "::-webkit-scrollbar-track": {
-    webkitBoxShadow: "inset 0 0 6px #333333",
-    backgroundColor: "#212121",
-  },
+  "::selection": { color: "white", background: theme.colors.yellow[5] },
 
   "::-webkit-scrollbar": {
     width: 8,
     height: 8,
     borderRadius: 20,
-    backgroundColor: "#555555",
+  },
+
+  "::-webkit-scrollbar-track": {
+    webkitBoxShadow: "inset 0 0 6px #333333",
+    backgroundColor: theme.colorScheme === "dark" ? "#4b4b4b" : "#d4d4d4",
+    borderRadius: 8,
   },
 
   "::-webkit-scrollbar-thumb": {
     borderRadius: 20,
-    backgroundColor: "#eea02b",
+    backgroundColor: theme.colors.yellow[5],
     border: "none",
   },
 

@@ -83,7 +83,7 @@ export function SignIn() {
         </Text>
         <Paper
           withBorder
-          shadow="md"
+          shadow="lg"
           p={30}
           mt={30}
           radius="md"

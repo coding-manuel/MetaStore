@@ -19,7 +19,6 @@ import {
 import Character from "./Character";
 
 function Experience() {
-  const [chicken, setChicken] = useState(false);
   function Loader() {
     const { progress } = useProgress();
     return (
@@ -38,7 +37,7 @@ function Experience() {
           maxPolarAngle={Math.PI / 2.3}
         />
         <PerspectiveCamera makeDefault fov={50} position={[0, 20, 13]} />
-        <Character addShoe={chicken} />
+        <Character />
         <mesh position={[0, -10, 0]} rotation={[-Math.PI / 2, 0, 0]}>
           <planeGeometry args={[200, 200]} position={[0, 0, 0]} />
           <MeshReflectorMaterial

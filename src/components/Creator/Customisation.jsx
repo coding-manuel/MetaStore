@@ -18,7 +18,6 @@ export default function Customisation() {
         isDesktop
           ? {
               height: "100%",
-              maxWidth: 900,
             }
           : {
               position: "absolute",

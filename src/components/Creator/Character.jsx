@@ -1,57 +1,65 @@
 import React, { useRef, useEffect, useState } from "react";
 import { useLoader } from "@react-three/fiber";
-import { useGLTF, useAnimations, useHelper } from "@react-three/drei";
-import { TextureLoader } from "three";
+import { useGLTF, useAnimations, useTexture } from "@react-three/drei";
+import { TextureLoader, Color } from "three";
 import useCharacterStore from "../../store/characterStore";
-import { XR, ARButton, useHitTest } from "@react-three/xr";
 
-export default function Model({ addShoe }) {
-  const group = useRef(null);
+export default function Model() {
   const { nodes, materials, animations } = useGLTF(
     "/assets/models/male_model.glb"
   );
 
   const shapeKeys = useCharacterStore((state) => state.shapeKeys);
-  const topTexture = useCharacterStore((state) => state.texture.top);
   const materialData = useCharacterStore((state) => state.material);
+  const textureData = useCharacterStore((state) => state.texture);
 
-  const { actions } = useAnimations(animations, group);
+  const topTex = useLoader(TextureLoader, textureData.top);
+  const skinTex = useLoader(
+    TextureLoader,
+    `/assets/skin_shades/skintone_${textureData.skin}.png`
+  );
+  const faceTex = useLoader(
+    TextureLoader,
+    `/assets/skin_shades/face_${textureData.face}.png`
+  );
+
+  const group = useRef(null);
+  const hairRef = useRef(null);
+  const topRef = useRef(null);
+  const faceRef = useRef(null);
+  const skinRef = useRef(null);
+  const xd = useAnimations(animations);
 
   const [selectedAction, setSelectedAction] = useState(
-    "Armature.001|mixamo.com|Layer0"
+    "Armature.001|mixamo.com|Layer0_Male Body.002"
   );
 
-  useHitTest((hitTestMatrix) => {
-    if (group.current) {
-      hitTestMatrix.decompose(
-        group.current.position,
-        group.current.quaternion,
-        group.current.scale
-      );
-    }
-  });
-
   useEffect(() => {
-    actions[selectedAction]?.reset().fadeIn(0.5).play();
-    return () => void actions[selectedAction]?.fadeOut(0.5);
+    console.log(nodes, materials, materialData);
+    // actions[selectedAction]?.reset().fadeIn(0.5).play();
+    // return () => void actions[selectedAction]?.fadeOut(0.5);
   }, [selectedAction]);
 
-  const material = useRef(null);
-
-  const [tpTexture, setTpTexture] = useState(
-    useLoader(TextureLoader, topTexture)
-  );
+  useEffect(() => {
+    topTex.flipY = false;
+  }, [topTex]);
 
   useEffect(() => {
-    customLoader();
-  }, [topTexture]);
+    faceTex.flipY = false;
+  }, [faceTex]);
 
-  const customLoader = () => {
-    const x = useLoader(TextureLoader, topTexture);
-    x.flipY = false;
-    // setTpTexture(x);
-    material.current.map = x;
-    // console.log(material.current);
+  useEffect(() => {
+    skinTex.flipY = false;
+  }, [skinTex]);
+
+  useEffect(() => {
+    hairLoader(hairRef, textureData.hair);
+  }, [textureData.hair]);
+
+  const hairLoader = (ref, color) => {
+    // const x = useLoader(TextureLoader, "/assets/hairAlpha.png");
+    // ref.current.map = x;
+    ref.current.color = new Color(color);
   };
 
   return (
@@ -68,11 +76,16 @@ export default function Model({ addShoe }) {
           <skinnedMesh
             name="Body"
             geometry={nodes.Body.geometry}
-            material={materials["Body-Shade-Brown-01"]}
             skeleton={nodes.Body.skeleton}
             morphTargetDictionary={nodes.Body.morphTargetDictionary}
             morphTargetInfluences={nodes.Body.morphTargetInfluences}
-          />
+          >
+            <meshStandardMaterial
+              ref={skinRef}
+              map={skinTex}
+              normalMap={materials["Skin-03"].normalMap}
+            ></meshStandardMaterial>
+          </skinnedMesh>
           <skinnedMesh
             name="Bottom"
             geometry={nodes.Bottom.geometry}
@@ -103,12 +116,24 @@ export default function Model({ addShoe }) {
             morphTargetDictionary={nodes.EyeRight.morphTargetDictionary}
             morphTargetInfluences={nodes.EyeRight.morphTargetInfluences}
           />
+          {materialData.glasses !== "none" && (
+            <skinnedMesh
+              name={materialData.glasses}
+              geometry={nodes[materialData.glasses].geometry}
+              material={materials[materialData.glasses]}
+              skeleton={nodes[materialData.glasses].skeleton}
+            />
+          )}
           <skinnedMesh
-            name="Hair"
-            geometry={nodes.Hair.geometry}
-            material={materials["Hair-Black-01"]}
-            skeleton={nodes.Hair.skeleton}
-          />
+            name={materialData.hairMesh}
+            geometry={nodes[materialData.hairMesh].geometry}
+            skeleton={nodes["Hair-02"].skeleton}
+          >
+            <meshStandardMaterial
+              ref={hairRef}
+              normalMap={materials[materialData.hairColor].normalMap}
+            ></meshStandardMaterial>
+          </skinnedMesh>
           <skinnedMesh
             name="Top"
             geometry={nodes.Top.geometry}
@@ -122,8 +147,8 @@ export default function Model({ addShoe }) {
             ]}
           >
             <meshStandardMaterial
-              ref={material}
-              // map={tpTexture}
+              map={topTex}
+              ref={topRef}
             ></meshStandardMaterial>
           </skinnedMesh>
           <skinnedMesh
@@ -143,15 +168,17 @@ export default function Model({ addShoe }) {
           <skinnedMesh
             name="Head_1"
             geometry={nodes.Head_1.geometry}
-            material={materials["Head-Shade-Brown-01"]}
             skeleton={nodes.Head_1.skeleton}
             morphTargetDictionary={nodes.Head_1.morphTargetDictionary}
             morphTargetInfluences={nodes.Head_1.morphTargetInfluences}
-          />
+          >
+            <meshStandardMaterial
+              map={faceTex}
+              ref={faceRef}
+            ></meshStandardMaterial>
+          </skinnedMesh>
         </group>
       </group>
     </group>
   );
 }
-
-useGLTF.preload("/assets/models/male_model.glb");

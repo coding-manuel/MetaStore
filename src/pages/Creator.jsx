@@ -23,10 +23,10 @@ export default function Creator() {
       >
         {isDesktop ? (
           <Allotment>
-            <Allotment.Pane minSize={200}>
+            <Allotment.Pane minSize={450}>
               <Customisation />
             </Allotment.Pane>
-            <Allotment.Pane>
+            <Allotment.Pane minSize={450}>
               <Box
                 sx={{
                   width: "100%",
