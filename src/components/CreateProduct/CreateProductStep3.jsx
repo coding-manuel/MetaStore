@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 import {
   Button,
   Group,
@@ -9,32 +9,46 @@ import {
   SimpleGrid,
   Accordion,
   Paper,
-} from "@mantine/core";
-import { Carousel } from "@mantine/carousel";
-import { useNavigate } from "react-router-dom";
-import uuid from "react-uuid";
-import { Article } from "phosphor-react";
+} from "@mantine/core"
+import { Carousel } from "@mantine/carousel"
+import { useNavigate } from "react-router-dom"
+import uuid from "react-uuid"
+import { Article } from "phosphor-react"
 
-import useMainStore from "../../store/mainStore";
-import { supabase } from "../../utils/supabaseClient";
-import { getUploadDetails, uploadFile } from "../../utils/ImageFunctions";
+import useMainStore from "../../store/mainStore"
+import { supabase } from "../../utils/supabaseClient"
+import { getUploadDetails, uploadFile } from "../../utils/ImageFunctions"
 
 export function CreateProductStep3({
   productData,
   productImages,
   sizeData,
   prevStep,
+  productTexture,
 }) {
-  const [loading, setLoading] = useState(false);
-  const shopId = useMainStore((state) => state.shopName);
+  const [loading, setLoading] = useState(false)
+  const shopId = useMainStore((state) => state.shopName)
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleSubmit = async () => {
     try {
-      setLoading(true);
-      const product_id = uuid();
-      let imagesPath = [];
+      setLoading(true)
+      const product_id = uuid()
+      let imagesPath = []
+
+      const promises = await productImages.map(async (image, index) => {
+        let path = `${product_id}/${uuid()}-product-img`
+        imagesPath.push(path)
+        let data = await getUploadDetails()
+        await uploadFile(image[0][0], product_id, path, data)
+      })
+
+      await Promise.all(promises)
+
+      let texpath = `${product_id}/${uuid()}-texture-img`
+      let data = await getUploadDetails()
+      await uploadFile(productTexture, product_id, texpath, data)
 
       // create shop page
       const { error } = await supabase.from("products").insert({
@@ -53,24 +67,17 @@ export function CreateProductStep3({
         product_sku: productData.product_sku,
         product_images: imagesPath,
         product_size_available: sizeData,
-      });
+        product_thumbnail: imagesPath[0],
+        product_texture: texpath,
+      })
 
-      const promises = await productImages.map(async (image, index) => {
-        let path = `${product_id}/${uuid()}-product-img`;
-        imagesPath.push(path);
-        let data = await getUploadDetails();
-        await uploadFile(image[0][0], product_id, path, data);
-      });
-
-      await Promise.all(promises);
-
-      navigate(`/dashboard/${shopId}`);
+      navigate(`/dashboard/${shopId}`)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
   return (
     <Stack spacing={0}>
       <Text weight={700}>Step 3 of 3</Text>
@@ -92,7 +99,7 @@ export function CreateProductStep3({
                   />
                 </AspectRatio>
               </Carousel.Slide>
-            );
+            )
           })}
         </Carousel>
         <Stack spacing={2}>
@@ -124,7 +131,7 @@ export function CreateProductStep3({
                         {size.sizeName}
                       </Text>
                     </Paper>
-                  );
+                  )
               })}
             </Group>
           </Stack>
@@ -186,5 +193,5 @@ export function CreateProductStep3({
         </Button>
       </Group>
     </Stack>
-  );
+  )
 }

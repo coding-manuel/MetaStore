@@ -1,4 +1,4 @@
-import { useTheme } from "@emotion/react";
+import { useTheme } from "@emotion/react"
 import {
   Box,
   Button,
@@ -9,9 +9,9 @@ import {
   Stack,
   Title,
   UnstyledButton,
-} from "@mantine/core";
-import React from "react";
-import useCharacterStore from "../../store/characterStore";
+} from "@mantine/core"
+import React from "react"
+import useCharacterStore from "../../store/characterStore"
 
 const skinShades = [
   "pale",
@@ -23,15 +23,16 @@ const skinShades = [
   "ember",
   "chocolate",
   "darkchocolate",
-];
+]
 
 export default function Outfit() {
-  const updateMaterial = useCharacterStore((state) => state.updateMaterial);
-  const hairColor = useCharacterStore((state) => state.texture.hair);
-  const updateHairColor = useCharacterStore((state) => state.updateHairColor);
-  const updateSkin = useCharacterStore((state) => state.updateSkin);
-  const materialData = useCharacterStore((state) => state.material);
-  const textureData = useCharacterStore((state) => state.texture);
+  const updateMaterial = useCharacterStore((state) => state.updateMaterial)
+  const hairColor = useCharacterStore((state) => state.texture.hair)
+  const updateHairColor = useCharacterStore((state) => state.updateHairColor)
+  const updateSkin = useCharacterStore((state) => state.updateSkin)
+  const materialData = useCharacterStore((state) => state.material)
+  const textureData = useCharacterStore((state) => state.texture)
+
   return (
     <Stack p={8}>
       <Title order={5}>Shoes</Title>
@@ -79,15 +80,15 @@ export default function Outfit() {
               onClick={() => updateSkin(skin)}
               src={`/assets/skin_shades/skintone_${skin}.png`}
             />
-          );
+          )
         })}
       </Group>
     </Stack>
-  );
+  )
 }
 
 function CustomSkinButton(props) {
-  const theme = useTheme();
+  const theme = useTheme()
   return (
     <Paper
       sx={(theme) => ({
@@ -109,5 +110,5 @@ function CustomSkinButton(props) {
       h={50}
       {...props}
     ></Paper>
-  );
+  )
 }

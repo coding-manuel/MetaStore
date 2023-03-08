@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import { Stepper, Container } from "@mantine/core";
-import { useBeforeunload } from "react-beforeunload";
+import React, { useState } from "react"
+import { Stepper, Container } from "@mantine/core"
+import { useBeforeunload } from "react-beforeunload"
 
-import { FootLayout } from "../Layout/Layout";
-import { CreateProductStep1 } from "./CreateProductStep1";
-import { CreateProductStep2 } from "./CreateProductStep2";
-import { CreateProductStep3 } from "./CreateProductStep3";
+import { FootLayout } from "../Layout/Layout"
+import { CreateProductStep1 } from "./CreateProductStep1"
+import { CreateProductStep2 } from "./CreateProductStep2"
+import { CreateProductStep3 } from "./CreateProductStep3"
 
 export default function CreateProduct() {
-  const [active, setActive] = useState(1);
-  const [stepOneData, setStepOneData] = useState(null);
-  const [stepTwoData, setStepTwoData] = useState(null);
-  const [uploadedImages, setUploadedImages] = useState([]);
+  const [active, setActive] = useState(0)
+  const [stepOneData, setStepOneData] = useState(null)
+  const [stepTwoData, setStepTwoData] = useState(null)
+  const [uploadedImages, setUploadedImages] = useState([])
   const [sizeData, setSizeData] = useState([
     {
       sizeName: "XS",
@@ -43,15 +43,15 @@ export default function CreateProduct() {
       sizeMeasurements: ["", "", ""],
       available: 0,
     },
-  ]);
+  ])
 
   const nextStep = () => {
-    setActive((current) => (current < 3 ? current + 1 : current));
-  };
+    setActive((current) => (current < 3 ? current + 1 : current))
+  }
   const prevStep = () =>
-    setActive((current) => (current > 0 ? current - 1 : current));
+    setActive((current) => (current > 0 ? current - 1 : current))
 
-  useBeforeunload(() => "Bruh");
+  useBeforeunload(() => "Bruh")
 
   return (
     <FootLayout>
@@ -82,6 +82,7 @@ export default function CreateProduct() {
           <Stepper.Step>
             <CreateProductStep3
               productData={stepTwoData}
+              productTexture={stepOneData}
               productImages={uploadedImages}
               sizeData={sizeData}
               prevStep={prevStep}
@@ -93,5 +94,5 @@ export default function CreateProduct() {
         </Stepper>
       </Container>
     </FootLayout>
-  );
+  )
 }

@@ -16,14 +16,15 @@ import {
   useMantineColorScheme,
   Switch,
   Text,
-} from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { MoonStars, SignOut, SunDim, User } from "phosphor-react";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import LogoLight from "/assets/type-logo-light.svg";
-import LogoDark from "/assets/type-logo-dark.svg";
-import useMainStore from "../../store/mainStore";
+  Stack,
+} from "@mantine/core"
+import { useDisclosure } from "@mantine/hooks"
+import { MoonStars, SignOut, Storefront, SunDim, User } from "phosphor-react"
+import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
+import LogoLight from "/assets/type-logo-light.svg"
+import LogoDark from "/assets/type-logo-dark.svg"
+import useMainStore from "../../store/mainStore"
 
 const useStyles = createStyles((theme) => ({
   link: {
@@ -91,23 +92,23 @@ const useStyles = createStyles((theme) => ({
       display: "none",
     },
   },
-}));
+}))
 
 export function HeaderComp() {
-  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme()
 
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
-    useDisclosure(false);
-  const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false);
-  const [userMenuOpened, setUserMenuOpened] = useState(false);
+    useDisclosure(false)
+  const [linksOpened, { toggle: toggleLinks }] = useDisclosure(false)
+  const [userMenuOpened, setUserMenuOpened] = useState(false)
 
-  const userId = useMainStore((state) => state.user);
-  const shopName = useMainStore((state) => state.shopName);
-  const role = useMainStore((state) => state.role);
-  const handleLogOut = useMainStore((state) => state.handleLogOut);
+  const userId = useMainStore((state) => state.user)
+  const shopName = useMainStore((state) => state.shopName)
+  const role = useMainStore((state) => state.role)
+  const handleLogOut = useMainStore((state) => state.handleLogOut)
 
-  const navigate = useNavigate();
-  const { classes, theme } = useStyles();
+  const navigate = useNavigate()
+  const { classes, theme } = useStyles()
 
   return (
     <Box>
@@ -166,23 +167,22 @@ export function HeaderComp() {
                     />
                   </Group>
                   <Menu.Divider />
-                  {role == "owner" ? (
+                  {role == "owner" && (
                     <Menu.Item
                       component={Link}
                       to={`/dashboard/${shopName}`}
-                      icon={<User size={16} />}
+                      icon={<Storefront size={16} />}
                     >
                       Shop Page
                     </Menu.Item>
-                  ) : (
-                    <Menu.Item
-                      component={Link}
-                      to="/profile"
-                      icon={<User size={16} />}
-                    >
-                      Profile
-                    </Menu.Item>
                   )}
+                  <Menu.Item
+                    component={Link}
+                    to="/profile"
+                    icon={<User size={16} />}
+                  >
+                    Profile
+                  </Menu.Item>
                   <Menu.Item
                     component={Link}
                     to="/signin"
@@ -285,30 +285,30 @@ export function HeaderComp() {
             </Button>
           </Group>
 
-          <Group
+          <Stack
             hidden={userId === null}
             position="center"
             grow
             pb="xl"
             px="md"
           >
-            {role == "owner" ? (
+            {role == "owner" && (
               <Button
                 component={Link}
                 to={`/dashboard/${shopName}`}
-                leftIcon={<User size={16} />}
+                leftIcon={<Storefront size={16} />}
               >
                 Shop Page
               </Button>
-            ) : (
-              <Button
-                component={Link}
-                to="/profile"
-                leftIcon={<User size={16} />}
-              >
-                Profile
-              </Button>
             )}
+            <Button
+              component={Link}
+              to="/profile"
+              leftIcon={<User size={16} />}
+            >
+              Profile
+            </Button>
+
             <Button
               component={Link}
               to="/signin"
@@ -318,9 +318,9 @@ export function HeaderComp() {
             >
               Log out
             </Button>
-          </Group>
+          </Stack>
         </ScrollArea>
       </Drawer>
     </Box>
-  );
+  )
 }

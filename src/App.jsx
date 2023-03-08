@@ -1,44 +1,41 @@
-import React, { useEffect } from "react";
-import { MantineProvider, ColorSchemeProvider, Global } from "@mantine/core";
-import {
-  NotificationsProvider,
-  showNotification,
-} from "@mantine/notifications";
-import { ModalsProvider } from "@mantine/modals";
-import { useLocalStorage } from "@mantine/hooks";
-import { supabase } from "./utils/supabaseClient";
-import { Navigate, Route, Routes } from "react-router-dom";
+import React, { useEffect } from "react"
+import { MantineProvider, ColorSchemeProvider, Global } from "@mantine/core"
+import { NotificationsProvider, showNotification } from "@mantine/notifications"
+import { ModalsProvider } from "@mantine/modals"
+import { useLocalStorage } from "@mantine/hooks"
+import { supabase } from "./utils/supabaseClient"
+import { Navigate, Route, Routes } from "react-router-dom"
 
-import { globalStyles, bodyStyles, notificationStyles } from "./globalStyles";
-import { SignIn } from "./pages/SignIn";
-import { SignUp } from "./pages/SignUp";
-import Creator from "./pages/Creator";
-import Profile from "./pages/Profile";
-import Home from "./pages/Home";
-import useMainStore from "./store/mainStore";
-import CreateShop from "./pages/CreateShop";
-import Dashboard from "./pages/Dashboard";
-import CreateProduct from "./components/CreateProduct/CreateProduct";
-import NotFound from "./pages/NotFound";
-import ShopPage from "./pages/ShopPage";
-import ProductPage from "./pages/ProductPage";
-import ARView from "./pages/ARView";
+import { globalStyles, bodyStyles, notificationStyles } from "./globalStyles"
+import { SignIn } from "./pages/SignIn"
+import { SignUp } from "./pages/SignUp"
+import Creator from "./pages/Creator"
+import Profile from "./pages/Profile"
+import Home from "./pages/Home"
+import useMainStore from "./store/mainStore"
+import CreateShop from "./pages/CreateShop"
+import Dashboard from "./pages/Dashboard"
+import CreateProduct from "./components/CreateProduct/CreateProduct"
+import NotFound from "./pages/NotFound"
+import ShopPage from "./pages/ShopPage"
+import ProductPage from "./pages/ProductPage"
+import ARView from "./pages/ARView"
 
 function App() {
-  const setUserData = useMainStore((state) => state.setUserData);
-  const userId = useMainStore((state) => state.user);
-  const onResize = useMainStore((state) => state.onResize);
-  const setRole = useMainStore((state) => state.setRole);
-  const role = useMainStore((state) => state.role);
+  const setUserData = useMainStore((state) => state.setUserData)
+  const userId = useMainStore((state) => state.user)
+  const onResize = useMainStore((state) => state.onResize)
+  const setRole = useMainStore((state) => state.setRole)
+  const role = useMainStore((state) => state.role)
 
   const [colorScheme, setColorScheme] = useLocalStorage({
     key: "mantine-color-scheme",
     defaultValue: "dark",
     getInitialValueInEffect: true,
-  });
+  })
 
   const toggleColorScheme = (value) =>
-    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
+    setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"))
 
   const theme = {
     components: globalStyles,
@@ -114,23 +111,23 @@ function App() {
         h6: { fontSize: "1.107rem" },
       },
     },
-  };
+  }
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setUserData(session);
-    });
+      if (userId) setUserData(session)
+    })
 
     supabase.auth.onAuthStateChange((_event, session) => {
-      setUserData(session);
-    });
-  }, []);
+      setUserData(session)
+    })
+  }, [])
 
   useEffect(() => {
-    window.addEventListener("resize", onResize);
-    onResize();
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
+    window.addEventListener("resize", onResize)
+    onResize()
+    return () => window.removeEventListener("resize", onResize)
+  }, [])
 
   return (
     <ColorSchemeProvider
@@ -194,7 +191,7 @@ function App() {
         </ModalsProvider>
       </MantineProvider>
     </ColorSchemeProvider>
-  );
+  )
 }
 
 const PrivateRoute = ({ user, children }) => {
@@ -203,23 +200,23 @@ const PrivateRoute = ({ user, children }) => {
       title: "Session Expired",
       message: "Cannot find your session",
       styles: notificationStyles,
-    });
-    return <Navigate to="/signin" replace />;
+    })
+    return <Navigate to="/signin" replace />
   }
 
-  return children;
-};
+  return children
+}
 
 const AdminRoute = ({ role, children }) => {
   if (role !== "owner") {
     showNotification({
       title: "Looks like you were lost",
       styles: notificationStyles,
-    });
-    return <Navigate to="/" replace />;
+    })
+    return <Navigate to="/" replace />
   }
 
-  return children;
-};
+  return children
+}
 
-export default App;
+export default App

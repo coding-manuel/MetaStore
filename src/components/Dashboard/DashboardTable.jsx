@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Stack, Button, Group, Text, Paper, AspectRatio } from "@mantine/core";
-import { DataTable } from "mantine-datatable";
+import React, { useEffect, useState } from "react"
+import { Stack, Button, Group, Text, Paper, AspectRatio } from "@mantine/core"
+import { DataTable } from "mantine-datatable"
 import {
   ArrowSquareOut,
   NotePencil,
@@ -8,99 +8,101 @@ import {
   Plus,
   Rows,
   TrashSimple,
-} from "phosphor-react";
-import { supabase } from "../../utils/supabaseClient";
+  QrCode,
+} from "phosphor-react"
+import { supabase } from "../../utils/supabaseClient"
 
-import { Link, useNavigate } from "react-router-dom";
-import { useToggle } from "@mantine/hooks";
-import CustomActionIcon from "../CustomActionIcon";
-import { showNotification } from "@mantine/notifications";
-import { notificationStyles } from "../../globalStyles";
-import { deleteFile } from "../../utils/ImageFunctions";
-import { openConfirmModal } from "@mantine/modals";
-import { getImageUrl } from "../../utils/utilFunctions";
+import { Link, useNavigate } from "react-router-dom"
+import { useToggle } from "@mantine/hooks"
+import CustomActionIcon from "../CustomActionIcon"
+import { showNotification } from "@mantine/notifications"
+import { notificationStyles } from "../../globalStyles"
+import { deleteFile } from "../../utils/ImageFunctions"
+import { openConfirmModal } from "@mantine/modals"
+import { getImageUrl } from "../../utils/utilFunctions"
 
 export default function DashboardTable({
   shopInfo,
   refreshProductList,
   handleEditProductModalOpen,
+  handleDownloadQRModalOpen,
 }) {
-  const [selectedRecords, setSelectedRecords] = useState([]);
-  const [productsList, setProductsList] = useState(null);
-  const [fetching, setFetching] = useState(false);
-  const [page, setPage] = useState(1);
-  const [totalRecords, setTotalRecords] = useState(null);
+  const [selectedRecords, setSelectedRecords] = useState([])
+  const [productsList, setProductsList] = useState(null)
+  const [fetching, setFetching] = useState(false)
+  const [page, setPage] = useState(1)
+  const [totalRecords, setTotalRecords] = useState(null)
 
-  const [tableView, setTableView] = useToggle(["compact", "expand"]);
+  const [tableView, setTableView] = useToggle(["compact", "expand"])
 
-  const PAGE_SIZE = 10;
+  const PAGE_SIZE = 10
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const setNewPage = async (page) => {
-    setPage(page);
-    await getProductsList(page);
-  };
+    setPage(page)
+    await getProductsList(page)
+  }
 
   const handleDelete = async () => {
-    setFetching(true);
+    setFetching(true)
     try {
       const deletePromises = selectedRecords.map(async (rec) => {
         const promises = rec.product_images.map(async (imageUrl) => {
-          await deleteFile(imageUrl);
-        });
+          await deleteFile(imageUrl)
+        })
 
-        await Promise.all(promises);
-      });
+        await Promise.all(promises)
+      })
 
-      await Promise.all(deletePromises);
+      await Promise.all(deletePromises)
 
       const promises = selectedRecords.map(async (rec) => {
         const { error } = await supabase
           .from("products")
           .delete()
-          .eq("product_id", rec.product_id);
-      });
+          .eq("product_id", rec.product_id)
+      })
 
-      await Promise.all(promises);
+      await Promise.all(promises)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     } finally {
-      await getProductsList(page);
-      setSelectedRecords([]);
+      await getProductsList(page)
+      setSelectedRecords([])
       showNotification({
         title: "Deleted Succesfully",
         styles: notificationStyles,
-      });
-      setFetching(false);
+      })
+      setFetching(false)
     }
-  };
+  }
 
   const getProductsList = async (page) => {
     try {
-      setFetching(true);
+      setFetching(true)
 
-      const from = (page - 1) * PAGE_SIZE;
-      const to = from + PAGE_SIZE;
+      const from = (page - 1) * PAGE_SIZE
+      const to = from + PAGE_SIZE
 
       const { data, count } = await supabase
         .from("products")
         .select("*", { count: "exact" })
         .eq("shop_id", shopInfo.shop_id)
-        .range(from, to);
+        .range(from, to)
 
-      setProductsList(data);
-      setTotalRecords(count);
+      setProductsList(data)
+      setTotalRecords(count)
     } catch (error) {
-      console.log(error);
+      console.log(error)
     } finally {
-      setFetching(false);
+      setFetching(false)
     }
-  };
+  }
 
   useEffect(() => {
-    getProductsList(page);
-  }, [refreshProductList]);
+    getProductsList(page)
+  }, [refreshProductList])
 
   return totalRecords === 0 ? (
     <Stack align="center">
@@ -142,14 +144,14 @@ export default function DashboardTable({
                         <Text size="sm" py={2}>
                           {rec.product_brand} - {rec.product_name}
                         </Text>
-                      );
+                      )
                     })}
                   </Paper>
                 </Stack>
               ),
               labels: { confirm: "Delete Products", cancel: "Cancel" },
               onConfirm: () => handleDelete(),
-            });
+            })
           }}
         >
           Delete {selectedRecords.length} Products
@@ -223,6 +225,12 @@ export default function DashboardTable({
                   <ArrowSquareOut size={16} />
                 </CustomActionIcon>
                 <CustomActionIcon
+                  tooltip="Download QR"
+                  onClick={() => handleDownloadQRModalOpen(product)}
+                >
+                  <QrCode size={16} />
+                </CustomActionIcon>
+                <CustomActionIcon
                   tooltip="Edit Product"
                   onClick={() => handleEditProductModalOpen(product)}
                 >
@@ -234,5 +242,5 @@ export default function DashboardTable({
         ]}
       />
     </Stack>
-  );
+  )
 }

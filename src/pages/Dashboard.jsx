@@ -12,7 +12,7 @@ import {
   Select,
   Skeleton,
   CopyButton,
-} from "@mantine/core";
+} from "@mantine/core"
 import {
   Check,
   FacebookLogo,
@@ -20,50 +20,57 @@ import {
   InstagramLogo,
   ShareNetwork,
   TwitterLogo,
-} from "phosphor-react";
-import React, { useEffect } from "react";
-import { useState } from "react";
-import { useParams } from "react-router-dom";
-import { HeadFootLayout } from "../components/Layout/Layout";
-import useMainStore from "../store/mainStore";
-import DashboardTable from "../components/Dashboard/DashboardTable";
-import { EditImageModal } from "../components/Dashboard/EditImageModal";
-import { EditPageModal } from "../components/Dashboard/EditPageModal";
-import { CustomLink } from "../components/CustomActionIcon";
-import EditProductModal from "../components/Dashboard/EditProductModal";
+} from "phosphor-react"
+import React, { useEffect } from "react"
+import { useState } from "react"
+import { useParams } from "react-router-dom"
+import { HeadFootLayout } from "../components/Layout/Layout"
+import useMainStore from "../store/mainStore"
+import DashboardTable from "../components/Dashboard/DashboardTable"
+import { EditImageModal } from "../components/Dashboard/EditImageModal"
+import { EditPageModal } from "../components/Dashboard/EditPageModal"
+import { CustomLink } from "../components/CustomActionIcon"
+import EditProductModal from "../components/Dashboard/EditProductModal"
+import DownloadQRModal from "../components/Dashboard/DownloadQRModal"
 
 export default function Dashboard() {
-  let { shop_id } = useParams();
-  const [loading, setLoading] = useState(false);
-  const [editImageModalOpen, setEditImageModalOpen] = useState(false);
-  const [editPageModalOpen, setEditPageModalOpen] = useState(false);
-  const [refreshProductList, setRefreshProductList] = useState(false);
+  let { shop_id } = useParams()
+  const [loading, setLoading] = useState(false)
+  const [editImageModalOpen, setEditImageModalOpen] = useState(false)
+  const [editPageModalOpen, setEditPageModalOpen] = useState(false)
+  const [downloadQRModalOpen, setDownloadQRModalOpen] = useState(false)
+  const [refreshProductList, setRefreshProductList] = useState(false)
 
-  const [editProductModalOpen, setEditProductModalOpen] = useState(false);
-  const [activeProduct, setActiveProduct] = useState(null);
+  const [editProductModalOpen, setEditProductModalOpen] = useState(false)
+  const [activeProduct, setActiveProduct] = useState(null)
 
-  const fetchShop = useMainStore((state) => state.fetchShopByID);
-  const isDesktop = useMainStore((state) => state.isDesktop);
-  const userId = useMainStore((state) => state.user);
+  const fetchShop = useMainStore((state) => state.fetchShopByID)
+  const isDesktop = useMainStore((state) => state.isDesktop)
+  const userId = useMainStore((state) => state.user)
 
-  const [shopInfo, setShopInfo] = useState(null);
+  const [shopInfo, setShopInfo] = useState(null)
 
   const handleEditProductModalOpen = (product) => {
-    setActiveProduct(product);
-    setEditProductModalOpen(true);
-  };
+    setActiveProduct(product)
+    setEditProductModalOpen(true)
+  }
+
+  const handleDownloadQRModalOpen = (product) => {
+    setActiveProduct(product)
+    setDownloadQRModalOpen(true)
+  }
 
   useEffect(() => {
-    refreshShopInfo();
-  }, []);
+    refreshShopInfo()
+  }, [])
 
   const refreshShopInfo = () => {
-    setLoading(true);
+    setLoading(true)
     fetchShop(shop_id).then((data) => {
-      setShopInfo(data.data);
-      setLoading(false);
-    });
-  };
+      setShopInfo(data.data)
+      setLoading(false)
+    })
+  }
 
   return (
     <HeadFootLayout>
@@ -165,6 +172,7 @@ export default function Dashboard() {
               refreshProductList={refreshProductList}
               shopInfo={shopInfo}
               handleEditProductModalOpen={handleEditProductModalOpen}
+              handleDownloadQRModalOpen={handleDownloadQRModalOpen}
             />
           </Paper>
           <EditImageModal
@@ -185,8 +193,15 @@ export default function Dashboard() {
             productInfo={activeProduct}
             setRefreshProductList={setRefreshProductList}
           />
+          <DownloadQRModal
+            downloadQRModalOpen={downloadQRModalOpen}
+            setDownloadQRModalOpen={setDownloadQRModalOpen}
+            productInfo={activeProduct}
+            shopInfo={shopInfo}
+            setRefreshProductList={setRefreshProductList}
+          />
         </Container>
       )}
     </HeadFootLayout>
-  );
+  )
 }

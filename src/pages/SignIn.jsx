@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { useForm } from "@mantine/form";
+import React, { useEffect, useState } from "react"
+import { useForm } from "@mantine/form"
 import {
   TextInput,
   PasswordInput,
@@ -10,24 +10,23 @@ import {
   Container,
   Group,
   Button,
-  Stack,
-} from "@mantine/core";
+} from "@mantine/core"
 
-import { supabase } from "../utils/supabaseClient";
-import { Link, useNavigate } from "react-router-dom";
-import { showNotification } from "@mantine/notifications";
-import { notificationStyles } from "../globalStyles";
-import useMainStore from "../store/mainStore";
-import { FootLayout } from "../components/Layout/Layout";
+import { supabase } from "../utils/supabaseClient"
+import { Link, useNavigate } from "react-router-dom"
+import { showNotification } from "@mantine/notifications"
+import { notificationStyles } from "../globalStyles"
+import useMainStore from "../store/mainStore"
+import { FootLayout } from "../components/Layout/Layout"
 
 export function SignIn() {
-  const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const setUserData = useMainStore((state) => state.setUserData);
-  const userId = useMainStore((state) => state.user);
+  const [loading, setLoading] = useState(false)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+  const setUserData = useMainStore((state) => state.setUserData)
+  const userId = useMainStore((state) => state.user)
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const form = useForm({
     initialValues: {
@@ -37,37 +36,37 @@ export function SignIn() {
     validate: {
       email: (value) => (/^\S+@\S+$/.test(value) ? null : "Invalid email"),
     },
-  });
+  })
 
   const handleLogin = async (values) => {
     try {
-      setLoading(true);
+      setLoading(true)
 
       const { data, error } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.password,
-      });
+      })
 
-      if (error) throw error;
+      if (error) throw error
 
-      setUserData(data);
+      setUserData(data)
 
-      setLoading(false);
+      setLoading(false)
 
-      navigate("/");
+      navigate("/")
     } catch (error) {
       showNotification({
         title: error.error_description || error.message,
         styles: notificationStyles,
-      });
+      })
 
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   useEffect(() => {
-    if (userId !== null) navigate("/signin");
-  }, []);
+    if (userId !== null) navigate("/signin")
+  }, [])
 
   return (
     <FootLayout>
@@ -122,5 +121,5 @@ export function SignIn() {
         </Paper>
       </Container>
     </FootLayout>
-  );
+  )
 }
