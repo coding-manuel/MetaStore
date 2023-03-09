@@ -1,4 +1,4 @@
-import { TextAlignJustify } from "phosphor-react";
+import { TextAlignJustify } from "phosphor-react"
 
 export const globalStyles = {
   Header: {
@@ -171,7 +171,7 @@ export const globalStyles = {
       },
     }),
   },
-};
+}
 
 export const notificationStyles = (theme) => ({
   root: {
@@ -198,7 +198,7 @@ export const notificationStyles = (theme) => ({
     transition: "0.1s ease-out",
     "&:hover": { backgroundColor: theme.colors.yellow[4] },
   },
-});
+})
 
 export const bodyStyles = (theme) => ({
   html: {
@@ -239,4 +239,4 @@ export const bodyStyles = (theme) => ({
     height: "inherit",
     fontSize: "1rem!important",
   },
-});
+})
