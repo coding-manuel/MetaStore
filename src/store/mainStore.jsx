@@ -14,6 +14,7 @@ const mainStore = (set, get) => ({
   role: null,
   shopName: null,
   registered: false,
+  cart: [],
 
   /* AUTH FUNCTION */
   useAuth() {
@@ -60,6 +61,7 @@ const mainStore = (set, get) => ({
     set((state) =>
       produce(state, (draftState) => {
         draftState.userDetails = userDetails[0]
+        draftState.cart = userDetails[0].cart
       })
     )
 
@@ -147,6 +149,42 @@ const mainStore = (set, get) => ({
       .eq("shop_id", shop_id)
 
     return data
+  },
+
+  async addToCart(product_id) {
+    if (get().cart === null) {
+      set((state) =>
+        produce(state, (draftState) => {
+          draftState.cart = [product_id]
+        })
+      )
+    } else {
+      set((state) => ({
+        cart: [...state.cart, product_id],
+      }))
+    }
+
+    await supabase
+      .from("profiles")
+      .update({ cart: get().cart }, { count: "exact" })
+      .eq("id", get().user)
+  },
+
+  async removeFromCart(product_id) {
+    let newCart = get().cart
+
+    newCart = newCart.filter((el) => el !== product_id)
+
+    set((state) =>
+      produce(state, (draftState) => {
+        draftState.cart = newCart
+      })
+    )
+
+    await supabase
+      .from("profiles")
+      .update({ cart: newCart })
+      .eq("id", get().user)
   },
 
   /* UI FUNCTION */

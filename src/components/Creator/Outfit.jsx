@@ -13,24 +13,11 @@ import {
 import React from "react"
 import useCharacterStore from "../../store/characterStore"
 
-const skinShades = [
-  "pale",
-  "white",
-  "sand",
-  "darksand",
-  "almond",
-  "bronze",
-  "ember",
-  "chocolate",
-  "darkchocolate",
-]
-
 export default function Outfit() {
   const updateMaterial = useCharacterStore((state) => state.updateMaterial)
   const hairColor = useCharacterStore((state) => state.texture.hair)
   const updateHairColor = useCharacterStore((state) => state.updateHairColor)
   const updateSkin = useCharacterStore((state) => state.updateSkin)
-  const materialData = useCharacterStore((state) => state.material)
   const textureData = useCharacterStore((state) => state.texture)
 
   return (
@@ -57,58 +44,6 @@ export default function Outfit() {
           03
         </Button>
       </Group>
-      <Title order={5}>Hair</Title>
-      <Group>
-        <Button onClick={() => updateMaterial("hairMesh", "Hair-01")}>
-          Hair 1
-        </Button>
-        <Button onClick={() => updateMaterial("hairMesh", "Hair-02")}>
-          Hair 2
-        </Button>
-      </Group>
-      <Group>
-        <ColorPicker value={hairColor} onChange={updateHairColor} />
-      </Group>
-      <Title order={5}>Skin Tone</Title>
-      <Group>
-        {skinShades.map((skin) => {
-          return (
-            <CustomSkinButton
-              key={skin}
-              id={skin}
-              active={textureData.skin}
-              onClick={() => updateSkin(skin)}
-              src={`/assets/skin_shades/skintone_${skin}.png`}
-            />
-          )
-        })}
-      </Group>
     </Stack>
-  )
-}
-
-function CustomSkinButton(props) {
-  const theme = useTheme()
-  return (
-    <Paper
-      sx={(theme) => ({
-        cursor: "pointer",
-        border:
-          props.id === props.active &&
-          `3px solid ${theme.colorScheme === "dark" ? "#fff" : theme.black}`,
-        transition: "box-shadow 150ms ease, transform 150ms ease",
-
-        backgroundImage: `url(${props.src})`,
-
-        "&:hover": {
-          boxShadow: `${theme.shadows.md} !important`,
-          transform: "scale(1.05)",
-        },
-      })}
-      shadow="md"
-      w={50}
-      h={50}
-      {...props}
-    ></Paper>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from "react"
 import {
   Button,
   Group,
@@ -9,11 +9,30 @@ import {
   SimpleGrid,
   Accordion,
   Paper,
-} from "@mantine/core";
-import { Carousel } from "@mantine/carousel";
-import { Article } from "phosphor-react";
+  ActionIcon,
+} from "@mantine/core"
+import { Carousel } from "@mantine/carousel"
+import { Article } from "phosphor-react"
+import useMainStore from "../../store/mainStore"
+import { Link } from "react-router-dom"
+import { Bag } from "phosphor-react/dist"
 
 export default function ProductContent({ productImages, productData }) {
+  const cart = useMainStore((state) => state.cart)
+  const addToCart = useMainStore((state) => state.addToCart)
+  const removeFromCart = useMainStore((state) => state.removeFromCart)
+  const [loading, setLoading] = useState(false)
+  const [inCart, setInCart] = useState(cart.includes(productData.product_id))
+
+  const handleAddToBag = async () => {
+    setLoading(true)
+    inCart
+      ? await removeFromCart(productData.product_id)
+      : await addToCart(productData.product_id)
+    setInCart(!inCart)
+    setLoading(false)
+  }
+
   return (
     <SimpleGrid
       my={16}
@@ -34,7 +53,7 @@ export default function ProductContent({ productImages, productData }) {
                 />
               </AspectRatio>
             </Carousel.Slide>
-          );
+          )
         })}
       </Carousel>
       <Stack spacing={2}>
@@ -66,10 +85,24 @@ export default function ProductContent({ productImages, productData }) {
                       {size.sizeName}
                     </Text>
                   </Paper>
-                );
+                )
             })}
           </Group>
         </Stack>
+        <Group grow>
+          <Button loading={loading} onClick={handleAddToBag}>
+            <Text>{inCart ? "Already in Bag" : "Add to Bag"}</Text>
+          </Button>
+          <ActionIcon
+            variant="filled"
+            sx={{ width: 36, height: 36, transition: "0.15s ease" }}
+            tooltip="Share"
+            component={Link}
+            to="/creator"
+          >
+            <Bag size={16} />
+          </ActionIcon>
+        </Group>
         <Accordion
           radius={8}
           my={16}
@@ -114,5 +147,5 @@ export default function ProductContent({ productImages, productData }) {
         </Accordion>
       </Stack>
     </SimpleGrid>
-  );
+  )
 }

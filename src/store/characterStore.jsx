@@ -81,6 +81,15 @@ const characterStore = (set, get) => ({
     )
   },
 
+  updateShapeKeyAdd(shapekey, val) {
+    set((state) =>
+      produce(state, (draftState) => {
+        draftState.shapeKeysAdd[shapekey] = val
+        draftState.preset = "custom"
+      })
+    )
+  },
+
   setPreset(size) {
     set((state) =>
       produce(state, (draftState) => {

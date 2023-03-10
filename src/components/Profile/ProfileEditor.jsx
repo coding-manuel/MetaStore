@@ -9,15 +9,32 @@ import {
   Divider,
   NumberInput,
   Button,
+  ColorPicker,
 } from "@mantine/core"
 import useCharacterStore from "../../store/characterStore"
 import { useTheme } from "@emotion/react"
 import { Pencil, X } from "phosphor-react"
 import MeasurementsCreator from "./MeasurementsCreator"
 
+const skinShades = [
+  "pale",
+  "white",
+  "sand",
+  "darksand",
+  "almond",
+  "bronze",
+  "ember",
+  "chocolate",
+  "darkchocolate",
+]
+
 const ProfileEditor = () => {
   const shapeKeys = useCharacterStore((state) => state.shapeKeys)
-  const shapeKeysAdd = useCharacterStore((state) => state.shapeKeysAdd)
+  const updateMaterial = useCharacterStore((state) => state.updateMaterial)
+  const hairColor = useCharacterStore((state) => state.texture.hair)
+  const updateHairColor = useCharacterStore((state) => state.updateHairColor)
+  const updateSkin = useCharacterStore((state) => state.updateSkin)
+  const textureData = useCharacterStore((state) => state.texture)
   const measurement = useCharacterStore((state) => state.measurement)
   const [edit, setEdit] = useState(false)
 
@@ -53,29 +70,91 @@ const ProfileEditor = () => {
         )}
       </Group>
       {edit ? (
-        <MeasurementsCreator onSubmit={setEdit} />
+        <MeasurementsCreator onSubmit={setEdit} withShapeKey={true} />
       ) : (
         <Stack spacing="xs">
-          <CustomMeasurement measurement="chest" value={measurement.chest} />
+          <CustomMeasurement measurement="chest" value={measurement?.chest} />
           <CustomMeasurement
             measurement="shoulder"
-            value={measurement.shoulder}
+            value={measurement?.shoulder}
           />
-          <CustomMeasurement measurement="waist" value={measurement.waist} />
-          <CustomMeasurement measurement="thighs" value={measurement.thighs} />
+          <CustomMeasurement measurement="waist" value={measurement?.waist} />
+          <CustomMeasurement measurement="thighs" value={measurement?.thighs} />
           <CustomMeasurement
             measurement="weight"
-            value={measurement.weight}
+            value={measurement?.weight}
             type="weight"
           />
         </Stack>
       )}
       <Divider />
-      <CustomSlider shapeKey="stomach" value={shapeKeysAdd.stomach} />
-      <CustomSlider shapeKey="butt" value={shapeKeysAdd.butt} />
-      <CustomSlider shapeKey="thighs" value={shapeKeysAdd.thighs} />
-      <CustomSlider shapeKey="hands" value={shapeKeysAdd.hands} />
+      <Title order={5}>Hair</Title>
+      <Group>
+        <Button onClick={() => updateMaterial("hairMesh", "Hair-01")}>
+          Hair 1
+        </Button>
+        <Button onClick={() => updateMaterial("hairMesh", "Hair-02")}>
+          Hair 2
+        </Button>
+      </Group>
+      <Group>
+        <ColorPicker
+          value={hairColor}
+          onChange={updateHairColor}
+          swatches={[
+            "#090806",
+            "#2c222b",
+            "#664f3c",
+            "#8c684a",
+            "#332a22",
+            "#d8c078",
+            "#f2e1ae",
+            "#3b3c24",
+            "#b56239",
+          ]}
+        />
+      </Group>
+      <Title order={5}>Skin Tone</Title>
+      <Group>
+        {skinShades.map((skin) => {
+          return (
+            <CustomSkinButton
+              key={skin}
+              id={skin}
+              active={textureData.skin}
+              onClick={() => updateSkin(skin)}
+              src={`/assets/skin_shades/skintone_${skin}.png`}
+            />
+          )
+        })}
+      </Group>
     </>
+  )
+}
+
+function CustomSkinButton(props) {
+  const theme = useTheme()
+  return (
+    <Paper
+      sx={(theme) => ({
+        cursor: "pointer",
+        border:
+          props.id === props.active &&
+          `3px solid ${theme.colorScheme === "dark" ? "#fff" : theme.black}`,
+        transition: "box-shadow 150ms ease, transform 150ms ease",
+
+        backgroundImage: `url(${props.src})`,
+
+        "&:hover": {
+          boxShadow: `${theme.shadows.md} !important`,
+          transform: "scale(1.05)",
+        },
+      })}
+      shadow="md"
+      w={50}
+      h={50}
+      {...props}
+    ></Paper>
   )
 }
 
@@ -108,7 +187,9 @@ const CustomSizeButton = ({ size }) => {
 }
 
 function CustomSlider({ shapeKey, value }) {
-  const updateShapeKey = useCharacterStore((state) => state.updateShapeKey)
+  const updateShapeKeyAdd = useCharacterStore(
+    (state) => state.updateShapeKeyAdd
+  )
   return (
     <Group align="center" sx={{ width: "100%" }}>
       <Stack py={8} spacing={8} sx={{ flexGrow: 1 }}>
@@ -116,14 +197,14 @@ function CustomSlider({ shapeKey, value }) {
         <Slider
           sx={{ flexGrow: 1 }}
           value={value}
-          onChange={(val) => updateShapeKey(shapeKey, val)}
+          onChange={(val) => updateShapeKeyAdd(shapeKey, val)}
           label={null}
           step={0.01}
-          min={-1}
-          max={1}
+          min={-0.2}
+          max={0.2}
         />
       </Stack>
-      <Paper
+      {/* <Paper
         sx={{
           padding: "8px 8px",
           borderRadius: 8,
@@ -131,7 +212,7 @@ function CustomSlider({ shapeKey, value }) {
         }}
       >
         {value.toFixed(2)}
-      </Paper>
+      </Paper> */}
     </Group>
   )
 }

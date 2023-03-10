@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Button, Stack, NumberInput, Text } from "@mantine/core"
+import { Button, Stack, NumberInput, Text, Group, Slider } from "@mantine/core"
 import { useForm } from "@mantine/form"
 import useCharacterStore from "../../store/characterStore"
 import { supabase } from "../../utils/supabaseClient"
@@ -7,10 +7,11 @@ import useMainStore from "../../store/mainStore"
 import { showNotification } from "@mantine/notifications"
 import { notificationStyles } from "../../globalStyles"
 
-const MeasurementsCreator = ({ desc, onSubmit }) => {
+const MeasurementsCreator = ({ desc, onSubmit, withShapeKey }) => {
   const [loading, setLoading] = useState(false)
   const measurement = useCharacterStore((state) => state.measurement)
   const setBodySize = useCharacterStore((state) => state.setMeasurement)
+  const shapeKeysAdd = useCharacterStore((state) => state.shapeKeysAdd)
   const userId = useMainStore((state) => state.user)
 
   const form = useForm({
@@ -121,11 +122,50 @@ const MeasurementsCreator = ({ desc, onSubmit }) => {
           parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
           {...form.getInputProps("weight")}
         />
+        {withShapeKey && (
+          <>
+            <CustomSlider shapeKey="stomach" value={shapeKeysAdd.stomach} />
+            <CustomSlider shapeKey="butt" value={shapeKeysAdd.butt} />
+            <CustomSlider shapeKey="thighs" value={shapeKeysAdd.thighs} />
+            <CustomSlider shapeKey="hands" value={shapeKeysAdd.hands} />
+          </>
+        )}
         <Button my={"md"} type="submit" fullWidth mt="xl" loading={loading}>
           Submit
         </Button>
       </Stack>
     </form>
+  )
+}
+
+function CustomSlider({ shapeKey, value }) {
+  const updateShapeKeyAdd = useCharacterStore(
+    (state) => state.updateShapeKeyAdd
+  )
+  return (
+    <Group align="center" sx={{ width: "100%" }}>
+      <Stack py={8} spacing={8} sx={{ flexGrow: 1 }}>
+        <Text>{shapeKey.charAt(0).toUpperCase() + shapeKey.slice(1)}</Text>
+        <Slider
+          sx={{ flexGrow: 1 }}
+          value={value}
+          onChange={(val) => updateShapeKeyAdd(shapeKey, val)}
+          label={null}
+          step={0.01}
+          min={-0.2}
+          max={0.2}
+        />
+      </Stack>
+      {/* <Paper
+        sx={{
+          padding: "8px 8px",
+          borderRadius: 8,
+          marginTop: 8,
+        }}
+      >
+        {value.toFixed(2)}
+      </Paper> */}
+    </Group>
   )
 }
 
