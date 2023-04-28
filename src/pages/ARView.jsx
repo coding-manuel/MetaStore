@@ -18,17 +18,6 @@ function Experience() {
   const [select, setSelect] = useState(false)
   return (
     <Container>
-      <div>
-        <ARButton />
-        <Canvas dpr={[1, 2]} shadows camera={{ position: [0, 2, 0] }}>
-          <XR referenceSpace="local-floor">
-            {select ? <Character /> : <Marker />}
-            <ambientLight intensity={0.2} />
-            <Character />
-            <Environment preset="city" />
-          </XR>
-        </Canvas>
-      </div>
       <Box sx={{ width: "100%", height: 500 }}>
         <model-viewer
           src="/assets/models/male_model_final.glb"
@@ -38,7 +27,11 @@ function Experience() {
           alt="A 3D model of an astronaut"
           xr-environment
           width={500}
-        ></model-viewer>
+        >
+          <button slot="ar-button" id="ar-button">
+            View in your space
+          </button>
+        </model-viewer>
       </Box>
     </Container>
   )
