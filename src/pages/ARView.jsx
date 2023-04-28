@@ -1,12 +1,12 @@
-import React, { useRef, useState } from "react";
-import { ARButton, XR, useHitTest } from "@react-three/xr";
-import { Canvas } from "@react-three/fiber";
-import { Environment, Html } from "@react-three/drei";
-import Character from "../components/Creator/Character";
-import { Box, Button, Center, Group, Loader, Stack } from "@mantine/core";
+import React, { useRef, useState } from "react"
+import { ARButton, XR, useHitTest } from "@react-three/xr"
+import { Canvas } from "@react-three/fiber"
+import { Environment, Html } from "@react-three/drei"
+import Character from "../components/Creator/Character"
+import { Box, Button, Center, Group, Loader, Stack } from "@mantine/core"
 
 function Experience() {
-  const [select, setSelect] = useState(false);
+  const [select, setSelect] = useState(false)
   return (
     // <div>
     //   <ARButton />
@@ -49,7 +49,7 @@ function Experience() {
     //   </Stack> */}
     // </model-viewer>
     <model-viewer
-      src="/assets/models/male_model.glb"
+      src="/assets/models/male_model_final.glb"
       ar
       ar-scale="fixed"
       camera-controls
@@ -57,11 +57,11 @@ function Experience() {
       alt="A 3D model of an astronaut"
       xr-environment
     ></model-viewer>
-  );
+  )
 }
 
 export function Marker() {
-  const marker = useRef();
+  const marker = useRef()
 
   useHitTest((hitTestMatrix) => {
     if (marker.current) {
@@ -69,9 +69,9 @@ export function Marker() {
         marker.current.position,
         marker.current.quaternion,
         marker.current.scale
-      );
+      )
     }
-  });
+  })
   return (
     <mesh ref={marker} visible userData={{ test: "hello" }} castShadow>
       <sphereGeometry attach="geometry" args={[0.3, 16, 16]} />
@@ -83,7 +83,7 @@ export function Marker() {
         metalness={0.1}
       />
     </mesh>
-  );
+  )
 }
 
-export default Experience;
+export default Experience
